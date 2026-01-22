@@ -65,6 +65,12 @@ services:
     networks:
       - app_network
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+
 networks:
   app_network:
     driver: bridge
