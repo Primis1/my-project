@@ -1,0 +1,17 @@
+
+.DS_Store
+.env
+.next
+.vercel
+
+public/robots.txt
+public/sitemap*.xml
+.vscode
+.cursor
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
