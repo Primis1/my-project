@@ -43,12 +43,7 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_payload:5432/${POSTGRES_DB}
       PAYLOAD_SECRET: ${PAYLOAD_SECRET}
       NEXT_PUBLIC_SERVER_URL: https://${DOMAIN_NAME}
-    depends_on:
-      postgres_payload:
-        condition: service_healthy
-    networks:
-      - payload_network
-      - web_network
+
 
   # n8n:
   #   image: n8nio/n8n:latest

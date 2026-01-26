@@ -1,65 +1,51 @@
-FROM node:20-alpine AS base
+FROM node:18-alpine AS builder
 
-# ===== DEPS STAGE =====
-FROM base AS deps
-WORKDIR /app
+WORKDIR /home/node/app
 
-# Install build dependencies for node-gyp (in case sharp needs to compile)
+# Install dependencies needed for sharp and other native modules
 RUN apk add --no-cache \
-    libc6-compat \
     python3 \
     make \
-    g++
+    g++ \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    giflib-dev \
+    pixman-dev
 
-# Copy package files
-COPY package.json package-lock.json* ./
+COPY package*.json ./
 
-# Install dependencies with correct flags for Alpine ARM64
-RUN npm ci --legacy-peer-deps && \
-    npm install --arch=arm64 --os=linux --libc=musl sharp
+RUN npm install --legacy-peer-deps
 
-# ===== BUILDER STAGE =====
-FROM base AS builder
-WORKDIR /app
-
-# Copy dependencies from deps stage
-COPY --from=deps /app/node_modules ./node_modules
-
-# Copy source code
 COPY . .
-
-# Set environment variables for build
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 
 # Build the application
 RUN npm run build
 
-# ===== RUNNER STAGE =====
-FROM base AS runner
-WORKDIR /app
+# Production stage
+FROM node:18-alpine
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+WORKDIR /home/node/app
 
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+# Install runtime dependencies for sharp
+RUN apk add --no-cache \
+    cairo \
+    jpeg \
+    pango \
+    giflib \
+    pixman
 
-# Copy public assets
-COPY --from=builder /app/public ./public
+# Copy package files
+COPY package*.json ./
 
-# Create .next directory
-RUN mkdir .next && chown nextjs:nodejs .next
+# Install production dependencies only
+RUN npm install --production --legacy-peer-deps
 
-# Copy standalone build output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+# Copy built application from builder
+COPY --from=builder /home/node/app/.next ./.next
+COPY --from=builder /home/node/app/public ./public
+COPY --from=builder /home/node/app/next.config.js ./next.config.js
 
 EXPOSE 3000
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["npm", "run", "start"]
