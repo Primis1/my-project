@@ -34,6 +34,51 @@ services:
       - payload_network
       - web_network
 
+  postgres_n8n: 
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${N8N_DB_USER}
+      POSTGRES_PASSWORD: ${N8N_DB_PASSWORD}
+      POSTGRES_DB: ${N8N_DB_NAME}
+    volumes:
+      - n8n_db_data:/var/lib/postgresql/data
+    networks:
+      - n8n_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${N8N_DB_USER} -d ${N8N_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- NEW: n8n Application ---
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres_n8n
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${N8N_DB_NAME}
+      - DB_POSTGRESDB_USER=${N8N_DB_USER}
+      - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD}
+      - N8N_HOST=${N8N_SUBDOMAIN}.${DOMAIN_NAME}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}/
+      - GENERIC_TIMEZONE=${TIMEZONE}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+    ports:
+      - "127.0.0.1:5678:5678"
+    depends_on:
+      postgres_n8n:
+        condition: service_healthy
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - n8n_network
+      - web_network
+
   nginx:
     image: nginx:alpine
     restart: always
@@ -60,7 +105,10 @@ networks:
     driver: bridge
   web_network:
     driver: bridge
+  n8n_network:
+    driver: bridge
 
 volumes:
   payload_db_data:
   n8n_db_data:
+  n8n_data:
