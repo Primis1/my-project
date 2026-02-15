@@ -53,7 +53,7 @@ services:
 
   # --- NEW: n8n Application ---
   n8n:
-    image: n8nio/n8n:1.77.2
+    image: n8nio/n8n:2.7.4
     restart: always
     environment:
       - DB_TYPE=postgresdb
@@ -62,6 +62,7 @@ services:
       - DB_POSTGRESDB_DATABASE=${N8N_DB_NAME}
       - DB_POSTGRESDB_USER=${N8N_DB_USER}
       - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD}
+      - N8N_RELEASE_TYPE=stable
       - N8N_HOST=${N8N_SUBDOMAIN}.${DOMAIN_NAME}
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
