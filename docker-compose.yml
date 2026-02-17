@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres_payload:
@@ -13,7 +13,7 @@ services:
     networks:
       - payload_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U finn -d payload"]  # ← Add -d payload      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U finn -d payload"] # ← Add -d payload      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -25,6 +25,7 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_payload:5432/${POSTGRES_DB}
       PAYLOAD_SECRET: ${PAYLOAD_SECRET}
       NEXT_PUBLIC_SERVER_URL: https://${DOMAIN_NAME}
+      PREVIEW_SECRET: ${PREVIEW_SECRET}
       PORT: 3000
       HOSTNAME: "0.0.0.0"
     depends_on:
@@ -34,7 +35,7 @@ services:
       - payload_network
       - web_network
 
-  postgres_n8n: 
+  postgres_n8n:
     image: postgres:16-alpine
     restart: always
     environment:
