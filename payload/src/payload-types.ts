@@ -204,7 +204,7 @@ export interface Page {
     showScrollIndicator?: boolean | null;
     scrollIndicatorLabel?: string | null;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | SplitSectionBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -785,6 +785,94 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SplitSectionBlock".
+ */
+export interface SplitSectionBlock {
+  /**
+   * Short uppercase label above the heading (e.g. "OUR APPROACH")
+   */
+  eyebrow?: string | null;
+  heading?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  enableCta?: boolean | null;
+  cta?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  rightColumnType: 'image' | 'stats' | 'steps';
+  /**
+   * Which side the image appears on
+   */
+  imagePosition?: ('right' | 'left') | null;
+  rightImage?: (number | null) | Media;
+  rightStats?:
+    | {
+        icon?:
+          | ('shield' | 'building' | 'trending-up' | 'lock' | 'users' | 'star' | 'bar-chart' | 'check-circle')
+          | null;
+        statValue: string;
+        statLabel: string;
+        statDescription?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  rightSteps?:
+    | {
+        title: string;
+        highlight?: boolean | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'splitSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1095,6 +1183,7 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        splitSection?: T | SplitSectionBlockSelect<T>;
       };
   meta?:
     | T
@@ -1191,6 +1280,48 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SplitSectionBlock_select".
+ */
+export interface SplitSectionBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  body?: T;
+  enableCta?: T;
+  cta?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  rightColumnType?: T;
+  imagePosition?: T;
+  rightImage?: T;
+  rightStats?:
+    | T
+    | {
+        icon?: T;
+        statValue?: T;
+        statLabel?: T;
+        statDescription?: T;
+        id?: T;
+      };
+  rightSteps?:
+    | T
+    | {
+        title?: T;
+        highlight?: T;
+        description?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
