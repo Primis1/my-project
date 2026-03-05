@@ -47,7 +47,7 @@ ENV HOSTNAME="0.0.0.0"
 COPY --from=builder /home/node/app/package*.json ./
 
 # 2. Install production dependencies (this creates node_modules with the payload CLI)
-RUN npm ci --omit=dev
+RUN npm install --omit=dev --legacy-peer-deps
 
 # 3. Copy standalone output and static assets
 COPY --from=builder /home/node/app/.next/standalone ./
