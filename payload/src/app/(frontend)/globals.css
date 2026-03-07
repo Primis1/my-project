@@ -67,7 +67,7 @@
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 15%;
-    --muted-foreground: 40 48% 56%;
+    --muted-foreground: 0 0% 90%;
 
     --accent: 40 48% 56%;
     --accent-foreground: 0 0% 7%;
@@ -101,4 +101,10 @@ html {
 html[data-theme='dark'],
 html[data-theme='light'] {
   opacity: initial;
+}
+
+/* Brand styling: italic text inside CMS rich text renders in gold */
+.payload-richtext em,
+.payload-richtext i {
+  color: #c5a059;
 }

@@ -1,0 +1,13 @@
+/* Lexical Editor: Base text should be white */
+.rich-text-lexical [contenteditable='true'],
+[data-lexical-editor] {
+  color: #fff !important;
+}
+
+/* Lexical Editor: Italic text should be gold */
+.rich-text-lexical em,
+.rich-text-lexical i,
+[data-lexical-editor] em,
+[data-lexical-editor] i {
+  color: #c5a059 !important;
+}

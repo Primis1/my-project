@@ -38,12 +38,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
       </div>
 
       {/* Content */}
-      <div
-        className={cn(
-          'relative z-10 mx-auto max-w-5xl px-6 text-center text-white',
-          style === 'gold' && 'text-gold',
-        )}
-      >
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-white">
         {/* Eyebrow */}
         {eyebrow && (
           <div className="mb-8 flex items-center justify-center gap-4">
@@ -58,7 +53,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
         {/* Headline & Subtext via RichText */}
         {richText && (
           <RichText
-            className="font-serif [&_h1]:text-5xl [&_h1]:font-normal [&_h1]:leading-[1.1] [&_h1]:tracking-tight [&_h1]:sm:text-6xl [&_h1]:md:text-7xl [&_h1]:lg:text-8xl [&_p]:mx-auto [&_p]:mt-8 [&_p]:max-w-2xl [&_p]:text-base [&_p]:leading-relaxed [&_p]:text-muted-foreground [&_p]:sm:text-lg"
+            className="font-serif [&_h1]:text-5xl [&_h1]:font-normal [&_h1]:leading-[1.1] [&_h1]:tracking-tight [&_h1]:sm:text-6xl [&_h1]:md:text-7xl [&_h1]:lg:text-8xl [&_p]:mx-auto [&_p]:mt-8 [&_p]:max-w-2xl [&_p]:text-base [&_p]:leading-relaxed [&_p]:text-white [&_p]:sm:text-lg"
             data={richText}
             enableGutter={false}
           />

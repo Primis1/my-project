@@ -52,9 +52,7 @@ const StatsPanel: React.FC<{ stats: SplitSectionBlockProps['rightStats'] }> = ({
                 </span>
               </div>
               {stat.statDescription && (
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {stat.statDescription}
-                </p>
+                <p className="text-sm text-white leading-relaxed">{stat.statDescription}</p>
               )}
             </div>
           </div>
@@ -89,7 +87,7 @@ const StepsPanel: React.FC<{ steps: SplitSectionBlockProps['rightSteps'] }> = ({
                 {step.title}
               </h4>
               {step.description && (
-                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                <p className="text-sm text-white leading-relaxed">{step.description}</p>
               )}
             </div>
           </div>
@@ -148,7 +146,7 @@ export const SplitSectionBlock: React.FC<SplitSectionBlockProps> = ({
             {/* Body */}
             {body && (
               <RichText
-                className="[&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:text-base [&_blockquote]:border-l-2 [&_blockquote]:border-gold/50 [&_blockquote]:pl-5 [&_blockquote]:text-muted-foreground [&_blockquote]:italic [&_cite]:text-xs [&_cite]:text-gold [&_cite]:uppercase [&_cite]:tracking-widest [&_cite]:not-italic"
+                className="[&_p]:text-white [&_p]:leading-relaxed [&_p]:text-base [&_blockquote]:border-l-2 [&_blockquote]:border-gold/50 [&_blockquote]:pl-5 [&_blockquote]:text-white [&_blockquote]:italic [&_cite]:text-xs [&_cite]:text-gold [&_cite]:uppercase [&_cite]:tracking-widest [&_cite]:not-italic"
                 data={body}
                 enableGutter={false}
                 enableProse={false}
