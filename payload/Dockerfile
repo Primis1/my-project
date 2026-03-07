@@ -26,8 +26,6 @@ COPY .env* ./
 
 COPY . .
 
-# Remove lockfile to avoid Next.js patching issues on ARM64
-RUN rm -f package-lock.json
 
 # Build using experimental compile mode (no DB needed)
 ENV NODE_ENV=production
@@ -44,10 +42,10 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # 1. Copy package files first (for better layer caching)
-COPY --from=builder /home/node/app/package*.json ./
+COPY package.json package-lock.json ./
 
 # 2. Install production dependencies (this creates node_modules with the payload CLI)
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --legacy-peer-deps
 
 # 3. Copy standalone output and static assets
 COPY --from=builder /home/node/app/.next/standalone ./
