@@ -3,25 +3,35 @@ import * as React from 'react'
 
 const Card: React.FC<
   { ref?: React.Ref<HTMLDivElement> } & React.HTMLAttributes<HTMLDivElement>
-> = ({ className, ref, ...props }) => (
+> = ({ className, ref, children, ...props }) => (
   <div
-    className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
+    className={cn(
+      'group relative rounded-none border-0 bg-background py-10 shadow-none transition-all duration-500 hover:bg-card',
+      className,
+    )}
     ref={ref}
     {...props}
-  />
+  >
+    {children}
+    {/* Gold accent line on hover */}
+    <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gold transition-all duration-700 group-hover:w-full" />
+  </div>
 )
 
 const CardHeader: React.FC<
   { ref?: React.Ref<HTMLDivElement> } & React.HTMLAttributes<HTMLDivElement>
 > = ({ className, ref, ...props }) => (
-  <div className={cn('flex flex-col space-y-1.5 p-6', className)} ref={ref} {...props} />
+  <div className={cn('flex flex-col gap-4 p-6 pt-0', className)} ref={ref} {...props} />
 )
 
 const CardTitle: React.FC<
   { ref?: React.Ref<HTMLHeadingElement> } & React.HTMLAttributes<HTMLHeadingElement>
 > = ({ className, ref, ...props }) => (
   <h3
-    className={cn('text-2xl font-semibold leading-none tracking-tight', className)}
+    className={cn(
+      'font-serif text-xl font-normal tracking-tight text-foreground transition-colors duration-500 group-hover:text-gold',
+      className,
+    )}
     ref={ref}
     {...props}
   />
@@ -30,7 +40,7 @@ const CardTitle: React.FC<
 const CardDescription: React.FC<
   { ref?: React.Ref<HTMLParagraphElement> } & React.HTMLAttributes<HTMLParagraphElement>
 > = ({ className, ref, ...props }) => (
-  <p className={cn('text-sm text-muted-foreground', className)} ref={ref} {...props} />
+  <p className={cn('text-sm leading-relaxed text-white', className)} ref={ref} {...props} />
 )
 
 const CardContent: React.FC<

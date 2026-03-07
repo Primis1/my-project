@@ -204,7 +204,15 @@ export interface Page {
     showScrollIndicator?: boolean | null;
     scrollIndicatorLabel?: string | null;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | SplitSectionBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | SplitSectionBlock
+    | FeatureCardsBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -873,6 +881,42 @@ export interface SplitSectionBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureCardsBlock".
+ */
+export interface FeatureCardsBlock {
+  /**
+   * Short uppercase label above the heading (e.g. "WHAT WE DO")
+   */
+  eyebrow?: string | null;
+  heading: string;
+  cards?:
+    | {
+        icon?:
+          | (
+              | 'shield'
+              | 'building'
+              | 'trending-up'
+              | 'lock'
+              | 'users'
+              | 'star'
+              | 'bar-chart'
+              | 'check-circle'
+              | 'scale'
+              | 'briefcase'
+              | 'heart'
+            )
+          | null;
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1184,6 +1228,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         splitSection?: T | SplitSectionBlockSelect<T>;
+        featureCards?: T | FeatureCardsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1319,6 +1364,24 @@ export interface SplitSectionBlockSelect<T extends boolean = true> {
     | {
         title?: T;
         highlight?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureCardsBlock_select".
+ */
+export interface FeatureCardsBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  cards?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
         description?: T;
         id?: T;
       };
