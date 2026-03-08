@@ -1,3 +1,4 @@
+import canUseDOM from './canUseDOM'
 import { getClientSideURL } from '@/utilities/getURL'
 
 /**
@@ -15,10 +16,15 @@ export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | 
 
   // Check if URL already has http/https protocol
   if (url.startsWith('http://') || url.startsWith('https://')) {
-    return cacheTag ? `${url}?${cacheTag}` : url
+    return cacheTag ? `${url}?v=${cacheTag}` : url
   }
 
-  // Otherwise prepend client-side URL
+  // If we are on the client, return a relative URL to avoid remotePatterns issues
+  if (canUseDOM) {
+    return cacheTag ? `${url}?v=${cacheTag}` : url
+  }
+
+  // Otherwise prepend client-side URL (useful for server-side generation, emails, etc.)
   const baseUrl = getClientSideURL()
-  return cacheTag ? `${baseUrl}${url}?${cacheTag}` : `${baseUrl}${url}`
+  return cacheTag ? `${baseUrl}${url}?v=${cacheTag}` : `${baseUrl}${url}`
 }

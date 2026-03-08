@@ -11,7 +11,7 @@ const nextConfig = {
   output: 'standalone',
   images: {
     remotePatterns: [
-      ...[NEXT_PUBLIC_SERVER_URL].map((item) => {
+      ...[NEXT_PUBLIC_SERVER_URL, 'http://localhost:3000'].map((item) => {
         const url = new URL(item)
         return {
           hostname: url.hostname,
