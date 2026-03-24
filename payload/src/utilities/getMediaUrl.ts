@@ -19,12 +19,8 @@ export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | 
     return cacheTag ? `${url}?v=${cacheTag}` : url
   }
 
-  // If we are on the client, return a relative URL to avoid remotePatterns issues
-  if (canUseDOM) {
-    return cacheTag ? `${url}?v=${cacheTag}` : url
-  }
-
-  // Otherwise prepend client-side URL (useful for server-side generation, emails, etc.)
-  const baseUrl = getClientSideURL()
-  return cacheTag ? `${baseUrl}${url}?v=${cacheTag}` : `${baseUrl}${url}`
+  // Always return relative URLs for Next.js Image component.
+  // Next.js Image Optimization fetches relative URLs internally via localhost,
+  // avoiding DNS resolution and HTTPS issues inside Docker containers.
+  return cacheTag ? `${url}?v=${cacheTag}` : url
 }
