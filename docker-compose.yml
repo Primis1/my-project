@@ -23,6 +23,8 @@ services:
   payload:
     image: ghcr.io/finn-0b/payload:latest
     restart: always
+    volumes:
+      - payload_media:/home/node/app/public/media
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}
@@ -115,5 +117,6 @@ networks:
 
 volumes:
   payload_db_data:
+  payload_media:
   n8n_db_data:
   n8n_data:
