@@ -19,7 +19,7 @@ export const Logo = (props: Props) => {
         <div className="h-5 w-[2px] bg-gold" />
       </div>
       <span className="font-serif text-lg tracking-wide text-foreground">
-        {text || 'Sterling & Associates'}
+        {text || 'Finn Babinskyi'}
       </span>
     </div>
   )

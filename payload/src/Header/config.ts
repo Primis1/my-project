@@ -17,7 +17,7 @@ export const Header: GlobalConfig = {
           name: 'text',
           type: 'text',
           label: 'Logo Text',
-          defaultValue: 'Sterling & Associates',
+          defaultValue: 'Finn Babinskyi',
         },
       ],
     },
