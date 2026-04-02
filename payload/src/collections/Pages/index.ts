@@ -9,6 +9,7 @@ import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { SplitSection } from '../../blocks/SplitSection/config'
 import { FeatureCards } from '../../blocks/FeatureCards/config'
+import { QuoteFormBlock } from '../../blocks/QuoteForm/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -82,6 +83,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 FormBlock,
                 SplitSection,
                 FeatureCards,
+                QuoteFormBlock,
               ],
               required: true,
               admin: {

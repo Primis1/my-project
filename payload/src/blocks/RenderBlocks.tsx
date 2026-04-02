@@ -9,6 +9,7 @@ import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { SplitSectionBlock } from '@/blocks/SplitSection/Component'
 import { FeatureCardsBlock } from '@/blocks/FeatureCards/Component'
+import { QuoteFormBlock } from '@/blocks/QuoteForm/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -18,6 +19,7 @@ const blockComponents = {
   mediaBlock: MediaBlock,
   splitSection: SplitSectionBlock,
   featureCards: FeatureCardsBlock,
+  quoteForm: QuoteFormBlock,
 }
 
 export const RenderBlocks: React.FC<{

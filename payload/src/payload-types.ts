@@ -212,6 +212,7 @@ export interface Page {
     | FormBlock
     | SplitSectionBlock
     | FeatureCardsBlock
+    | QuoteFormBlock
   )[];
   meta?: {
     title?: string | null;
@@ -917,6 +918,31 @@ export interface FeatureCardsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "QuoteFormBlock".
+ */
+export interface QuoteFormBlock {
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'quoteForm';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1229,6 +1255,7 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         splitSection?: T | SplitSectionBlockSelect<T>;
         featureCards?: T | FeatureCardsBlockSelect<T>;
+        quoteForm?: T | QuoteFormBlockSelect<T>;
       };
   meta?:
     | T
@@ -1385,6 +1412,16 @@ export interface FeatureCardsBlockSelect<T extends boolean = true> {
         description?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "QuoteFormBlock_select".
+ */
+export interface QuoteFormBlockSelect<T extends boolean = true> {
+  enableIntro?: T;
+  introContent?: T;
   id?: T;
   blockName?: T;
 }
