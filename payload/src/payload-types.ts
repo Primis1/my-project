@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    'quote-requests': QuoteRequest;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +95,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'quote-requests': QuoteRequestsSelect<false> | QuoteRequestsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -112,10 +114,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    quoteFormOptions: QuoteFormOption;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    quoteFormOptions: QuoteFormOptionsSelect<false> | QuoteFormOptionsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -921,25 +925,90 @@ export interface FeatureCardsBlock {
  * via the `definition` "QuoteFormBlock".
  */
 export interface QuoteFormBlock {
-  enableIntro?: boolean | null;
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  /**
+   * Small uppercase label above the heading (e.g. "Risk Assessment")
+   */
+  eyebrow?: string | null;
+  heading: string;
+  /**
+   * This word inside the heading will render in italic gold. Must be a substring of Heading.
+   */
+  headingAccent?: string | null;
+  subheading?: string | null;
+  step1Heading?: string | null;
+  step1Subheading?: string | null;
+  step2Heading?: string | null;
+  step3Heading?: string | null;
+  step3Subheading?: string | null;
+  step4Heading?: string | null;
+  step4Subheading?: string | null;
+  submitButtonLabel?: string | null;
+  successHeading?: string | null;
+  successHeadingAccent?: string | null;
+  successMessage?: string | null;
+  /**
+   * Text shown beneath the form. The portion before "|" renders in gold. Supports multiple pipes.
+   */
+  trustLine?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'quoteForm';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quote-requests".
+ */
+export interface QuoteRequest {
+  id: number;
+  submitterIp?: string | null;
+  status: 'new' | 'reviewing' | 'contacted' | 'quoted' | 'closed-won' | 'closed-lost';
+  assignedBroker?: (number | null) | User;
+  /**
+   * Not visible to the client.
+   */
+  internalNotes?: string | null;
+  followUpDate?: string | null;
+  /**
+   * Automatically recorded on status changes.
+   */
+  statusHistory?:
+    | {
+        from?: string | null;
+        to?: string | null;
+        changedAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  province?: string | null;
+  preferredContact?: string | null;
+  timeframe?: string | null;
+  additionalNotes?: string | null;
+  selectedCoverages?:
+    | {
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  assets?:
+    | {
+        assetId?: string | null;
+        assetType?: string | null;
+        details?:
+          | {
+              key?: string | null;
+              value?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1150,6 +1219,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'quote-requests';
+        value: number | QuoteRequest;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1420,8 +1493,22 @@ export interface FeatureCardsBlockSelect<T extends boolean = true> {
  * via the `definition` "QuoteFormBlock_select".
  */
 export interface QuoteFormBlockSelect<T extends boolean = true> {
-  enableIntro?: T;
-  introContent?: T;
+  eyebrow?: T;
+  heading?: T;
+  headingAccent?: T;
+  subheading?: T;
+  step1Heading?: T;
+  step1Subheading?: T;
+  step2Heading?: T;
+  step3Heading?: T;
+  step3Subheading?: T;
+  step4Heading?: T;
+  step4Subheading?: T;
+  submitButtonLabel?: T;
+  successHeading?: T;
+  successHeadingAccent?: T;
+  successMessage?: T;
+  trustLine?: T;
   id?: T;
   blockName?: T;
 }
@@ -1592,6 +1679,55 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quote-requests_select".
+ */
+export interface QuoteRequestsSelect<T extends boolean = true> {
+  submitterIp?: T;
+  status?: T;
+  assignedBroker?: T;
+  internalNotes?: T;
+  followUpDate?: T;
+  statusHistory?:
+    | T
+    | {
+        from?: T;
+        to?: T;
+        changedAt?: T;
+        id?: T;
+      };
+  firstName?: T;
+  lastName?: T;
+  email?: T;
+  phone?: T;
+  province?: T;
+  preferredContact?: T;
+  timeframe?: T;
+  additionalNotes?: T;
+  selectedCoverages?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  assets?:
+    | T
+    | {
+        assetId?: T;
+        assetType?: T;
+        details?:
+          | T
+          | {
+              key?: T;
+              value?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1952,6 +2088,100 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quoteFormOptions".
+ */
+export interface QuoteFormOption {
+  id: number;
+  coverageTypes?:
+    | {
+        value: string;
+        label: string;
+        icon?: ('Home' | 'Car' | 'Building2' | 'Ship' | 'Gem' | 'Shield') | null;
+        id?: string | null;
+      }[]
+    | null;
+  propertyValueRanges?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  propertyTypes?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  constructionTypes?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  securitySystems?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  vehicleTypes?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  vehicleValues?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  usageTypes?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  storageTypes?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  provinces?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  preferredContactMethods?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  timeframes?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -2009,6 +2239,100 @@ export interface FooterSelect<T extends boolean = true> {
               url?: T;
               label?: T;
             };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quoteFormOptions_select".
+ */
+export interface QuoteFormOptionsSelect<T extends boolean = true> {
+  coverageTypes?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        icon?: T;
+        id?: T;
+      };
+  propertyValueRanges?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  propertyTypes?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  constructionTypes?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  securitySystems?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  vehicleTypes?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  vehicleValues?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  usageTypes?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  storageTypes?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  provinces?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  preferredContactMethods?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  timeframes?:
+    | T
+    | {
+        value?: T;
+        label?: T;
         id?: T;
       };
   updatedAt?: T;

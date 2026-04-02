@@ -19,6 +19,76 @@ import { StepIndicator } from "./step-indicator"
 import { FormField } from "./form-field"
 import { StyledSelect } from "./style-select"
 import { StyledInput } from "./styled-input"
+import { resolveIcon } from "./icon-resolver"
+
+export interface QuoteFormConfig {
+  eyebrow?: string | null
+  heading?: string | null
+  headingAccent?: string | null
+  subheading?: string | null
+  step1Heading?: string | null
+  step1Subheading?: string | null
+  step2Heading?: string | null
+  step3Heading?: string | null
+  step3Subheading?: string | null
+  step4Heading?: string | null
+  step4Subheading?: string | null
+  submitButtonLabel?: string | null
+  successHeading?: string | null
+  successHeadingAccent?: string | null
+  successMessage?: string | null
+  trustLine?: string | null
+}
+
+export interface PCQuoteFormProps {
+  config?: QuoteFormConfig
+  options?: QuoteFormOptions
+}
+
+type Validator = (value: string) => string | undefined
+
+const required: Validator = (v) =>
+  v.trim() === '' ? 'This field is required.' : undefined
+
+const validEmail: Validator = (v) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+    ? undefined
+    : 'Please enter a valid email address.'
+
+const validPhone: Validator = (v) =>
+  /^[\d\s\-+()]{7,}$/.test(v.trim())
+    ? undefined
+    : 'Please enter a valid phone number.'
+
+function validate(rules: Record<string, Array<Validator>>, data: Record<string, string>) {
+  const result: Record<string, string> = {}
+  for (const [field, validators] of Object.entries(rules)) {
+    for (const validator of validators) {
+      const error = validator(data[field] ?? '')
+      if (error) {
+        result[field] = error
+        break 
+      }
+    }
+  }
+  return result
+}
+
+function renderAccentHeading(full: string, accent: string, className = '') {
+  if (!accent || !full.includes(accent)) {
+    return <span className={className}>{full}</span>
+  }
+  const [before, ...afterParts] = full.split(accent)
+  const after = afterParts.join(accent)
+  return (
+    <>
+      {before}
+      <span className={cn('italic text-gold', className)}>{accent}</span>
+      {after}
+    </>
+  )
+}
+
 
 const steps = [
   { id: 1, label: "Coverage Type", icon: <Shield className="h-4 w-4" /> },
@@ -27,106 +97,36 @@ const steps = [
   { id: 4, label: "Review", icon: <ArrowRight className="h-4 w-4" /> },
 ]
 
-const coverageTypes = [
-  { value: "homeowners", label: "High-Value Homeowners", icon: Home },
-  { value: "auto", label: "Luxury Auto & Collection", icon: Car },
-  { value: "commercial", label: "Commercial Property", icon: Building2 },
-  { value: "watercraft", label: "Watercraft & Aviation", icon: Ship },
-  { value: "valuables", label: "Jewellery & Valuables", icon: Gem },
-  { value: "umbrella", label: "Excess Liability / Umbrella", icon: Shield },
-]
+export interface CoverageTypeOption {
+  value: string
+  label: string
+  icon: string
+}
 
-const propertyValueRanges = [
-  { value: "2m-5m", label: "$2M - $5M" },
-  { value: "5m-10m", label: "$5M - $10M" },
-  { value: "10m-25m", label: "$10M - $25M" },
-  { value: "25m-50m", label: "$25M - $50M" },
-  { value: "50m+", label: "$50M+" },
-]
+export interface SelectOption {
+  value: string
+  label: string
+}
 
-const propertyTypes = [
-  { value: "primary", label: "Primary Residence" },
-  { value: "secondary", label: "Secondary / Vacation Home" },
-  { value: "investment", label: "Investment Property" },
-  { value: "commercial", label: "Commercial Building" },
-  { value: "mixed", label: "Mixed-Use Property" },
-]
-
-const constructionTypes = [
-  { value: "standard", label: "Standard Construction" },
-  { value: "custom", label: "Custom / Architectural" },
-  { value: "heritage", label: "Heritage / Historical" },
-  { value: "modern", label: "Modern / Contemporary" },
-]
-
-const securitySystems = [
-  { value: "none", label: "None" },
-  { value: "basic", label: "Basic Alarm System" },
-  { value: "monitored", label: "24/7 Monitored System" },
-  { value: "comprehensive", label: "Comprehensive (Cameras, Motion, etc.)" },
-  { value: "staffed", label: "On-site Security Personnel" },
-]
+export interface QuoteFormOptions {
+  coverageTypes?: CoverageTypeOption[]
+  propertyValueRanges?: SelectOption[]
+  propertyTypes?: SelectOption[]
+  constructionTypes?: SelectOption[]
+  securitySystems?: SelectOption[]
+  vehicleTypes?: SelectOption[]
+  vehicleValues?: SelectOption[]
+  usageTypes?: SelectOption[]
+  storageTypes?: SelectOption[]
+  provinces?: SelectOption[]
+  preferredContactMethods?: SelectOption[]
+  timeframes?: SelectOption[]
+}
 
 const vehicleYears = Array.from({ length: 30 }, (_, i) => ({
   value: String(2025 - i),
   label: String(2025 - i),
 }))
-
-const vehicleTypes = [
-  { value: "luxury", label: "Luxury Sedan / SUV" },
-  { value: "exotic", label: "Exotic / Supercar" },
-  { value: "classic", label: "Classic / Vintage" },
-  { value: "collector", label: "Collector Vehicle" },
-  { value: "fleet", label: "Multiple Vehicles / Fleet" },
-]
-
-const vehicleValues = [
-  { value: "100k-250k", label: "$100K - $250K" },
-  { value: "250k-500k", label: "$250K - $500K" },
-  { value: "500k-1m", label: "$500K - $1M" },
-  { value: "1m-2m", label: "$1M - $2M" },
-  { value: "2m+", label: "$2M+" },
-]
-
-const usageTypes = [
-  { value: "personal", label: "Personal Use Only" },
-  { value: "occasional", label: "Occasional / Weekend" },
-  { value: "show", label: "Show / Display Only" },
-  { value: "track", label: "Track Days Included" },
-]
-
-const storageTypes = [
-  { value: "private-garage", label: "Private Garage" },
-  { value: "climate-controlled", label: "Climate-Controlled Storage" },
-  { value: "secure-facility", label: "Secure Storage Facility" },
-  { value: "outdoor", label: "Outdoor / Driveway" },
-]
-
-const provinces = [
-  { value: "ON", label: "Ontario" },
-  { value: "BC", label: "British Columbia" },
-  { value: "AB", label: "Alberta" },
-  { value: "QC", label: "Quebec" },
-  { value: "MB", label: "Manitoba" },
-  { value: "SK", label: "Saskatchewan" },
-  { value: "NS", label: "Nova Scotia" },
-  { value: "NB", label: "New Brunswick" },
-  { value: "NL", label: "Newfoundland and Labrador" },
-  { value: "PE", label: "Prince Edward Island" },
-]
-
-const preferredContactMethods = [
-  { value: "phone", label: "Phone Call" },
-  { value: "email", label: "Email" },
-  { value: "both", label: "Either" },
-]
-
-const timeframes = [
-  { value: "immediate", label: "Immediate - Within 1 week" },
-  { value: "1-3months", label: "1-3 Months" },
-  { value: "3-6months", label: "3-6 Months" },
-  { value: "exploring", label: "Just Exploring Options" },
-]
 
 interface Asset {
   id: string
@@ -134,7 +134,43 @@ interface Asset {
   details: Record<string, string>
 }
 
-export function PCQuoteForm() {
+export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
+  const {
+    coverageTypes: coverageTypesRaw = FALLBACK_COVERAGE_TYPES,
+    propertyValueRanges = FALLBACK_PROPERTY_VALUE_RANGES,
+    propertyTypes = FALLBACK_PROPERTY_TYPES,
+    constructionTypes = FALLBACK_CONSTRUCTION_TYPES,
+    securitySystems = FALLBACK_SECURITY_SYSTEMS,
+    vehicleTypes = FALLBACK_VEHICLE_TYPES,
+    vehicleValues = FALLBACK_VEHICLE_VALUES,
+    usageTypes = FALLBACK_USAGE_TYPES,
+    storageTypes = FALLBACK_STORAGE_TYPES,
+    provinces = FALLBACK_PROVINCES,
+    preferredContactMethods = FALLBACK_CONTACT_METHODS,
+    timeframes = FALLBACK_TIMEFRAMES,
+  } = options
+
+  const coverageTypes = coverageTypesRaw.map((c) => ({
+    ...c,
+    icon: resolveIcon(c.icon),
+  }))
+
+  const eyebrow = config.eyebrow || 'Risk Assessment'
+  const heading = config.heading || 'Request a Quote'
+  const headingAccent = config.headingAccent || 'Quote'
+  const subheading = config.subheading || 'Complete this form to receive a personalized coverage assessment from our senior brokers.'
+  const step1Heading = config.step1Heading || 'What would you like to protect?'
+  const step1Subheading = config.step1Subheading || 'Select all coverage types that apply. You can add multiple assets of each type.'
+  const step2Heading = config.step2Heading || 'Asset Details'
+  const step3Heading = config.step3Heading || 'Your Information'
+  const step3Subheading = config.step3Subheading || 'All information is treated with the strictest confidence.'
+  const step4Heading = config.step4Heading || 'Review Your Request'
+  const step4Subheading = config.step4Subheading || 'Please review your information before submitting.'
+  const submitButtonLabel = config.submitButtonLabel || 'Submit Request'
+  const successHeading = config.successHeading || 'Quote Request Received'
+  const successHeadingAccent = config.successHeadingAccent || 'Received'
+  const successMessage = config.successMessage || 'Thank you for your inquiry. A member of our P&C practice team will review your information and contact you within one business day to discuss your coverage needs.'
+  const trustLine = config.trustLine || 'RIBO Licensed | Your information is secure and confidential'
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedCoverages, setSelectedCoverages] = useState<string[]>([])
   const [assets, setAssets] = useState<Asset[]>([])
@@ -150,8 +186,36 @@ export function PCQuoteForm() {
     timeframe: "",
     additionalNotes: "",
   })
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [honeypot, setHoneypot] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const updateFormField = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    setErrors((prev) => ({ ...prev, [field]: '' }))
+  }
+
+  const stepValidationRules: Record<number, () => Record<string, string>> = {
+    1: (): Record<string, string> => {
+      if (selectedCoverages.length === 0) {
+        return { coverages: 'Please select at least one coverage type.' }
+      }
+      return {}
+    },
+    3: () =>
+      validate(
+        {
+          firstName: [required],
+          lastName: [required],
+          email: [required, validEmail],
+          phone: [required, validPhone],
+          province: [required],
+        },
+        formData,
+      ),
+  }
 
   const toggleCoverage = (value: string) => {
     setSelectedCoverages((prev) =>
@@ -187,7 +251,17 @@ export function PCQuoteForm() {
   }
 
   const handleNext = () => {
-    if (currentStep === 1 && selectedCoverages.length > 0) {
+    const rulesFn = stepValidationRules[currentStep]
+    const stepErrors = rulesFn ? rulesFn() : {}
+
+    if (Object.keys(stepErrors).length > 0) {
+      setErrors(stepErrors)
+      return // block navigation
+    }
+
+    setErrors({})
+
+    if (currentStep === 1) {
       // Initialize assets based on selected coverages if empty
       if (assets.length === 0) {
         const initialAssets = selectedCoverages.map((type) => ({
@@ -198,10 +272,8 @@ export function PCQuoteForm() {
         setAssets(initialAssets)
       }
       setCurrentStep(2)
-    } else if (currentStep === 2) {
-      setCurrentStep(3)
-    } else if (currentStep === 3) {
-      setCurrentStep(4)
+    } else if (currentStep < 4) {
+      setCurrentStep(currentStep + 1)
     }
   }
 
@@ -212,11 +284,48 @@ export function PCQuoteForm() {
   }
 
   const handleSubmit = async () => {
+    if (honeypot !== '') {
+      setIsSubmitted(true)
+      return
+    }
+    setSubmitError(null)
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      const payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        province: formData.province,
+        preferredContact: formData.preferredContact,
+        timeframe: formData.timeframe,
+        additionalNotes: formData.additionalNotes,
+        selectedCoverages: selectedCoverages.map((value) => ({ value })),
+        assets: assets.map((a) => ({
+          assetId: a.id,
+          assetType: a.type,
+          details: Object.entries(a.details).map(([key, value]) => ({ key, value })),
+        })),
+      }
+
+      const res = await fetch('/api/quote-requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}))
+        throw new Error(error?.message ?? `Submission failed: ${res.status}`)
+      }
+
+      setIsSubmitted(true)
+    } catch (err) {
+      console.error('Quote submission error:', err)
+      setSubmitError('Something went wrong. Please try again or contact us directly.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const currentAsset = assets[currentAssetIndex]
@@ -435,12 +544,10 @@ export function PCQuoteForm() {
             <Shield className="h-10 w-10 text-gold" />
           </div>
           <h2 className="font-serif text-4xl font-normal text-foreground">
-            Quote Request <span className="italic text-gold">Received</span>
+            {renderAccentHeading(successHeading, successHeadingAccent)}
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Thank you for your inquiry. A member of our P&C practice team will review
-            your information and contact you within one business day to discuss your
-            coverage needs.
+            {successMessage}
           </p>
           <p className="mt-8 text-xs tracking-wide text-muted-foreground">
             Reference: #{Date.now().toString(36).toUpperCase()}
@@ -472,15 +579,14 @@ export function PCQuoteForm() {
         <div className="mb-12 text-center">
           <span className="mb-4 inline-flex items-center gap-3 text-xs font-medium tracking-[0.35em] uppercase text-gold">
             <span className="h-[1px] w-8 bg-gold" />
-            Risk Assessment
+            {eyebrow}
             <span className="h-[1px] w-8 bg-gold" />
           </span>
           <h2 className="font-serif text-4xl font-normal leading-tight tracking-tight text-foreground sm:text-5xl">
-            Request a <span className="italic text-gold">Quote</span>
+            {renderAccentHeading(heading, headingAccent)}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-            Complete this form to receive a personalized coverage assessment from our
-            senior brokers.
+            {subheading}
           </p>
         </div>
 
@@ -493,10 +599,10 @@ export function PCQuoteForm() {
           {currentStep === 1 && (
             <div>
               <h3 className="mb-2 font-serif text-2xl font-normal text-foreground">
-                What would you like to protect?
+                {step1Heading}
               </h3>
               <p className="mb-8 text-sm text-muted-foreground">
-                Select all coverage types that apply. You can add multiple assets of each type.
+                {step1Subheading}
               </p>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -558,6 +664,9 @@ export function PCQuoteForm() {
                   )
                 })}
               </div>
+              {errors.coverages && (
+                <p className="mt-4 text-xs text-destructive">{errors.coverages}</p>
+              )}
             </div>
           )}
 
@@ -566,7 +675,7 @@ export function PCQuoteForm() {
             <div>
               <div className="mb-8 flex flex-wrap items-center gap-4">
                 <h3 className="font-serif text-2xl font-normal text-foreground">
-                  Asset Details
+                  {step2Heading}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {assets.map((asset, index) => {
@@ -637,64 +746,64 @@ export function PCQuoteForm() {
           {/* Step 3: Personal Information */}
           {currentStep === 3 && (
             <div>
+              <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', opacity: 0 }}>
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
               <h3 className="mb-2 font-serif text-2xl font-normal text-foreground">
-                Your Information
+                {step3Heading}
               </h3>
               <p className="mb-8 text-sm text-muted-foreground">
-                All information is treated with the strictest confidence.
+                {step3Subheading}
               </p>
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <FormField label="First Name" required>
+                <FormField label="First Name" required error={errors.firstName}>
                   <StyledInput
                     type="text"
                     placeholder="John"
                     value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, firstName: e.target.value })
-                    }
+                    onChange={(e) => updateFormField("firstName", e.target.value)}
                   />
                 </FormField>
 
-                <FormField label="Last Name" required>
+                <FormField label="Last Name" required error={errors.lastName}>
                   <StyledInput
                     type="text"
                     placeholder="Smith"
                     value={formData.lastName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, lastName: e.target.value })
-                    }
+                    onChange={(e) => updateFormField("lastName", e.target.value)}
                   />
                 </FormField>
 
-                <FormField label="Email Address" required>
+                <FormField label="Email Address" required error={errors.email}>
                   <StyledInput
                     type="email"
                     placeholder="john@example.com"
                     value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
+                    onChange={(e) => updateFormField("email", e.target.value)}
                   />
                 </FormField>
 
-                <FormField label="Phone Number" required>
+                <FormField label="Phone Number" required error={errors.phone}>
                   <StyledInput
                     type="tel"
                     placeholder="+1 (416) 555-1234"
                     value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
+                    onChange={(e) => updateFormField("phone", e.target.value)}
                   />
                 </FormField>
 
-                <FormField label="Province" required>
+                <FormField label="Province" required error={errors.province}>
                   <StyledSelect
                     value={formData.province}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, province: v })
-                    }
+                    onValueChange={(v) => updateFormField("province", v)}
                     placeholder="Select province..."
                     options={provinces}
                   />
@@ -703,9 +812,7 @@ export function PCQuoteForm() {
                 <FormField label="Preferred Contact Method">
                   <StyledSelect
                     value={formData.preferredContact}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, preferredContact: v })
-                    }
+                    onValueChange={(v) => updateFormField("preferredContact", v)}
                     placeholder="Select preference..."
                     options={preferredContactMethods}
                   />
@@ -717,9 +824,7 @@ export function PCQuoteForm() {
                 >
                   <StyledSelect
                     value={formData.timeframe}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, timeframe: v })
-                    }
+                    onValueChange={(v) => updateFormField("timeframe", v)}
                     placeholder="Select timeframe..."
                     options={timeframes}
                   />
@@ -733,9 +838,7 @@ export function PCQuoteForm() {
                     className="min-h-[100px] w-full border border-border bg-card p-4 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-300 hover:border-gold/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
                     placeholder="Any additional information you'd like us to know..."
                     value={formData.additionalNotes}
-                    onChange={(e) =>
-                      setFormData({ ...formData, additionalNotes: e.target.value })
-                    }
+                    onChange={(e) => updateFormField("additionalNotes", e.target.value)}
                   />
                 </FormField>
               </div>
@@ -746,10 +849,10 @@ export function PCQuoteForm() {
           {currentStep === 4 && (
             <div>
               <h3 className="mb-2 font-serif text-2xl font-normal text-foreground">
-                Review Your Request
+                {step4Heading}
               </h3>
               <p className="mb-8 text-sm text-muted-foreground">
-                Please review your information before submitting.
+                {step4Subheading}
               </p>
 
               {/* Coverage Summary */}
@@ -845,6 +948,11 @@ export function PCQuoteForm() {
               Back
             </button>
 
+            {submitError && (
+              <div className="absolute -top-6 right-0 text-xs text-destructive">
+                {submitError}
+              </div>
+            )}
             {currentStep < 4 ? (
               <button
                 type="button"
@@ -867,7 +975,7 @@ export function PCQuoteForm() {
                 disabled={isSubmitting}
                 className="flex items-center gap-2 border border-gold bg-gold px-8 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all duration-300 hover:bg-transparent hover:text-gold disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting ? "Submitting..." : "Submit Request"}
+                {isSubmitting ? "Submitting..." : submitButtonLabel}
                 <ArrowRight className="h-4 w-4" />
               </button>
             )}
@@ -876,11 +984,114 @@ export function PCQuoteForm() {
 
         {/* Trust indicators */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-8 text-center">
-          <p className="text-xs text-muted-foreground">
-            <span className="text-gold">RIBO Licensed</span> | Your information is secure and confidential
-          </p>
+          {(() => {
+            const [gold, ...rest] = trustLine.split('|')
+            const remainingText = rest.join('|')
+            return (
+              <p className="text-xs text-muted-foreground">
+                <span className="text-gold">{gold?.trim()}</span>
+                {remainingText ? ` | ${remainingText.trim()}` : ''}
+              </p>
+            )
+          })()}
         </div>
       </div>
     </section>
   )
 }
+
+const FALLBACK_COVERAGE_TYPES = [
+  { value: "homeowners", label: "High-Value Homeowners", icon: 'Home' },
+  { value: "auto", label: "Luxury Auto & Collection", icon: 'Car' },
+  { value: "commercial", label: "Commercial Property", icon: 'Building2' },
+  { value: "watercraft", label: "Watercraft & Aviation", icon: 'Ship' },
+  { value: "valuables", label: "Jewellery & Valuables", icon: 'Gem' },
+  { value: "umbrella", label: "Excess Liability / Umbrella", icon: 'Shield' },
+]
+
+const FALLBACK_PROPERTY_VALUE_RANGES = [
+  { value: "2m-5m", label: "$2M - $5M" },
+  { value: "5m-10m", label: "$5M - $10M" },
+  { value: "10m-25m", label: "$10M - $25M" },
+  { value: "25m-50m", label: "$25M - $50M" },
+  { value: "50m+", label: "$50M+" },
+]
+
+const FALLBACK_PROPERTY_TYPES = [
+  { value: "primary", label: "Primary Residence" },
+  { value: "secondary", label: "Secondary / Vacation Home" },
+  { value: "investment", label: "Investment Property" },
+  { value: "commercial", label: "Commercial Building" },
+  { value: "mixed", label: "Mixed-Use Property" },
+]
+
+const FALLBACK_CONSTRUCTION_TYPES = [
+  { value: "standard", label: "Standard Construction" },
+  { value: "custom", label: "Custom / Architectural" },
+  { value: "heritage", label: "Heritage / Historical" },
+  { value: "modern", label: "Modern / Contemporary" },
+]
+
+const FALLBACK_SECURITY_SYSTEMS = [
+  { value: "none", label: "None" },
+  { value: "basic", label: "Basic Alarm System" },
+  { value: "monitored", label: "24/7 Monitored System" },
+  { value: "comprehensive", label: "Comprehensive (Cameras, Motion, etc.)" },
+  { value: "staffed", label: "On-site Security Personnel" },
+]
+
+const FALLBACK_VEHICLE_TYPES = [
+  { value: "luxury", label: "Luxury Sedan / SUV" },
+  { value: "exotic", label: "Exotic / Supercar" },
+  { value: "classic", label: "Classic / Vintage" },
+  { value: "collector", label: "Collector Vehicle" },
+  { value: "fleet", label: "Multiple Vehicles / Fleet" },
+]
+
+const FALLBACK_VEHICLE_VALUES = [
+  { value: "100k-250k", label: "$100K - $250K" },
+  { value: "250k-500k", label: "$250K - $500K" },
+  { value: "500k-1m", label: "$500K - $1M" },
+  { value: "1m-2m", label: "$1M - $2M" },
+  { value: "2m+", label: "$2M+" },
+]
+
+const FALLBACK_USAGE_TYPES = [
+  { value: "personal", label: "Personal Use Only" },
+  { value: "occasional", label: "Occasional / Weekend" },
+  { value: "show", label: "Show / Display Only" },
+  { value: "track", label: "Track Days Included" },
+]
+
+const FALLBACK_STORAGE_TYPES = [
+  { value: "private-garage", label: "Private Garage" },
+  { value: "climate-controlled", label: "Climate-Controlled Storage" },
+  { value: "secure-facility", label: "Secure Storage Facility" },
+  { value: "outdoor", label: "Outdoor / Driveway" },
+]
+
+const FALLBACK_PROVINCES = [
+  { value: "ON", label: "Ontario" },
+  { value: "BC", label: "British Columbia" },
+  { value: "AB", label: "Alberta" },
+  { value: "QC", label: "Quebec" },
+  { value: "MB", label: "Manitoba" },
+  { value: "SK", label: "Saskatchewan" },
+  { value: "NS", label: "Nova Scotia" },
+  { value: "NB", label: "New Brunswick" },
+  { value: "NL", label: "Newfoundland and Labrador" },
+  { value: "PE", label: "Prince Edward Island" },
+]
+
+const FALLBACK_CONTACT_METHODS = [
+  { value: "phone", label: "Phone Call" },
+  { value: "email", label: "Email" },
+  { value: "both", label: "Either" },
+]
+
+const FALLBACK_TIMEFRAMES = [
+  { value: "immediate", label: "Immediate - Within 1 week" },
+  { value: "1-3months", label: "1-3 Months" },
+  { value: "3-6months", label: "3-6 Months" },
+  { value: "exploring", label: "Just Exploring Options" },
+]

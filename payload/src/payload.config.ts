@@ -11,9 +11,12 @@ import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { QuoteFormOptions } from '@/globals/QuoteFormOptions/config'
+import { QuoteRequests } from '@/collections/QuoteRequests'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { resendAdapter } from '@payloadcms/email-resend'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -58,15 +61,20 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
+  email: resendAdapter({
+    defaultFromAddress: 'no-reply@yourdomain.com',
+    defaultFromName: process.env.BROKERAGE_NAME || 'Your Brokerage Name',
+    apiKey: process.env.RESEND_API_KEY || 're_123',
+  }),
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
     push: process.env.NODE_ENV !== 'production',
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, Media, Categories, Users, QuoteRequests],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: [Header, Footer, QuoteFormOptions],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,
