@@ -41,10 +41,11 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# 1. Copy package files first (for better layer caching)
-COPY package.json package-lock.json ./
+# 1. Copy package files from builder (not host) so lock file matches what was actually installed
+COPY --from=builder /home/node/app/package.json ./
+COPY --from=builder /home/node/app/package-lock.json ./
 
-# 2. Install production dependencies (this creates node_modules with the payload CLI)
+# 2. Install production dependencies
 RUN npm ci --omit=dev --legacy-peer-deps
 
 # 3. Copy standalone output and static assets
