@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { cn } from "@/utilities/ui"
+import { Button } from "@/components/ui/button"
 import {
   Home,
   Car,
@@ -526,7 +527,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
 
         <FormField label="Description" className="md:col-span-2">
           <textarea
-            className="min-h-[100px] w-full border border-border bg-card p-4 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-300 hover:border-gold/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+            className="min-h-[100px] w-full rounded-xl border border-border bg-card p-4 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-300 hover:border-gold/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
             placeholder="Please describe the asset(s) you wish to insure..."
             value={asset.details.description || ""}
             onChange={(e) => updateAssetDetail(asset.id, "description", e.target.value)}
@@ -540,7 +541,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
     return (
       <section id="quote" className="relative bg-secondary py-28 lg:py-36">
         <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
-          <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center border border-gold bg-gold/10">
+          <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full border border-gold bg-gold/10">
             <Shield className="h-10 w-10 text-gold" />
           </div>
           <h2 className="font-serif text-4xl font-normal text-foreground">
@@ -558,7 +559,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
   }
 
   return (
-    <section id="quote" className="relative bg-secondary py-28 lg:py-36">
+    <section id="quote" className="relative py-28 lg:py-36">
       {/* Subtle diagonal pattern */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.015]"
@@ -594,7 +595,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
         <StepIndicator steps={steps} currentStep={currentStep} className="mb-12" />
 
         {/* Form Container */}
-        <div className="border border-border bg-card p-8 lg:p-12">
+        <div className="rounded-2xl shadow-lg border border-border bg-card p-8 lg:p-12">
           {/* Step 1: Coverage Selection */}
           {currentStep === 1 && (
             <div>
@@ -616,7 +617,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
                       type="button"
                       onClick={() => toggleCoverage(coverage.value)}
                       className={cn(
-                        "group relative flex flex-col items-start gap-4 border p-6 text-left transition-all duration-300",
+                        "group relative flex flex-col items-start gap-4 rounded-2xl border p-6 text-left transition-all duration-300",
                         isSelected
                           ? "border-gold bg-gold/5"
                           : "border-border bg-background hover:border-gold/40"
@@ -624,7 +625,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
                     >
                       {/* Checkmark indicator */}
                       {isSelected && (
-                        <div className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center bg-gold">
+                        <div className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-gold">
                           <svg
                             className="h-4 w-4 text-primary-foreground"
                             fill="none"
@@ -643,7 +644,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
 
                       <div
                         className={cn(
-                          "flex h-12 w-12 items-center justify-center border transition-all duration-300",
+                          "flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-300",
                           isSelected
                             ? "border-gold bg-gold/10 text-gold"
                             : "border-border text-muted-foreground group-hover:border-gold/40 group-hover:text-gold"
@@ -686,7 +687,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
                         type="button"
                         onClick={() => setCurrentAssetIndex(index)}
                         className={cn(
-                          "flex items-center gap-2 border px-3 py-1.5 text-xs transition-all duration-300",
+                          "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition-all duration-300",
                           currentAssetIndex === index
                             ? "border-gold bg-gold/10 text-gold"
                             : "border-border text-muted-foreground hover:border-gold/40"
@@ -720,7 +721,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
                       key={type}
                       type="button"
                       onClick={() => addAsset(type)}
-                      className="flex items-center gap-1 text-xs text-gold hover:text-gold-light"
+                      className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-gold hover:bg-gold/5 transition-colors"
                     >
                       <Plus className="h-3 w-3" />
                       {coverageType?.label}
@@ -835,7 +836,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
                   className="md:col-span-2"
                 >
                   <textarea
-                    className="min-h-[100px] w-full border border-border bg-card p-4 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-300 hover:border-gold/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+                    className="min-h-[100px] w-full rounded-xl border border-border bg-card p-4 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-300 hover:border-gold/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
                     placeholder="Any additional information you'd like us to know..."
                     value={formData.additionalNotes}
                     onChange={(e) => updateFormField("additionalNotes", e.target.value)}
@@ -856,7 +857,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
               </p>
 
               {/* Coverage Summary */}
-              <div className="mb-8 border border-border bg-background p-6">
+              <div className="mb-8 rounded-2xl border border-border bg-background p-6">
                 <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gold">
                   Coverage Types
                 </h4>
@@ -866,7 +867,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
                     return (
                       <span
                         key={type}
-                        className="border border-gold/30 bg-gold/5 px-3 py-1 text-xs text-gold"
+                        className="rounded-full border border-gold/30 bg-gold/5 px-3 py-1 text-xs text-gold"
                       >
                         {coverage?.label}
                       </span>
@@ -876,7 +877,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
               </div>
 
               {/* Assets Summary */}
-              <div className="mb-8 border border-border bg-background p-6">
+              <div className="mb-8 rounded-2xl border border-border bg-background p-6">
                 <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gold">
                   Assets ({assets.length})
                 </h4>
@@ -901,7 +902,7 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
               </div>
 
               {/* Contact Summary */}
-              <div className="border border-border bg-background p-6">
+              <div className="rounded-2xl border border-border bg-background p-6">
                 <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gold">
                   Contact Information
                 </h4>
@@ -933,20 +934,16 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
 
           {/* Navigation Buttons */}
           <div className="mt-12 flex items-center justify-between border-t border-border pt-8">
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={handleBack}
               disabled={currentStep === 1}
-              className={cn(
-                "flex items-center gap-2 border px-6 py-3 text-xs font-medium uppercase tracking-wider transition-all duration-300",
-                currentStep === 1
-                  ? "cursor-not-allowed border-border text-muted-foreground opacity-50"
-                  : "border-border text-foreground hover:border-gold/40 hover:text-gold"
-              )}
+              className={cn("flex items-center gap-2", currentStep === 1 ? "cursor-not-allowed opacity-50" : "")}
             >
               <ArrowLeft className="h-4 w-4" />
               Back
-            </button>
+            </Button>
 
             {submitError && (
               <div className="absolute -top-6 right-0 text-xs text-destructive">
@@ -954,30 +951,27 @@ export function PCQuoteForm({ config = {}, options = {} }: PCQuoteFormProps) {
               </div>
             )}
             {currentStep < 4 ? (
-              <button
+              <Button
                 type="button"
+                variant="default"
                 onClick={handleNext}
                 disabled={currentStep === 1 && selectedCoverages.length === 0}
-                className={cn(
-                  "flex items-center gap-2 border px-8 py-3 text-xs font-semibold uppercase tracking-wider transition-all duration-300",
-                  currentStep === 1 && selectedCoverages.length === 0
-                    ? "cursor-not-allowed border-border bg-border text-muted-foreground"
-                    : "border-gold bg-gold text-primary-foreground hover:bg-transparent hover:text-gold"
-                )}
+                className="flex items-center gap-2"
               >
                 Continue
                 <ArrowRight className="h-4 w-4" />
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 type="button"
+                variant="default"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 border border-gold bg-gold px-8 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-all duration-300 hover:bg-transparent hover:text-gold disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2"
               >
                 {isSubmitting ? "Submitting..." : submitButtonLabel}
                 <ArrowRight className="h-4 w-4" />
-              </button>
+              </Button>
             )}
           </div>
         </div>

@@ -218,6 +218,7 @@ export interface Page {
     | SplitSectionBlock
     | FeatureCardsBlock
     | QuoteFormBlock
+    | NewsGridBlock
   )[];
   meta?: {
     title?: string | null;
@@ -957,6 +958,29 @@ export interface QuoteFormBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsGridBlock".
+ */
+export interface NewsGridBlock {
+  eyebrow?: string | null;
+  heading: string;
+  /**
+   * Text within the heading to highlight in italics/brand color.
+   */
+  headingAccent?: string | null;
+  /**
+   * Label for the view all link.
+   */
+  viewAllLabel?: string | null;
+  /**
+   * URL for the view all link.
+   */
+  viewAllLink?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "quote-requests".
  */
 export interface QuoteRequest {
@@ -1331,6 +1355,7 @@ export interface PagesSelect<T extends boolean = true> {
         splitSection?: T | SplitSectionBlockSelect<T>;
         featureCards?: T | FeatureCardsBlockSelect<T>;
         quoteForm?: T | QuoteFormBlockSelect<T>;
+        newsGrid?: T | NewsGridBlockSelect<T>;
       };
   meta?:
     | T
@@ -1511,6 +1536,19 @@ export interface QuoteFormBlockSelect<T extends boolean = true> {
   successHeadingAccent?: T;
   successMessage?: T;
   trustLine?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsGridBlock_select".
+ */
+export interface NewsGridBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  headingAccent?: T;
+  viewAllLabel?: T;
+  viewAllLink?: T;
   id?: T;
   blockName?: T;
 }

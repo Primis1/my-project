@@ -34,7 +34,7 @@ export const ImpactHero: React.FC<Page['hero'] & { media2?: any }> = ({
                   <CMSLink
                     key={i}
                     {...link}
-                    className="rounded-md bg-primary px-8 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all duration-200 h-auto"
+                    appearance={i === 0 ? "default" : "outline"}
                   />
                 ))}
               </div>

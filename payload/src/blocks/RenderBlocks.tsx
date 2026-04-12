@@ -10,6 +10,7 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { SplitSectionBlock } from '@/blocks/SplitSection/Component'
 import { FeatureCardsBlock } from '@/blocks/FeatureCards/Component'
 import { QuoteFormBlock } from '@/blocks/QuoteForm/Component'
+import { NewsGridBlock } from '@/blocks/NewsGrid/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -20,6 +21,7 @@ const blockComponents = {
   splitSection: SplitSectionBlock,
   featureCards: FeatureCardsBlock,
   quoteForm: QuoteFormBlock,
+  newsGrid: NewsGridBlock,
 }
 
 export const RenderBlocks: React.FC<{

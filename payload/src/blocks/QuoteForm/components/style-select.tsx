@@ -36,7 +36,7 @@ export function StyledSelect({
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectTrigger
         className={cn(
-          "h-12 w-full border-border bg-card px-4 text-sm text-foreground transition-all duration-300",
+          "h-12 w-full rounded-xl border-border bg-card px-4 text-sm text-foreground transition-all duration-300",
           "hover:border-gold/40 focus:border-gold focus:ring-gold/20",
           "data-[placeholder]:text-muted-foreground",
           className

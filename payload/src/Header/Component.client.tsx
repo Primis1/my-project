@@ -68,7 +68,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
         {data.cta?.link && (
           <CMSLink
             {...data.cta.link}
-            className="hidden border border-gold/40 px-6 py-2.5 text-xs font-medium tracking-widest uppercase text-gold transition-all duration-300 hover:bg-gold hover:text-primary-foreground md:inline-block"
+            appearance="outline"
+            className="hidden md:inline-block"
           />
         )}
 
@@ -90,8 +91,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             {data.cta?.link && (
               <CMSLink
                 {...data.cta.link}
+                appearance="outline"
                 onClick={() => setMobileOpen(false)}
-                className="mt-8 border border-gold/40 px-6 py-3 text-xs font-medium tracking-widest uppercase text-gold transition-all hover:bg-gold hover:text-primary-foreground w-full max-w-[200px]"
+                className="mt-8 w-full max-w-[200px]"
               />
             )}
           </div>

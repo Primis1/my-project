@@ -67,11 +67,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
               <CMSLink
                 key={i}
                 {...link}
-                className={
-                  i === 0
-                    ? 'inline-block border border-gold bg-gold px-8 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-primary-foreground transition-all duration-300 hover:bg-transparent hover:text-gold'
-                    : 'inline-block border border-border px-8 py-3.5 text-xs font-medium tracking-[0.2em] uppercase text-foreground transition-all duration-300 hover:border-gold/40 hover:text-gold'
-                }
+                appearance={i === 0 ? "default" : "outline"}
               />
             ))}
           </div>

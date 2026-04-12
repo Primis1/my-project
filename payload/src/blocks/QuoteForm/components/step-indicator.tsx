@@ -37,7 +37,7 @@ export function StepIndicator({ steps, currentStep, className }: StepIndicatorPr
               {/* Step number/icon */}
               <div
                 className={cn(
-                  "flex h-8 w-8 shrink-0 items-center justify-center text-xs font-semibold transition-all duration-300",
+                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-all duration-300",
                   isActive && "border border-gold bg-gold text-primary-foreground",
                   isCompleted && "border border-gold bg-gold/20 text-gold",
                   !isActive && !isCompleted && "border border-border bg-card text-muted-foreground"

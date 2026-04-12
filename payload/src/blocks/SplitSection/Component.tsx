@@ -158,7 +158,8 @@ export const SplitSectionBlock: React.FC<SplitSectionBlockProps> = ({
               <div className="mt-2">
                 <CMSLink
                   {...cta}
-                  className="inline-flex items-center gap-3 border border-gold/40 bg-transparent px-7 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-gold transition-all duration-300 hover:bg-gold hover:text-primary-foreground"
+                  appearance="outline"
+                  className="inline-flex items-center gap-3"
                 >
                   <ArrowRight className="h-3.5 w-3.5" />
                 </CMSLink>

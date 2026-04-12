@@ -65,7 +65,7 @@ export const FeatureCardsBlock: React.FC<FeatureCardsBlockProps> = ({
             return (
               <div
                 key={i}
-                className="flex flex-col items-center text-center gap-6 p-8 rounded-xl border border-border bg-card hover:border-gold/30 hover:shadow-xl transition-all duration-300 group"
+                className="flex flex-col items-center text-center gap-6 p-8 rounded-xl border border-border hover:border-gold/30 hover:shadow-xl transition-all duration-300 group"
               >
                 {/* Icon Container - Circular */}
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted/30 transition-colors duration-500 group-hover:bg-gold/10">
