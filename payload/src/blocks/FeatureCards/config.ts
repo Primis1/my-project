@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { link } from '../../fields/link'
 
 export const FeatureCards: Block = {
   slug: 'featureCards',
@@ -62,6 +63,29 @@ export const FeatureCards: Block = {
           label: 'Description',
           required: true,
         },
+        {
+          name: 'bulletins',
+          type: 'array',
+          label: 'Bullet Points',
+          fields: [
+            {
+              name: 'item',
+              type: 'text',
+              required: true,
+            },
+          ],
+        },
+        {
+          name: 'enableLink',
+          type: 'checkbox',
+        },
+        link({
+          overrides: {
+            admin: {
+              condition: (_, { enableLink }) => Boolean(enableLink),
+            },
+          },
+        }),
       ],
     },
   ],

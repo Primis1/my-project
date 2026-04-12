@@ -12,5 +12,5 @@ export const QuoteFormBlock: React.FC<Props> = async ({ block }) => {
   const payload = await getPayload({ config })
   const options = await payload.findGlobal({ slug: 'quoteFormOptions' })
 
-  return <PCQuoteForm config={block} options={options} />
+  return <PCQuoteForm config={block} options={options as any} />
 }

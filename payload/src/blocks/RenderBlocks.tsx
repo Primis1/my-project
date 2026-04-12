@@ -11,6 +11,7 @@ import { SplitSectionBlock } from '@/blocks/SplitSection/Component'
 import { FeatureCardsBlock } from '@/blocks/FeatureCards/Component'
 import { QuoteFormBlock } from '@/blocks/QuoteForm/Component'
 import { NewsGridBlock } from '@/blocks/NewsGrid/Component'
+import { FaqBlock } from '@/blocks/FaqBlock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -22,6 +23,7 @@ const blockComponents = {
   featureCards: FeatureCardsBlock,
   quoteForm: QuoteFormBlock,
   newsGrid: NewsGridBlock,
+  faq: FaqBlock,
 }
 
 export const RenderBlocks: React.FC<{

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/utilities/ui'
 import type { FeatureCardsBlock as FeatureCardsBlockProps } from '@/payload-types'
+import { CMSLink } from '@/components/Link'
 
 // ─── Icon map ─────────────────────────────────────────────────────
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
@@ -75,13 +76,32 @@ export const FeatureCardsBlock: React.FC<FeatureCardsBlockProps> = ({
                 </div>
                 
                 {/* Content */}
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-4">
                   <h3 className="font-serif text-xl font-normal text-foreground leading-snug">
                     {card.title}
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {card.description}
                   </p>
+
+                  {/* Bullet Points */}
+                  {card.bulletins && card.bulletins.length > 0 && (
+                    <div className="flex flex-col gap-2.5 mt-2 text-left">
+                      {card.bulletins.map((bullet, bIdx) => (
+                        <div key={bIdx} className="flex items-start gap-2 text-left">
+                          <CheckCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" strokeWidth={2} />
+                          <span className="text-sm text-foreground/90">{bullet.item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Optional CTA */}
+                  {card.enableLink && card.link && (
+                    <div className="mt-4 flex justify-center">
+                      <CMSLink {...card.link} appearance="outline" />
+                    </div>
+                  )}
                 </div>
               </div>
             )

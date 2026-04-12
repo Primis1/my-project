@@ -219,6 +219,7 @@ export interface Page {
     | FeatureCardsBlock
     | QuoteFormBlock
     | NewsGridBlock
+    | FaqBlockType
   )[];
   meta?: {
     title?: string | null;
@@ -461,6 +462,10 @@ export interface User {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
+  /**
+   * Choose the visual layout for this Call to Action.
+   */
+  layout: 'centered' | 'detailed';
   richText?: {
     root: {
       type: string;
@@ -500,6 +505,34 @@ export interface CallToActionBlock {
         id?: string | null;
       }[]
     | null;
+  detailedContent?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    titleAccent?: string | null;
+    description?: string | null;
+    partnerCategories?:
+      | {
+          icon?: ('Building2' | 'Handshake' | 'Shield') | null;
+          title?: string | null;
+          description?: string | null;
+          partners?:
+            | {
+                name?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+    benefitsTitle?: string | null;
+    benefitsDescription?: string | null;
+    benefits?:
+      | {
+          benefit?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'cta';
@@ -915,6 +948,32 @@ export interface FeatureCardsBlock {
           | null;
         title: string;
         description: string;
+        bulletins?:
+          | {
+              item: string;
+              id?: string | null;
+            }[]
+          | null;
+        enableLink?: boolean | null;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
         id?: string | null;
       }[]
     | null;
@@ -978,6 +1037,48 @@ export interface NewsGridBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'newsGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlockType".
+ */
+export interface FaqBlockType {
+  eyebrow?: string | null;
+  title: string;
+  titleAccent?: string | null;
+  description?: string | null;
+  faqs: {
+    question: string;
+    answer: string;
+    id?: string | null;
+  }[];
+  cta?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1356,6 +1457,7 @@ export interface PagesSelect<T extends boolean = true> {
         featureCards?: T | FeatureCardsBlockSelect<T>;
         quoteForm?: T | QuoteFormBlockSelect<T>;
         newsGrid?: T | NewsGridBlockSelect<T>;
+        faq?: T | FaqBlockTypeSelect<T>;
       };
   meta?:
     | T
@@ -1376,6 +1478,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
+  layout?: T;
   richText?: T;
   links?:
     | T
@@ -1391,6 +1494,36 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
               appearance?: T;
             };
         id?: T;
+      };
+  detailedContent?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        titleAccent?: T;
+        description?: T;
+        partnerCategories?:
+          | T
+          | {
+              icon?: T;
+              title?: T;
+              description?: T;
+              partners?:
+                | T
+                | {
+                    name?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        benefitsTitle?: T;
+        benefitsDescription?: T;
+        benefits?:
+          | T
+          | {
+              benefit?: T;
+              id?: T;
+            };
       };
   id?: T;
   blockName?: T;
@@ -1510,6 +1643,23 @@ export interface FeatureCardsBlockSelect<T extends boolean = true> {
         icon?: T;
         title?: T;
         description?: T;
+        bulletins?:
+          | T
+          | {
+              item?: T;
+              id?: T;
+            };
+        enableLink?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
         id?: T;
       };
   id?: T;
@@ -1549,6 +1699,40 @@ export interface NewsGridBlockSelect<T extends boolean = true> {
   headingAccent?: T;
   viewAllLabel?: T;
   viewAllLink?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqBlockType_select".
+ */
+export interface FaqBlockTypeSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  titleAccent?: T;
+  description?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  cta?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

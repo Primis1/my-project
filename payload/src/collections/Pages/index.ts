@@ -11,6 +11,7 @@ import { SplitSection } from '../../blocks/SplitSection/config'
 import { FeatureCards } from '../../blocks/FeatureCards/config'
 import { QuoteFormBlock } from '../../blocks/QuoteForm/config'
 import { NewsGrid } from '../../blocks/NewsGrid/config'
+import { FaqBlock } from '../../blocks/FaqBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -86,6 +87,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 FeatureCards,
                 QuoteFormBlock,
                 NewsGrid,
+                FaqBlock,
               ],
               required: true,
               admin: {
