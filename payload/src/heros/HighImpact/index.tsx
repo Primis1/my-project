@@ -23,7 +23,8 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
   const { setHeaderTheme } = useHeaderTheme()
 
   useEffect(() => {
-    setHeaderTheme('dark')
+    // We let the global theme control the header unless we explicitly want a dark hero
+    // setHeaderTheme('dark')
   }, [setHeaderTheme])
 
   return (
@@ -33,12 +34,12 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
         {media && typeof media === 'object' && (
           <Media fill imgClassName="h-full w-full object-cover" priority resource={media} />
         )}
-        <div className="absolute inset-0 bg-[#121212]/75" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/40 via-transparent to-[#121212]" />
+        <div className="absolute inset-0 bg-background/45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/25 via-transparent to-background/70" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-white">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-foreground">
         {/* Eyebrow */}
         {eyebrow && (
           <div className="mb-8 flex items-center justify-center gap-4">
@@ -53,7 +54,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
         {/* Headline & Subtext via RichText */}
         {richText && (
           <RichText
-            className="font-serif [&_h1]:text-5xl [&_h1]:font-normal [&_h1]:leading-[1.1] [&_h1]:tracking-tight [&_h1]:sm:text-6xl [&_h1]:md:text-7xl [&_h1]:lg:text-8xl [&_p]:mx-auto [&_p]:mt-8 [&_p]:max-w-2xl [&_p]:text-base [&_p]:leading-relaxed [&_p]:text-white [&_p]:sm:text-lg"
+            className="font-serif [&_h1]:text-5xl [&_h1]:font-normal [&_h1]:leading-[1.1] [&_h1]:tracking-tight [&_h1]:sm:text-6xl [&_h1]:md:text-7xl [&_h1]:lg:text-8xl [&_p]:mx-auto [&_p]:mt-8 [&_p]:max-w-2xl [&_p]:text-base [&_p]:leading-relaxed [&_p]:text-foreground [&_p]:sm:text-lg"
             data={richText}
             enableGutter={false}
           />
@@ -69,7 +70,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
                 className={
                   i === 0
                     ? 'inline-block border border-gold bg-gold px-8 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-primary-foreground transition-all duration-300 hover:bg-transparent hover:text-gold'
-                    : 'inline-block border border-[#2e2e2e] px-8 py-3.5 text-xs font-medium tracking-[0.2em] uppercase text-foreground transition-all duration-300 hover:border-gold/40 hover:text-gold'
+                    : 'inline-block border border-border px-8 py-3.5 text-xs font-medium tracking-[0.2em] uppercase text-foreground transition-all duration-300 hover:border-gold/40 hover:text-gold'
                 }
               />
             ))}

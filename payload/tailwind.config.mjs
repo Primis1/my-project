@@ -71,7 +71,7 @@ const config = {
           foreground: 'hsl(var(--destructive-foreground))',
         },
         foreground: 'hsl(var(--foreground))',
-        gold: '#C5A059',
+        gold: '#0051ff',
         input: 'hsl(var(--input))',
         muted: {
           DEFAULT: 'hsl(var(--muted))',

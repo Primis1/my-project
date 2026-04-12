@@ -2,7 +2,7 @@ import type { Theme } from './types'
 
 export const themeLocalStorageKey = 'payload-theme'
 
-export const defaultTheme = 'dark'
+export const defaultTheme = 'light'
 
 export const getImplicitPreference = (): Theme | null => {
   // const mediaQuery = '(prefers-color-scheme: dark)'
@@ -14,5 +14,5 @@ export const getImplicitPreference = (): Theme | null => {
   // }
 
   // return null
-  return 'dark'
+  return 'light'
 }

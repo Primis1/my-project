@@ -48,7 +48,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
         scrolled
-          ? 'bg-[#121212]/80 backdrop-blur-xl border-b border-[#2e2e2e]/50'
+          ? 'bg-background/50 backdrop-blur-xl border-border/50'
           : 'bg-transparent',
       )}
       {...(theme ? { 'data-theme': theme } : {})}
@@ -84,7 +84,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-[#2e2e2e]/50 bg-[#121212]/95 backdrop-blur-xl md:hidden">
+        <div className="border-t border-border/50 bg-background/45 backdrop-blur-xl md:hidden">
           <div className="flex flex-col gap-1 px-6 py-10 items-center text-center">
             <HeaderNav data={data} className="flex-col gap-6" />
             {data.cta?.link && (

@@ -14,16 +14,23 @@ export async function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="mt-auto border-t border-border bg-[#0e0e0e]">
+    <footer className="relative mt-auto border-t border-border bg-[#0e0e0e] overflow-hidden">
+      {/* Background Large Text */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.05] select-none z-0">
+        <span className="text-[20vw] font-bold tracking-tighter text-white uppercase whitespace-nowrap">
+          Integrated
+        </span>
+      </div>
+
       {/* Main footer */}
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 lg:px-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center">
               <Logo />
             </Link>
-            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Private Wealth &amp; Estate Strategy
               <br />
               Toronto, Ontario, Canada
@@ -32,7 +39,7 @@ export async function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="mb-4 text-xs font-medium tracking-[0.25em] uppercase text-foreground">
+            <h4 className="mb-4 text-sm font-medium tracking-[0.25em] uppercase text-foreground">
               Practice Areas
             </h4>
             <ul className="space-y-3">
@@ -47,7 +54,7 @@ export async function Footer() {
                 <li key={item}>
                   <a
                     href="#services"
-                    className="text-xs text-muted-foreground transition-colors hover:text-gold"
+                    className="text-sm text-muted-foreground transition-colors hover:text-gold"
                   >
                     {item}
                   </a>
@@ -58,7 +65,7 @@ export async function Footer() {
 
           {/* Firm */}
           <div>
-            <h4 className="mb-4 text-xs font-medium tracking-[0.25em] uppercase text-foreground">
+            <h4 className="mb-4 text-sm font-medium tracking-[0.25em] uppercase text-foreground">
               The Firm
             </h4>
             <ul className="space-y-3">
@@ -71,7 +78,7 @@ export async function Footer() {
                 <li key={item}>
                   <a
                     href="#about"
-                    className="text-xs text-muted-foreground transition-colors hover:text-gold"
+                    className="text-sm text-muted-foreground transition-colors hover:text-gold"
                   >
                     {item}
                   </a>
@@ -82,10 +89,10 @@ export async function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="mb-4 text-xs font-medium tracking-[0.25em] uppercase text-foreground">
+            <h4 className="mb-4 text-sm font-medium tracking-[0.25em] uppercase text-foreground">
               Private Inquiries
             </h4>
-            <div className="space-y-3 text-xs text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>olehb@kmibrokers.com</p>
               <p>+1 (437) 477 5760</p>
               <p>
@@ -103,7 +110,7 @@ export async function Footer() {
               {navItems.map(({ link }, i) => {
                 return (
                   <CMSLink
-                    className="text-xs text-muted-foreground transition-colors hover:text-gold"
+                    className="text-sm text-muted-foreground transition-colors hover:text-gold"
                     key={i}
                     {...link}
                   />
@@ -115,16 +122,16 @@ export async function Footer() {
       </div>
 
       {/* Compliance / Institutional Disclosures bar */}
-      <div className="border-t border-[#1a1a1a] bg-[#0a0a0a]">
+      <div className="relative z-10 border-t border-[#1a1a1a] bg-transparent backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
           <div className="mb-4 flex items-center gap-3">
             <div className="h-[1px] w-4 bg-gold/30" />
-            <span className="text-[10px] font-medium tracking-[0.3em] uppercase text-gold/60">
+            <span className="text-xs font-medium tracking-[0.3em] uppercase text-gold/60">
               Institutional Disclosures
             </span>
           </div>
 
-          <div className="space-y-3 text-[11px] leading-relaxed text-[#555]">
+          <div className="space-y-3 text-[13px] leading-relaxed text-[#555]">
             <p>
               Property & Casualty insurance products and services are provided through KMI Brokers
               Inc., licensed under the Registered Insurance Brokers of Ontario (RIBO). RIBO License
@@ -140,7 +147,7 @@ export async function Footer() {
           </div>
 
           <div className="mt-6 flex flex-col gap-4 border-t border-[#1a1a1a] pt-6 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[10px] tracking-wide text-[#444]">
+            <p className="text-xs tracking-wide text-[#444]">
               {`\u00A9 ${currentYear} Sterling & Associates. All rights reserved.`}
             </p>
             <div className="flex gap-6">
@@ -149,7 +156,7 @@ export async function Footer() {
                   <a
                     key={item.label}
                     href={item.href}
-                    className="text-[10px] tracking-wide text-[#444] transition-colors hover:text-gold/60"
+                    className="text-xs tracking-wide text-[#444] transition-colors hover:text-gold/60"
                   >
                     {item.label}
                   </a>

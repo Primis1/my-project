@@ -35,6 +35,10 @@ export const hero: Field = {
           label: 'Low Impact',
           value: 'lowImpact',
         },
+        {
+          label: 'Impact (Side-by-Side)',
+          value: 'impact',
+        },
       ],
       required: true,
     },
@@ -42,7 +46,7 @@ export const hero: Field = {
       name: 'eyebrow',
       type: 'text',
       admin: {
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact', 'impact'].includes(type),
       },
     },
     {
@@ -68,8 +72,19 @@ export const hero: Field = {
     {
       name: 'media',
       type: 'upload',
+      label: 'Main Image',
       admin: {
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact', 'impact'].includes(type),
+      },
+      relationTo: 'media',
+      required: true,
+    },
+    {
+      name: 'media2',
+      type: 'upload',
+      label: 'Secondary Image (Impact only)',
+      admin: {
+        condition: (_, { type } = {}) => ['impact'].includes(type),
       },
       relationTo: 'media',
       required: true,
@@ -78,7 +93,7 @@ export const hero: Field = {
       name: 'style',
       type: 'select',
       admin: {
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact', 'impact'].includes(type),
       },
       defaultValue: 'default',
       options: [
@@ -87,7 +102,7 @@ export const hero: Field = {
           value: 'default',
         },
         {
-          label: 'Brand Gold',
+          label: 'Brand Blue',
           value: 'gold',
         },
       ],

@@ -12,7 +12,7 @@ import {
   Briefcase,
   Heart,
 } from 'lucide-react'
-import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { cn } from '@/utilities/ui'
 import type { FeatureCardsBlock as FeatureCardsBlockProps } from '@/payload-types'
 
 // ─── Icon map ─────────────────────────────────────────────────────
@@ -40,44 +40,50 @@ export const FeatureCardsBlock: React.FC<FeatureCardsBlockProps> = ({
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-6">
-        {/* Header Section */}
-        <div className="mb-16 text-center lg:text-left">
+        {/* Header Section - Centered */}
+        <div className="mb-16 text-center">
           {eyebrow && (
-            <div className="flex items-center justify-center lg:justify-start gap-4 mb-6">
+            <div className="flex items-center justify-center gap-4 mb-6">
               <span className="h-[1px] w-8 bg-gold/50 flex-shrink-0" />
               <span className="text-xs font-medium tracking-[0.3em] uppercase text-gold">
                 {eyebrow}
               </span>
+              <span className="h-[1px] w-8 bg-gold/50 flex-shrink-0" />
             </div>
           )}
           {heading && (
-            <h2 className="font-serif text-4xl lg:text-5xl font-normal text-white leading-tight">
+            <h2 className="font-serif text-4xl lg:text-5xl font-normal text-foreground leading-tight">
               {heading}
             </h2>
           )}
         </div>
 
-        {/* Cards Grid - "Cubes within a rectangle" approach */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-[#1a1a1a] border border-[#2e2e2e]/50">
+        {/* Feature Cards Grid - Rounded & Centered */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {cards.map((card: NonNullable<FeatureCardsBlockProps['cards']>[number], i: number) => {
             const IconComponent = iconMap[card.icon ?? 'shield']
             return (
-              <Card
+              <div
                 key={i}
-                className="bg-transparent border-[#2e2e2e]/30 border-r border-b md:odd:border-r lg:[&:not(:nth-child(3n))]:border-r hover:bg-[#222222]"
+                className="flex flex-col items-center text-center gap-6 p-8 rounded-xl border border-border bg-card hover:border-gold/30 hover:shadow-xl transition-all duration-300 group"
               >
-                <CardHeader className="gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center border border-[#2e2e2e]/60 transition-colors duration-500 group-hover:border-gold/40 group-hover:bg-gold/5">
-                    {IconComponent && (
-                      <IconComponent className="h-5 w-5 text-white transition-colors duration-500 group-hover:text-gold" />
-                    )}
-                  </div>
-                  <CardTitle>{card.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{card.description}</CardDescription>
-                </CardContent>
-              </Card>
+                {/* Icon Container - Circular */}
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted/30 transition-colors duration-500 group-hover:bg-gold/10">
+                  {IconComponent && (
+                    <IconComponent className="h-6 w-6 text-gold transition-colors duration-500" />
+                  )}
+                </div>
+                
+                {/* Content */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-serif text-xl font-normal text-foreground leading-snug">
+                    {card.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {card.description}
+                  </p>
+                </div>
+              </div>
             )
           })}
         </div>

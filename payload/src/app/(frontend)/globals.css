@@ -24,24 +24,24 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 221 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 221 100% 50%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 221 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 240 6% 80%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 221 100% 50%;
 
     --radius: 0.2rem;
 
@@ -60,8 +60,8 @@
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 40 48% 56%;
-    --primary-foreground: 0 0% 7%;
+    --primary: 221 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 100%;
@@ -69,15 +69,15 @@
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 90%;
 
-    --accent: 40 48% 56%;
-    --accent-foreground: 0 0% 7%;
+    --accent: 221 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 15% / 0.8;
     --input: 0 0% 15%;
-    --ring: 40 48% 56%;
+    --ring: 221 100% 50%;
 
     --success: 196 100% 14%;
     --warning: 34 51% 25%;
@@ -106,5 +106,5 @@ html[data-theme='light'] {
 /* Brand styling: italic text inside CMS rich text renders in gold */
 .payload-richtext em,
 .payload-richtext i {
-  color: #c5a059;
+  color: #0051ff;
 }

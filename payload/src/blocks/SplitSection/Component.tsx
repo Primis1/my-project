@@ -34,13 +34,13 @@ const StatsPanel: React.FC<{ stats: SplitSectionBlockProps['rightStats'] }> = ({
   if (!stats || stats.length === 0) return null
 
   return (
-    <div className="flex flex-col divide-y divide-[#2e2e2e]/60">
+    <div className="flex flex-col divide-y divide-border/60">
       {stats.map((stat: NonNullable<SplitSectionBlockProps['rightStats']>[number], i: number) => {
         const IconComponent = iconMap[stat.icon ?? 'shield']
         return (
           <div key={i} className="flex items-start gap-5 py-7 first:pt-0 last:pb-0">
             {/* Icon box */}
-            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 border border-[#2e2e2e]/60 bg-[#1a1a1a]">
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 border border-border/60 bg-muted/20">
               {IconComponent && <IconComponent className="w-5 h-5 text-muted-foreground" />}
             </div>
             {/* Content */}
@@ -52,7 +52,7 @@ const StatsPanel: React.FC<{ stats: SplitSectionBlockProps['rightStats'] }> = ({
                 </span>
               </div>
               {stat.statDescription && (
-                <p className="text-sm text-white leading-relaxed">{stat.statDescription}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{stat.statDescription}</p>
               )}
             </div>
           </div>
@@ -67,7 +67,7 @@ const StepsPanel: React.FC<{ steps: SplitSectionBlockProps['rightSteps'] }> = ({
   if (!steps || steps.length === 0) return null
 
   return (
-    <div className="flex flex-col divide-y divide-[#2e2e2e]/60">
+    <div className="flex flex-col divide-y divide-border/60">
       {steps.map((step: NonNullable<SplitSectionBlockProps['rightSteps']>[number], i: number) => {
         const num = String(i + 1).padStart(2, '0')
         return (
@@ -87,7 +87,7 @@ const StepsPanel: React.FC<{ steps: SplitSectionBlockProps['rightSteps'] }> = ({
                 {step.title}
               </h4>
               {step.description && (
-                <p className="text-sm text-white leading-relaxed">{step.description}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{step.description}</p>
               )}
             </div>
           </div>
@@ -146,7 +146,7 @@ export const SplitSectionBlock: React.FC<SplitSectionBlockProps> = ({
             {/* Body */}
             {body && (
               <RichText
-                className="[&_p]:text-white [&_p]:leading-relaxed [&_p]:text-base [&_blockquote]:border-l-2 [&_blockquote]:border-gold/50 [&_blockquote]:pl-5 [&_blockquote]:text-white [&_blockquote]:italic [&_cite]:text-xs [&_cite]:text-gold [&_cite]:uppercase [&_cite]:tracking-widest [&_cite]:not-italic"
+                className="[&_p]:text-foreground/80 [&_p]:leading-relaxed [&_p]:text-base [&_blockquote]:border-l-2 [&_blockquote]:border-gold/50 [&_blockquote]:pl-5 [&_blockquote]:text-foreground [&_blockquote]:italic [&_cite]:text-xs [&_cite]:text-gold [&_cite]:uppercase [&_cite]:tracking-widest [&_cite]:not-italic"
                 data={body}
                 enableGutter={false}
                 enableProse={false}
@@ -158,7 +158,7 @@ export const SplitSectionBlock: React.FC<SplitSectionBlockProps> = ({
               <div className="mt-2">
                 <CMSLink
                   {...cta}
-                  className="inline-flex items-center gap-3 border border-gold/40 bg-transparent px-7 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-gold transition-all duration-300 hover:bg-gold hover:text-[#121212]"
+                  className="inline-flex items-center gap-3 border border-gold/40 bg-transparent px-7 py-3.5 text-xs font-semibold tracking-[0.2em] uppercase text-gold transition-all duration-300 hover:bg-gold hover:text-primary-foreground"
                 >
                   <ArrowRight className="h-3.5 w-3.5" />
                 </CMSLink>
