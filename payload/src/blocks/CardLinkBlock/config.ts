@@ -1,42 +1,47 @@
 import type { Block } from 'payload'
 import { link } from '../../fields/link'
 
-export const FeatureCards: Block = {
-  slug: 'featureCards',
-  interfaceName: 'FeatureCardsBlock',
-  labels: {
-    singular: 'Feature Cards',
-    plural: 'Feature Cards',
-  },
+export const CardLinkBlock: Block = {
+  slug: 'cardLink',
+  interfaceName: 'CardLinkBlockType',
   fields: [
     {
       name: 'eyebrow',
       type: 'text',
-      label: 'Eyebrow Text',
-      admin: {
-        description: 'Short uppercase label above the heading (e.g. "WHAT WE DO")',
-      },
+      defaultValue: 'Who We Serve',
     },
     {
-      name: 'heading',
+      name: 'title',
       type: 'text',
-      label: 'Heading',
+      defaultValue: 'Solutions for Every Stage of Life',
       required: true,
+    },
+    {
+      name: 'titleAccent',
+      type: 'text',
+      defaultValue: 'Every',
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      defaultValue: 'We understand that insurance needs vary based on your life situation. That is why we offer specialized solutions for entrepreneurs, families, and individuals alike.',
     },
     {
       name: 'cards',
       type: 'array',
       label: 'Cards',
+      required: true,
       minRows: 1,
-      admin: {
-        initCollapsed: true,
-      },
       fields: [
+        {
+          name: 'image',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+        },
         {
           name: 'icon',
           type: 'select',
-          label: 'Icon',
-          defaultValue: 'shield',
           options: [
             { label: 'Shield', value: 'shield' },
             { label: 'Building', value: 'building' },
@@ -49,32 +54,29 @@ export const FeatureCards: Block = {
             { label: 'Scale', value: 'scale' },
             { label: 'Briefcase', value: 'briefcase' },
             { label: 'Heart', value: 'heart' },
+            { label: 'Home', value: 'home' },
+            { label: 'Car', value: 'car' },
           ],
+          defaultValue: 'shield',
         },
         {
           name: 'title',
           type: 'text',
-          label: 'Title',
           required: true,
         },
         {
-          name: 'badge',
+          name: 'subtitle',
           type: 'text',
-          label: 'Badge (Optional)',
-          admin: {
-            description: 'Short label to highlight this card (e.g. "Popular", "New")',
-          },
         },
         {
           name: 'description',
           type: 'textarea',
-          label: 'Description',
           required: true,
         },
         {
-          name: 'bulletins',
+          name: 'needs',
           type: 'array',
-          label: 'Bullet Points',
+          label: 'Key Coverage Needs',
           fields: [
             {
               name: 'item',
@@ -83,18 +85,12 @@ export const FeatureCards: Block = {
             },
           ],
         },
-        {
-          name: 'enableLink',
-          type: 'checkbox',
-        },
-        link({
-          overrides: {
-            admin: {
-              condition: (_, { enableLink }) => Boolean(enableLink),
-            },
-          },
-        }),
+        link(),
       ],
     },
   ],
+  labels: {
+    plural: 'Card Link Blocks',
+    singular: 'Card Link Block',
+  },
 }

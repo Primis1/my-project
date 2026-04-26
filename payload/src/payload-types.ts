@@ -220,6 +220,7 @@ export interface Page {
     | QuoteFormBlock
     | NewsGridBlock
     | FaqBlockType
+    | CardLinkBlockType
   )[];
   meta?: {
     title?: string | null;
@@ -947,6 +948,10 @@ export interface FeatureCardsBlock {
             )
           | null;
         title: string;
+        /**
+         * Short label to highlight this card (e.g. "Popular", "New")
+         */
+        badge?: string | null;
         description: string;
         bulletins?:
           | {
@@ -1079,6 +1084,68 @@ export interface FaqBlockType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardLinkBlockType".
+ */
+export interface CardLinkBlockType {
+  eyebrow?: string | null;
+  title: string;
+  titleAccent?: string | null;
+  description?: string | null;
+  cards: {
+    image: number | Media;
+    icon?:
+      | (
+          | 'shield'
+          | 'building'
+          | 'trending-up'
+          | 'lock'
+          | 'users'
+          | 'star'
+          | 'bar-chart'
+          | 'check-circle'
+          | 'scale'
+          | 'briefcase'
+          | 'heart'
+          | 'home'
+          | 'car'
+        )
+      | null;
+    title: string;
+    subtitle?: string | null;
+    description: string;
+    needs?:
+      | {
+          item: string;
+          id?: string | null;
+        }[]
+      | null;
+    link: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+      /**
+       * Choose how the link should be rendered.
+       */
+      appearance?: ('default' | 'outline') | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cardLink';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1458,6 +1525,7 @@ export interface PagesSelect<T extends boolean = true> {
         quoteForm?: T | QuoteFormBlockSelect<T>;
         newsGrid?: T | NewsGridBlockSelect<T>;
         faq?: T | FaqBlockTypeSelect<T>;
+        cardLink?: T | CardLinkBlockTypeSelect<T>;
       };
   meta?:
     | T
@@ -1642,6 +1710,7 @@ export interface FeatureCardsBlockSelect<T extends boolean = true> {
     | {
         icon?: T;
         title?: T;
+        badge?: T;
         description?: T;
         bulletins?:
           | T
@@ -1721,6 +1790,44 @@ export interface FaqBlockTypeSelect<T extends boolean = true> {
   cta?:
     | T
     | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardLinkBlockType_select".
+ */
+export interface CardLinkBlockTypeSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  titleAccent?: T;
+  description?: T;
+  cards?:
+    | T
+    | {
+        image?: T;
+        icon?: T;
+        title?: T;
+        subtitle?: T;
+        description?: T;
+        needs?:
+          | T
+          | {
+              item?: T;
+              id?: T;
+            };
         link?:
           | T
           | {

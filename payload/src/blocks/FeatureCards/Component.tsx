@@ -39,7 +39,7 @@ export const FeatureCardsBlock: React.FC<FeatureCardsBlockProps> = ({
   if (!cards || cards.length === 0) return null
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-gray-50/50">
       <div className="container mx-auto px-6">
         {/* Header Section - Centered */}
         <div className="mb-16 text-center">
@@ -66,12 +66,21 @@ export const FeatureCardsBlock: React.FC<FeatureCardsBlockProps> = ({
             return (
               <div
                 key={i}
-                className="flex flex-col items-center text-center gap-6 p-8 rounded-xl border border-border hover:border-gold/30 hover:shadow-xl transition-all duration-300 group"
+                className="relative flex flex-col items-center text-center gap-6 p-8 rounded-xl border border-border bg-white hover:border-brand/20 hover:shadow-xl transition-all duration-300 group"
               >
+                {/* Optional Badge */}
+                {card.badge && (
+                  <div className="absolute top-4 right-4 capitalize">
+                    <span className="inline-flex items-center rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-medium text-brand">
+                      {card.badge}
+                    </span>
+                  </div>
+                )}
+                
                 {/* Icon Container - Circular */}
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted/30 transition-colors duration-500 group-hover:bg-gold/10">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted/30 transition-colors duration-500 group-hover:bg-brand/10">
                   {IconComponent && (
-                    <IconComponent className="h-6 w-6 text-gold transition-colors duration-500" />
+                    <IconComponent className="h-6 w-6 text-brand transition-colors duration-500" />
                   )}
                 </div>
                 
