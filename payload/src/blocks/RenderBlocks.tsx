@@ -15,6 +15,7 @@ import { FaqBlock } from '@/blocks/FaqBlock/Component'
 import { CardLinkBlock } from '@/blocks/CardLinkBlock/Component'
 import { EventsBlock } from '@/blocks/EventsBlock/Component'
 import { ContactBlock } from '@/blocks/ContactBlock/Component'
+import { PartnerCardsBlock } from '@/blocks/PartnerCards/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -30,6 +31,7 @@ const blockComponents = {
   cardLink: CardLinkBlock,
   events: EventsBlock,
   contact: ContactBlock,
+  partnerCards: PartnerCardsBlock,
 }
 
 export const RenderBlocks: React.FC<{

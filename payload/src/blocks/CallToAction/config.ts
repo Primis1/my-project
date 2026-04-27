@@ -70,63 +70,6 @@ export const CallToAction: Block = {
       },
       fields: [
         {
-          name: 'eyebrow',
-          type: 'text',
-          defaultValue: 'Our Partners',
-        },
-        {
-          name: 'title',
-          type: 'text',
-          defaultValue: 'Backed by Industry Leaders',
-        },
-        {
-          name: 'titleAccent',
-          type: 'text',
-          defaultValue: 'Industry',
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-          defaultValue: 'As an independent agency, we partner with the best carriers in the industry to bring you choice, value, and peace of mind.',
-        },
-        {
-          name: 'partnerCategories',
-          type: 'array',
-          label: 'Partner Categories',
-          dbName: 'cta_part_cats',
-          fields: [
-            {
-              name: 'icon',
-              type: 'select',
-              dbName: 'cta_cat_icon',
-              options: [
-                { label: 'Building', value: 'Building2' },
-                { label: 'Handshake', value: 'Handshake' },
-                { label: 'Shield', value: 'Shield' },
-              ],
-              defaultValue: 'Building2',
-            },
-            {
-              name: 'title',
-              type: 'text',
-            },
-            {
-              name: 'description',
-              type: 'textarea',
-            },
-            {
-              name: 'partners',
-              type: 'array',
-              fields: [
-                {
-                  name: 'name',
-                  type: 'text',
-                },
-              ],
-            },
-          ],
-        },
-        {
           type: 'row',
           fields: [
             {

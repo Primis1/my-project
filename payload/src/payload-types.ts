@@ -223,6 +223,7 @@ export interface Page {
     | CardLinkBlockType
     | EventsBlockType
     | ContactBlockType
+    | PartnerCardsBlockType
   )[];
   meta?: {
     title?: string | null;
@@ -509,24 +510,6 @@ export interface CallToActionBlock {
       }[]
     | null;
   detailedContent?: {
-    eyebrow?: string | null;
-    title?: string | null;
-    titleAccent?: string | null;
-    description?: string | null;
-    partnerCategories?:
-      | {
-          icon?: ('Building2' | 'Handshake' | 'Shield') | null;
-          title?: string | null;
-          description?: string | null;
-          partners?:
-            | {
-                name?: string | null;
-                id?: string | null;
-              }[]
-            | null;
-          id?: string | null;
-        }[]
-      | null;
     benefitsTitle?: string | null;
     benefitsDescription?: string | null;
     benefits?:
@@ -1219,6 +1202,33 @@ export interface ContactBlockType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnerCardsBlockType".
+ */
+export interface PartnerCardsBlockType {
+  eyebrow?: string | null;
+  title?: string | null;
+  titleAccent?: string | null;
+  description?: string | null;
+  partnerCategories?:
+    | {
+        icon?: ('Building2' | 'Handshake' | 'Shield') | null;
+        title?: string | null;
+        description?: string | null;
+        partners?:
+          | {
+              name?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'partnerCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "quote-requests".
  */
 export interface QuoteRequest {
@@ -1598,6 +1608,7 @@ export interface PagesSelect<T extends boolean = true> {
         cardLink?: T | CardLinkBlockTypeSelect<T>;
         events?: T | EventsBlockTypeSelect<T>;
         contact?: T | ContactBlockTypeSelect<T>;
+        partnerCards?: T | PartnerCardsBlockTypeSelect<T>;
       };
   meta?:
     | T
@@ -1638,24 +1649,6 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
   detailedContent?:
     | T
     | {
-        eyebrow?: T;
-        title?: T;
-        titleAccent?: T;
-        description?: T;
-        partnerCategories?:
-          | T
-          | {
-              icon?: T;
-              title?: T;
-              description?: T;
-              partners?:
-                | T
-                | {
-                    name?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
         benefitsTitle?: T;
         benefitsDescription?: T;
         benefits?:
@@ -1962,6 +1955,32 @@ export interface ContactBlockTypeSelect<T extends boolean = true> {
           | T
           | {
               text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnerCardsBlockType_select".
+ */
+export interface PartnerCardsBlockTypeSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  titleAccent?: T;
+  description?: T;
+  partnerCategories?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        partners?:
+          | T
+          | {
+              name?: T;
               id?: T;
             };
         id?: T;

@@ -15,6 +15,7 @@ import { FaqBlock } from '../../blocks/FaqBlock/config'
 import { CardLinkBlock } from '../../blocks/CardLinkBlock/config'
 import { EventsBlock } from '../../blocks/EventsBlock/config'
 import { ContactBlock } from '../../blocks/ContactBlock/config'
+import { PartnerCardsBlock } from '../../blocks/PartnerCards/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -94,6 +95,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 CardLinkBlock,
                 EventsBlock,
                 ContactBlock,
+                PartnerCardsBlock,
               ],
               required: true,
               admin: {
