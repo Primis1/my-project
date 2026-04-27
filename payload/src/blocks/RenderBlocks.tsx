@@ -13,6 +13,8 @@ import { QuoteFormBlock } from '@/blocks/QuoteForm/Component'
 import { NewsGridBlock } from '@/blocks/NewsGrid/Component'
 import { FaqBlock } from '@/blocks/FaqBlock/Component'
 import { CardLinkBlock } from '@/blocks/CardLinkBlock/Component'
+import { EventsBlock } from '@/blocks/EventsBlock/Component'
+import { ContactBlock } from '@/blocks/ContactBlock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -26,6 +28,8 @@ const blockComponents = {
   newsGrid: NewsGridBlock,
   faq: FaqBlock,
   cardLink: CardLinkBlock,
+  events: EventsBlock,
+  contact: ContactBlock,
 }
 
 export const RenderBlocks: React.FC<{

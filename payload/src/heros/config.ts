@@ -111,7 +111,7 @@ export const hero: Field = {
       name: 'showScrollIndicator',
       type: 'checkbox',
       admin: {
-        condition: (_, { type } = {}) => ['highImpact'].includes(type),
+        condition: (_, { type } = {}) => ['highImpact', 'impact'].includes(type),
       },
       defaultValue: true,
       label: 'Show Scroll Indicator',
@@ -121,7 +121,7 @@ export const hero: Field = {
       type: 'text',
       admin: {
         condition: (_, { type, showScrollIndicator } = {}) =>
-          ['highImpact'].includes(type) && showScrollIndicator,
+          ['highImpact', 'impact'].includes(type) && showScrollIndicator,
       },
       defaultValue: 'Discover',
       label: 'Scroll Indicator Label',

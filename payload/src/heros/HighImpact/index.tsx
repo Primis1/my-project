@@ -28,7 +28,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
   }, [setHeaderTheme])
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-screen flex-col overflow-hidden">
       {/* Background Media with dark overlays */}
       <div className="absolute inset-0 -z-10">
         {media && typeof media === 'object' && (
@@ -39,44 +39,46 @@ export const HighImpactHero: React.FC<Page['hero']> = ({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center text-foreground">
-        {/* Eyebrow */}
-        {eyebrow && (
-          <div className="mb-8 flex items-center justify-center gap-4">
-            <span className="h-[1px] w-12 bg-gold/50" />
-            <span className="text-xs font-medium tracking-[0.35em] uppercase text-gold">
-              {eyebrow}
-            </span>
-            <span className="h-[1px] w-12 bg-gold/50" />
-          </div>
-        )}
+      <div className="relative z-10 flex-1 flex items-center justify-center mx-auto max-w-5xl px-6 text-center text-foreground">
+        <div>
+          {/* Eyebrow */}
+          {eyebrow && (
+            <div className="mb-8 flex items-center justify-center gap-4">
+              <span className="h-[1px] w-12 bg-gold/50" />
+              <span className="text-xs font-medium tracking-[0.35em] uppercase text-gold">
+                {eyebrow}
+              </span>
+              <span className="h-[1px] w-12 bg-gold/50" />
+            </div>
+          )}
 
-        {/* Headline & Subtext via RichText */}
-        {richText && (
-          <RichText
-            className="font-serif [&_h1]:text-5xl [&_h1]:font-normal [&_h1]:leading-[1.1] [&_h1]:tracking-tight [&_h1]:sm:text-6xl [&_h1]:md:text-7xl [&_h1]:lg:text-8xl [&_p]:mx-auto [&_p]:mt-8 [&_p]:max-w-2xl [&_p]:text-base [&_p]:leading-relaxed [&_p]:text-foreground [&_p]:sm:text-lg"
-            data={richText}
-            enableGutter={false}
-          />
-        )}
+          {/* Headline & Subtext via RichText */}
+          {richText && (
+            <RichText
+              className="font-serif [&_h1]:text-5xl [&_h1]:font-normal [&_h1]:leading-[1.1] [&_h1]:tracking-tight [&_h1]:sm:text-6xl [&_h1]:md:text-7xl [&_h1]:lg:text-8xl [&_p]:mx-auto [&_p]:mt-8 [&_p]:max-w-2xl [&_p]:text-base [&_p]:leading-relaxed [&_p]:text-foreground [&_p]:sm:text-lg"
+              data={richText}
+              enableGutter={false}
+            />
+          )}
 
-        {/* CTAs */}
-        {Array.isArray(links) && links.length > 0 && (
-          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-            {links.map(({ link }, i) => (
-              <CMSLink
-                key={i}
-                {...link}
-                appearance={i === 0 ? "default" : "outline"}
-              />
-            ))}
-          </div>
-        )}
+          {/* CTAs */}
+          {Array.isArray(links) && links.length > 0 && (
+            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+              {links.map(({ link }, i) => (
+                <CMSLink
+                  key={i}
+                  {...link}
+                  appearance={i === 0 ? "default" : "outline"}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator area */}
       {showScrollIndicator && (
-        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
+        <div className="relative h-24 w-full flex items-center justify-center z-10 pb-8">
           <a
             href="#discover"
             className="flex flex-col items-center gap-2 text-muted-foreground transition-colors hover:text-gold"

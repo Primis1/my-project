@@ -13,6 +13,8 @@ import { QuoteFormBlock } from '../../blocks/QuoteForm/config'
 import { NewsGrid } from '../../blocks/NewsGrid/config'
 import { FaqBlock } from '../../blocks/FaqBlock/config'
 import { CardLinkBlock } from '../../blocks/CardLinkBlock/config'
+import { EventsBlock } from '../../blocks/EventsBlock/config'
+import { ContactBlock } from '../../blocks/ContactBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -90,6 +92,8 @@ export const Pages: CollectionConfig<'pages'> = {
                 NewsGrid,
                 FaqBlock,
                 CardLinkBlock,
+                EventsBlock,
+                ContactBlock,
               ],
               required: true,
               admin: {

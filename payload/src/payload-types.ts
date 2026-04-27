@@ -221,6 +221,8 @@ export interface Page {
     | NewsGridBlock
     | FaqBlockType
     | CardLinkBlockType
+    | EventsBlockType
+    | ContactBlockType
   )[];
   meta?: {
     title?: string | null;
@@ -1149,6 +1151,74 @@ export interface CardLinkBlockType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventsBlockType".
+ */
+export interface EventsBlockType {
+  type: 'promo' | 'giveaway' | 'new-service' | 'announcement';
+  badge: string;
+  title: string;
+  /**
+   * Optional highlighted text shown below the title.
+   */
+  highlight?: string | null;
+  description: string;
+  /**
+   * Optional expiration text (e.g., "Offer ends May 31").
+   */
+  expires?: string | null;
+  image?: (number | null) | Media;
+  cta?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'events';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlockType".
+ */
+export interface ContactBlockType {
+  eyebrow?: string | null;
+  title: string;
+  titleHighlight?: string | null;
+  description?: string | null;
+  contactInfo?:
+    | {
+        icon: 'MapPin' | 'Phone' | 'Mail' | 'Clock';
+        title: string;
+        details?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "quote-requests".
  */
 export interface QuoteRequest {
@@ -1526,6 +1596,8 @@ export interface PagesSelect<T extends boolean = true> {
         newsGrid?: T | NewsGridBlockSelect<T>;
         faq?: T | FaqBlockTypeSelect<T>;
         cardLink?: T | CardLinkBlockTypeSelect<T>;
+        events?: T | EventsBlockTypeSelect<T>;
+        contact?: T | ContactBlockTypeSelect<T>;
       };
   meta?:
     | T
@@ -1837,6 +1909,60 @@ export interface CardLinkBlockTypeSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventsBlockType_select".
+ */
+export interface EventsBlockTypeSelect<T extends boolean = true> {
+  type?: T;
+  badge?: T;
+  title?: T;
+  highlight?: T;
+  description?: T;
+  expires?: T;
+  image?: T;
+  cta?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactBlockType_select".
+ */
+export interface ContactBlockTypeSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  titleHighlight?: T;
+  description?: T;
+  contactInfo?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        details?:
+          | T
+          | {
+              text?: T;
+              id?: T;
             };
         id?: T;
       };

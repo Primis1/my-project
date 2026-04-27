@@ -5,15 +5,22 @@ import type { Page } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
+import { ArrowDown } from 'lucide-react'
+import { cn } from '@/utilities/ui'
 
 export const ImpactHero: React.FC<Page['hero'] & { media2?: any }> = ({
   links,
   media,
   media2,
   richText,
+  scrollIndicatorLabel,
+  showScrollIndicator,
 }) => {
   return (
-    <section className="bg-background px-4 py-16 md:py-24">
+    <section className={cn(
+      "relative bg-background px-4 pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden",
+      showScrollIndicator && "min-h-[85vh] flex flex-col justify-center"
+    )}>
       <div className="mx-auto max-w-6xl rounded-2xl bg-card p-8 shadow-2xl md:p-14 border border-border/50">
         <div className="grid items-center gap-12 md:grid-cols-2">
           {/* Left Column — Typography */}
@@ -70,6 +77,22 @@ export const ImpactHero: React.FC<Page['hero'] & { media2?: any }> = ({
           </div>
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      {showScrollIndicator && (
+        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
+          <a
+            href="#discover"
+            className="flex flex-col items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+            aria-label="Scroll down"
+          >
+            <span className="text-[10px] tracking-[0.3em] uppercase">
+              {scrollIndicatorLabel || 'Discover'}
+            </span>
+            <ArrowDown className="h-4 w-4 animate-bounce" />
+          </a>
+        </div>
+      )}
     </section>
   )
 }
