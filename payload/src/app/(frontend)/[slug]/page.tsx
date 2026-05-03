@@ -12,6 +12,7 @@ import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { PersonalLinesTemplate } from '@/templates/PersonalLines'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -64,7 +65,18 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  const { hero, layout } = page
+  const { hero, layout, template, personalLines } = page
+
+  if (template === 'personal-lines') {
+    return (
+      <article className="pt-16 pb-24">
+        <PageClient />
+        <PayloadRedirects disableNotFound url={url} />
+        {draft && <LivePreviewListener />}
+        <PersonalLinesTemplate data={personalLines} />
+      </article>
+    )
+  }
 
   return (
     <article className="pt-16 pb-24">

@@ -161,6 +161,7 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
+  template?: ('default' | 'personal-lines') | null;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'impact';
     eyebrow?: string | null;
@@ -208,6 +209,11 @@ export interface Page {
     style?: ('default' | 'gold') | null;
     showScrollIndicator?: boolean | null;
     scrollIndicatorLabel?: string | null;
+  };
+  personalLines?: {
+    heroHeadlineTop?: string | null;
+    heroHeadlineBottom?: string | null;
+    heroDescription?: string | null;
   };
   layout: (
     | CallToActionBlock
@@ -1565,6 +1571,7 @@ export interface PayloadMigration {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  template?: T;
   hero?:
     | T
     | {
@@ -1591,6 +1598,13 @@ export interface PagesSelect<T extends boolean = true> {
         style?: T;
         showScrollIndicator?: T;
         scrollIndicatorLabel?: T;
+      };
+  personalLines?:
+    | T
+    | {
+        heroHeadlineTop?: T;
+        heroHeadlineBottom?: T;
+        heroDescription?: T;
       };
   layout?:
     | T

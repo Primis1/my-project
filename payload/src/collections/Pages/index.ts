@@ -70,11 +70,61 @@ export const Pages: CollectionConfig<'pages'> = {
       required: true,
     },
     {
+      name: 'template',
+      type: 'select',
+      defaultValue: 'default',
+      admin: {
+        position: 'sidebar',
+      },
+      options: [
+        {
+          label: 'Default (Blocks)',
+          value: 'default',
+        },
+        {
+          label: 'Personal Lines',
+          value: 'personal-lines',
+        },
+      ],
+    },
+    {
       type: 'tabs',
       tabs: [
         {
           fields: [hero],
           label: 'Hero',
+          admin: {
+            condition: (_, siblingData) => !siblingData?.template || siblingData?.template === 'default',
+          },
+        },
+        {
+          label: 'Template Settings',
+          fields: [
+            {
+              name: 'personalLines',
+              type: 'group',
+              fields: [
+                {
+                  name: 'heroHeadlineTop',
+                  type: 'text',
+                  defaultValue: 'Compare. Save.',
+                },
+                {
+                  name: 'heroHeadlineBottom',
+                  type: 'text',
+                  defaultValue: 'Get Protected.',
+                },
+                {
+                  name: 'heroDescription',
+                  type: 'textarea',
+                  defaultValue: 'We shop 20+ insurance companies to find you the best coverage at the lowest price. No sales pressure, just expert guidance tailored to your needs.',
+                },
+              ],
+            },
+          ],
+          admin: {
+            condition: (_, siblingData) => siblingData?.template === 'personal-lines',
+          },
         },
         {
           fields: [
@@ -104,6 +154,9 @@ export const Pages: CollectionConfig<'pages'> = {
             },
           ],
           label: 'Content',
+          admin: {
+            condition: (_, siblingData) => !siblingData?.template || siblingData?.template === 'default',
+          },
         },
         {
           name: 'meta',
