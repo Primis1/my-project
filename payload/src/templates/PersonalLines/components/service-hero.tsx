@@ -78,6 +78,47 @@ export function ServiceHero({
   trustStats,
 }: ServiceHeroProps) {
   const [activeTab, setActiveTab] = useState(defaultTab)
+  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormStatus("loading")
+    setErrorMessage("")
+
+    const formData = new FormData(e.currentTarget)
+    
+    // Construct payload matching QuoteRequests schema
+    const data = {
+      firstName: formData.get("firstName") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      additionalNotes: formData.get("zipCode") ? `ZIP Code: ${formData.get("zipCode")}` : undefined,
+      selectedCoverages: [{ value: activeTab }],
+      status: "new",
+    }
+
+    try {
+      const res = await fetch("/api/quote-requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!res.ok) {
+        throw new Error("Failed to submit quote request")
+      }
+
+      setFormStatus("success")
+    } catch (err) {
+      console.error(err)
+      setFormStatus("error")
+      setErrorMessage("Something went wrong. Please try again or call us directly.")
+    }
+  }
 
   const visibleFields = fields.filter(
     (field) => !field.showForTabs || field.showForTabs.includes(activeTab)
@@ -105,6 +146,7 @@ export function ServiceHero({
               ))}
             </SelectContent>
           </Select>
+          {/* Note: If a select field is added in the future, we'd need a hidden input here to capture its value in the FormData */}
         </div>
       )
     }
@@ -116,8 +158,10 @@ export function ServiceHero({
         </label>
         <Input
           type={field.type}
+          name={field.id}
           placeholder={field.placeholder}
           className={baseClass}
+          required={field.id !== "zipCode"}
         />
       </div>
     )
@@ -188,62 +232,96 @@ export function ServiceHero({
 
           {/* Right - Quote Form */}
           <aside aria-labelledby="quote-form-title" className="bg-white rounded-2xl shadow-2xl shadow-slate-200/50 border border-slate-100 p-6 md:p-8">
-            <div className="text-center mb-6">
-              <h2 id="quote-form-title" className="text-xl font-semibold text-foreground mb-1">
-                {formTitle}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {formSubtitle}
-              </p>
-            </div>
-
-            {/* Tab Switcher */}
-            {tabs.length > 1 && (
-              <div className="flex rounded-lg bg-gray-100 p-1 mb-6" role="tablist">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon
-                  const isActive = activeTab === tab.id
-                  const isLast = tab.id === tabs[tabs.length - 1].id
-                  return (
-                    <button
-                      key={tab.id}
-                      role="tab"
-                      aria-selected={isActive}
-                      aria-controls="form-container"
-                      onClick={() => setActiveTab(tab.id)}
-                      aria-pressed={isActive}
-                      aria-label={`Switch to ${tab.label} quote form`}
-                      className={cn(
-                        "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-medium transition-all",
-                        isActive && isLast
-                          ? "bg-primary text-white shadow-sm"
-                          : isActive
-                          ? "bg-white text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {tab.label}
-                    </button>
-                  )
-                })}
+            {formStatus === "success" ? (
+              <div className="py-12 text-center space-y-4">
+                <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-8 h-8 text-success" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Request Received</h3>
+                <p className="text-sm text-muted-foreground">
+                  Thank you! One of our advisors will be in touch shortly with your personalized quotes.
+                </p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setFormStatus("idle")}
+                  className="mt-4"
+                >
+                  Submit Another Request
+                </Button>
               </div>
-            )}
+            ) : (
+              <>
+                <div className="text-center mb-6">
+                  <h2 id="quote-form-title" className="text-xl font-semibold text-foreground mb-1">
+                    {formTitle}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {formSubtitle}
+                  </p>
+                </div>
 
-            {/* Form Fields */}
-            <div className="grid grid-cols-2 gap-4">
-              {visibleFields.map(renderField)}
-            </div>
+                {/* Tab Switcher */}
+                {tabs.length > 1 && (
+                  <div className="flex rounded-lg bg-gray-100 p-1 mb-6" role="tablist">
+                    {tabs.map((tab) => {
+                      const Icon = tab.icon
+                      const isActive = activeTab === tab.id
+                      const isLast = tab.id === tabs[tabs.length - 1].id
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          aria-controls="form-container"
+                          onClick={() => setActiveTab(tab.id)}
+                          aria-pressed={isActive}
+                          aria-label={`Switch to ${tab.label} quote form`}
+                          className={cn(
+                            "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-medium transition-all",
+                            isActive && isLast
+                              ? "bg-primary text-white shadow-sm"
+                              : isActive
+                              ? "bg-white text-foreground shadow-sm"
+                              : "text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          <Icon className="w-4 h-4" />
+                          {tab.label}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
 
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-3 h-12 text-sm font-semibold shadow-md mt-6">
-              {submitLabel}
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+                <form onSubmit={handleSubmit}>
+                  {/* Form Fields */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {visibleFields.map(renderField)}
+                  </div>
 
-            {formFooter && (
-              <p className="text-xs text-muted-foreground text-center mt-4">
-                {formFooter}
-              </p>
+                  {formStatus === "error" && (
+                    <p className="text-sm text-destructive mt-4 text-center">
+                      {errorMessage}
+                    </p>
+                  )}
+
+                  <Button 
+                    type="submit"
+                    disabled={formStatus === "loading"}
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-3 h-12 text-sm font-semibold shadow-md mt-6"
+                  >
+                    {formStatus === "loading" ? "Submitting..." : submitLabel}
+                    {!formStatus && <ArrowRight className="w-4 h-4 ml-2" />}
+                  </Button>
+                </form>
+
+                {formFooter && (
+                  <p className="text-xs text-muted-foreground text-center mt-4">
+                    {formFooter}
+                  </p>
+                )}
+              </>
             )}
           </aside>
         </div>
