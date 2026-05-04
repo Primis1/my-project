@@ -37,18 +37,6 @@ const stories = [
     benefits: ['Belongings protected', 'Right-sized policy', 'Low-friction management'],
     bottomLine: 'Your belongings. Your protection.',
   },
-  {
-    tag: 'Home Optimization',
-    persona: 'Long-Term Homeowner',
-    icon: Shield,
-    issue: 'Outdated Limits',
-    issueDetail: 'Home renovations over 10 years created a "silent gap" in replacement value.',
-    metric: '$620',
-    metricLabel: 'Recovered',
-    bundle: ['High-Value Home', 'Valuables'],
-    benefits: ['No silent coverage gaps', 'Updated endorsements', 'Annual checkups'],
-    bottomLine: 'Coverage that keeps up with your life.',
-  },
 ]
 
 export function ClientSuccessStories() {
@@ -64,7 +52,7 @@ export function ClientSuccessStories() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-primary border border-slate-200 rounded-3xl overflow-hidden">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-primary border border-slate-200 rounded-3xl overflow-hidden">
           {stories.map((story, i) => {
             const Icon = story.icon
             return (

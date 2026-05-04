@@ -1,39 +1,50 @@
-"use client"
+'use client'
 
-import { ClipboardCheck, MessageSquare, Search, FileCheck, ArrowRight, TrendingDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import {
+  ClipboardCheck,
+  MessageSquare,
+  Search,
+  FileCheck,
+  ArrowRight,
+  TrendingDown,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 const reviewSteps = [
   {
     step: 1,
     icon: ClipboardCheck,
-    title: "Assess Changes",
-    description: "We review what's changed in your life since last year - new car, home improvements, life changes, or updated coverage needs.",
+    title: 'Assess Changes',
+    description:
+      "We review what's changed in your life since last year - new car, home improvements, life changes, or updated coverage needs.",
   },
   {
     step: 2,
     icon: MessageSquare,
-    title: "Address Concerns",
-    description: "Discuss any gaps in coverage, concerns about your current policy, or new protection you might need.",
+    title: 'Address Concerns',
+    description:
+      'Discuss any gaps in coverage, concerns about your current policy, or new protection you might need.',
   },
   {
     step: 3,
     icon: Search,
-    title: "Find Best Rate",
-    description: "We re-shop all 20+ carriers - including your current insurer - to find the most competitive rate for your updated needs.",
+    title: 'Find Best Rate',
+    description:
+      'We re-shop all 20+ carriers - including your current insurer - to find the most competitive rate for your updated needs.',
   },
   {
     step: 4,
     icon: FileCheck,
-    title: "Implement & Document",
-    description: "Seamlessly switch or renew with optimized coverage. We handle the paperwork and keep records for future reviews.",
+    title: 'Implement & Document',
+    description:
+      'Seamlessly switch or renew with optimized coverage. We handle the paperwork and keep records for future reviews.',
   },
 ]
 
 const stats = [
-  { value: "73%", label: "of clients find better rates at annual review" },
-  { value: "$847", label: "average annual savings per household" },
-  { value: "100%", label: "of reviews are free with no obligation" },
+  { value: '73%', label: 'of clients find better rates at annual review' },
+  { value: '$847', label: 'average annual savings per household' },
+  { value: '100%', label: 'of reviews are free with no obligation' },
 ]
 
 export function AnnualReviewSection() {
@@ -50,9 +61,9 @@ export function AnnualReviewSection() {
               Your Coverage Should Evolve With You
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Life changes. So should your insurance. Each year, we conduct a comprehensive 
-              review to ensure your coverage matches your current needs and budget - and that 
-              you&apos;re still getting the best rate available.
+              Life changes. So should your insurance. Each year, we conduct a comprehensive review
+              to ensure your coverage matches your current needs and budget - and that you&apos;re
+              still getting the best rate available.
             </p>
 
             {/* Stats */}
@@ -65,10 +76,7 @@ export function AnnualReviewSection() {
               ))}
             </div>
 
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-blue-700 text-white rounded-full px-8"
-            >
+            <Button size="lg" className="bg-primary hover:bg-blue-700 text-white rounded-full px-8">
               Schedule Your Free Review
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
@@ -77,7 +85,6 @@ export function AnnualReviewSection() {
           {/* Right - Process steps */}
           <div className="relative">
             {/* Connecting line */}
-            <div className="absolute left-7 top-8 bottom-8 w-0.5 bg-gradient-to-b from-blue-200 via-blue-300 to-blue-200 hidden md:block" />
 
             <div className="space-y-6">
               {reviewSteps.map((step) => {
@@ -107,18 +114,19 @@ export function AnnualReviewSection() {
             </div>
 
             {/* Result callout */}
-            <div className="mt-8 bg-green-50 border border-green-100 rounded-xl p-5 flex items-start gap-4">
+            <div className="mt-8 z-50 bg-green-50 border border-green-100 rounded-xl p-5 flex items-start gap-4">
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <TrendingDown className="w-5 h-5 text-green-600" />
               </div>
               <div>
                 <h4 className="font-semibold text-green-800 mb-1">The Result?</h4>
                 <p className="text-sm text-green-700">
-                  Most clients save money or get better coverage - often both. 
-                  And if your current policy is still the best option, we&apos;ll confirm that too.
+                  Most clients save money or get better coverage - often both. And if your current
+                  policy is still the best option, we&apos;ll confirm that too.
                 </p>
               </div>
             </div>
+            {/* <div className="absolute left-7 -z-59 top-8 bottom-4 w-0.5 bg-gradient-to-b from-blue-200 via-blue-300 to-blue-200 hidden md:block" /> */}
           </div>
         </div>
       </div>
