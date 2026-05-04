@@ -28,7 +28,7 @@ export function HeroSection({ data }: { data?: any }) {
       tabs={[
         { id: "auto", label: "Auto", icon: Car },
         { id: "home", label: "Home", icon: Home },
-        { id: "tenant", label: "Tenant", icon: Building2 },
+        { id: "bundle", label: "Bundle", icon: Building2 },
       ]}
       defaultTab="auto"
       fields={[

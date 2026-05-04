@@ -10,7 +10,7 @@ import { FaqBlock } from '@/blocks/FaqBlock/Component'
 
 export const PersonalLinesTemplate: React.FC<{ data?: any }> = ({ data }) => {
   return (
-    <div>
+    <main aria-label="Personal Insurance Solutions">
       <HeroSection data={data} />
       <PartnersCarousel />
       <CoverageSection />
@@ -56,6 +56,6 @@ export const PersonalLinesTemplate: React.FC<{ data?: any }> = ({ data }) => {
         ]}
       />
       <CTASection />
-    </div>
+    </main>
   )
 }

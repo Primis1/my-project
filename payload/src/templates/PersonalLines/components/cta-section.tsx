@@ -53,7 +53,7 @@ export function CTASection() {
   }
 
   return (
-    <section className="py-20 lg:py-28 bg-white">
+    <section id="contact" className="py-20 lg:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Contact methods */}
         <div className="text-center mb-12">
@@ -61,7 +61,7 @@ export function CTASection() {
             Ready to Save?
           </p>
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
-            Let&apos;s Find Your Best Rate
+            Connect With Our [Your Region] Insurance Advisors
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Choose how you&apos;d like to connect. Our licensed advisors are ready to help you 
@@ -69,25 +69,27 @@ export function CTASection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <ul aria-label="Insurance advisor contact methods" className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {contactMethods.map((method) => {
             const Icon = method.icon
             return (
-              <button
-                key={method.title}
-                className="group bg-slate-50 hover:bg-blue-50 rounded-2xl p-6 text-left transition-all hover:shadow-lg border border-transparent hover:border-blue-100"
-              >
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:bg-blue-100 transition-colors">
-                  <Icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-1">{method.title}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{method.description}</p>
-                <div className="text-sm font-semibold text-primary">{method.action}</div>
-                <div className="text-xs text-muted-foreground mt-1">{method.available}</div>
-              </button>
+              <li key={method.title}>
+                <button
+                  aria-label={`Contact us by ${method.title} at ${method.action}`}
+                  className="w-full h-full group bg-muted/30 hover:bg-primary/5 rounded-2xl p-6 text-left transition-all hover:shadow-lg border border-transparent hover:border-primary/10"
+                >
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:bg-primary/10 transition-colors">
+                    <Icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-1">{method.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">{method.description}</p>
+                  <div className="text-sm font-semibold text-primary">{method.action}</div>
+                  <div className="text-xs text-muted-foreground mt-1">{method.available}</div>
+                </button>
+              </li>
             )
           })}
-        </div>
+        </ul>
 
         {/* Email capture banner */}
         <div className="bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-3xl p-8 md:p-12 lg:p-16 relative overflow-hidden">
@@ -103,7 +105,7 @@ export function CTASection() {
               <h3 className="text-2xl md:text-3xl font-serif font-bold mb-4">
                 Start Saving Today
               </h3>
-              <p className="text-blue-100 mb-6 leading-relaxed">
+              <p className="text-primary-foreground/80 mb-6 leading-relaxed">
                 Enter your email to receive a free personalized quote comparison. 
                 No obligation, no spam - just real savings opportunities.
               </p>
@@ -130,14 +132,14 @@ export function CTASection() {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-14 bg-white/90 border-0 rounded-xl text-foreground placeholder:text-slate-400"
+                    className="h-14 bg-background/90 border-0 rounded-xl text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button
                     type="submit"
                     size="lg"
-                    className="flex-1 h-14 bg-white text-primary hover:bg-blue-50 rounded-xl font-semibold"
+                    className="flex-1 h-14 bg-white text-primary hover:opacity-90 rounded-xl font-semibold"
                   >
                     Get My Free Quote
                     <ArrowRight className="w-4 h-4 ml-2" />
@@ -158,6 +160,33 @@ export function CTASection() {
               </form>
             </div>
           </div>
+        </div>
+        {/* Local Business Schema for Search Engines */}
+        <div 
+          itemScope 
+          itemType="http://schema.org/LocalBusiness" 
+          className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-muted-foreground"
+        >
+          <div className="flex flex-col items-center md:items-start">
+            <span itemProp="name" className="font-bold text-foreground mb-1">Integrated Insurance Agency</span>
+            <div itemProp="address" itemScope itemType="http://schema.org/PostalAddress">
+              <span itemProp="streetAddress">123 Local Street</span>, 
+              <span itemProp="addressLocality"> [Your City]</span>, 
+              <span itemProp="addressRegion"> [Your State]</span>
+            </div>
+          </div>
+          <div className="flex gap-8">
+            <div>
+              <span className="font-semibold text-foreground">Phone: </span>
+              <span itemProp="telephone">(555) 123-4567</span>
+            </div>
+            <div>
+              <span className="font-semibold text-foreground">Service Area: </span>
+              <span>[Your Region] & Surrounding Areas</span>
+            </div>
+          </div>
+          <meta itemProp="priceRange" content="$$" />
+          <meta itemProp="image" content="/logo.png" />
         </div>
       </div>
     </section>

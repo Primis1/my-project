@@ -53,7 +53,7 @@ const coverageTypes = [
 
 export function CoverageSection() {
   return (
-    <section className="py-20 lg:py-28 bg-slate-50">
+    <section id="coverage" className="py-20 lg:py-28 bg-muted/30">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
@@ -61,7 +61,7 @@ export function CoverageSection() {
             Coverage Options
           </p>
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
-            Insurance That Fits Your Life
+            Integrated Insurance That Fits Your Life
           </h2>
           <p className="text-lg text-muted-foreground">
             Whether you drive, own, or rent, we find the right coverage from top-rated insurers 
@@ -70,27 +70,29 @@ export function CoverageSection() {
         </div>
 
         {/* Coverage cards */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <ul className="grid md:grid-cols-3 gap-8">
           {coverageTypes.map((coverage) => {
             const Icon = coverage.icon
             return (
-              <div
+              <li
                 key={coverage.id}
-                className="group bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-xl hover:border-blue-100 transition-all duration-300"
+                itemScope
+                itemType="http://schema.org/Service"
+                className="group bg-white rounded-2xl p-8 shadow-sm border border-border hover:shadow-xl hover:border-primary/20 transition-all duration-300"
               >
                 {/* Icon */}
-                <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-100 transition-colors">
+                <div className="w-14 h-14 bg-primary/5 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/10 transition-colors">
                   <Icon className="w-7 h-7 text-primary" />
                 </div>
 
                 {/* Savings badge */}
-                <div className="inline-block px-3 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full mb-4">
+                <div className="inline-block px-3 py-1 bg-success/10 text-success text-xs font-semibold rounded-full mb-4">
                   {coverage.savings}
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-bold text-foreground mb-3">{coverage.title}</h3>
-                <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                <h3 itemProp="name" className="text-xl font-bold text-foreground mb-3">{coverage.title}</h3>
+                <p itemProp="description" className="text-muted-foreground text-sm mb-6 leading-relaxed">
                   {coverage.description}
                 </p>
 
@@ -98,7 +100,7 @@ export function CoverageSection() {
                 <ul className="space-y-3 mb-8">
                   {coverage.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-3 text-sm text-foreground">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" />
                       {feature}
                     </li>
                   ))}
@@ -112,13 +114,13 @@ export function CoverageSection() {
                   Get {coverage.title.split(" ")[0]} Quote
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-              </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
 
         {/* Bundle banner */}
-        <div className="mt-12 bg-gradient-to-r from-primary to-blue-700 rounded-2xl p-8 md:p-10 text-center text-white">
+        <div className="mt-12 bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-8 md:p-10 text-center text-white">
           <h3 className="text-2xl md:text-3xl font-serif font-bold mb-3">
             Bundle & Save Even More
           </h3>
@@ -128,7 +130,7 @@ export function CoverageSection() {
           </p>
           <Button 
             size="lg" 
-            className="bg-white text-primary hover:bg-blue-50 rounded-full px-8 font-semibold"
+            className="bg-white text-primary hover:bg-primary-foreground rounded-full px-8 font-semibold"
           >
             Explore Bundle Options
             <ArrowRight className="w-4 h-4 ml-2" />

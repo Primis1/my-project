@@ -41,44 +41,42 @@ const stories = [
 
 export function ClientSuccessStories() {
   return (
-    <section className="py-20 lg:py-28 bg-slate-50">
+    <section id="success-stories" className="py-20 lg:py-28 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-3">
-            Client Success Stories
+            Insurance Client Success Stories
           </h2>
-          <p className="text-slate-600 text-base">
+          <p className="text-muted-foreground text-base">
             Real scenarios. Better outcomes. We find the right fit — then keep it right.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-primary border border-slate-200 rounded-3xl overflow-hidden">
+        <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-primary border border-border rounded-3xl overflow-hidden">
           {stories.map((story, i) => {
             const Icon = story.icon
             return (
-              <article
-                key={i}
-                className="group bg-white p-8 flex flex-col gap-6 hover:bg-slate-50 transition-colors"
-              >
+              <li key={i}>
+                <article itemScope itemType="http://schema.org/Review" className="group bg-white h-full p-8 flex flex-col gap-6 hover:bg-muted/30 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                       <Icon className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-foreground">{story.tag}</p>
-                      <p className="text-xs text-muted-foreground">{story.persona}</p>
+                      <h3 itemProp="name" className="text-sm font-bold text-foreground">{story.tag}</h3>
+                      <p itemProp="author" className="text-xs text-muted-foreground">{story.persona}</p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+                  <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
                     Case 0{i + 1}
                   </span>
                 </div>
 
-                <div className="rounded-xl border border-red-100 bg-red-50/50 p-4">
+                <div itemProp="reviewBody" className="rounded-xl border border-destructive/20 bg-destructive/10 p-4">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <AlertCircle className="w-3.5 h-3.5 text-red-600" />
-                    <span className="text-[10px] font-bold tracking-widest uppercase text-red-600">
+                    <AlertCircle className="w-3.5 h-3.5 text-destructive" />
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-destructive">
                       The Issue
                     </span>
                   </div>
@@ -107,9 +105,9 @@ export function ClientSuccessStories() {
                   </div>
                 </div>
 
-                <ul className="space-y-2 pt-4 border-t border-slate-100">
+                <ul className="space-y-2 pt-4 border-t border-border">
                   {story.benefits.map((benefit, j) => (
-                    <li key={j} className="flex items-start gap-3 text-sm text-slate-700">
+                    <li key={j} className="flex items-start gap-3 text-sm text-muted-foreground">
                       <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                       <span>{benefit}</span>
                     </li>
@@ -121,9 +119,10 @@ export function ClientSuccessStories() {
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </p>
               </article>
+              </li>
             )
           })}
-        </div>
+        </ul>
 
         {/* Bottom CTA */}
         <div className="mt-12 bg-white border border-border rounded-2xl px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-5 shadow-sm">
