@@ -124,7 +124,7 @@ export function CoverageSection() {
           <h3 className="text-2xl md:text-3xl font-serif font-bold mb-3">
             Bundle & Save Even More
           </h3>
-          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+          <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">
             Combine your auto and home insurance to unlock additional discounts of up to 25%. 
             We&apos;ll find the best bundle across all our partner carriers.
           </p>

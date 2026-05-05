@@ -76,7 +76,7 @@ export function AnnualReviewSection() {
               ))}
             </ul>
 
-            <Button size="lg" className="bg-primary hover:bg-blue-700 text-white rounded-full px-8">
+            <Button size="lg" className="bg-primary hover:opacity-90 text-primary-foreground rounded-full px-8">
               Schedule Your Free Review
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
@@ -129,7 +129,7 @@ export function AnnualReviewSection() {
                 </p>
               </div>
             </div>
-            {/* <div className="absolute left-7 -z-59 top-8 bottom-4 w-0.5 bg-gradient-to-b from-blue-200 via-blue-300 to-blue-200 hidden md:block" /> */}
+            {/* <div className="absolute left-7 -z-59 top-8 bottom-4 w-0.5 bg-gradient-to-b from-primary/20 via-primary/30 to-primary/20 hidden md:block" /> */}
           </div>
         </div>
       </div>

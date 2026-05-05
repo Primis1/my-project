@@ -168,11 +168,11 @@ export function ServiceHero({
   }
 
   return (
-    <section id="hero" className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
+    <section id="hero" className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-muted/30 via-background to-primary/5 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-100/30 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-28 w-full">
@@ -204,7 +204,7 @@ export function ServiceHero({
             <div className="flex flex-wrap gap-x-6 gap-y-3 pt-2">
               {checkmarks.map((item) => (
                 <div key={item} className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" strokeWidth={2.5} />
+                  <CheckCircle2 className="w-5 h-5 text-success" strokeWidth={2.5} />
                   <span className="text-sm text-foreground font-medium">{item}</span>
                 </div>
               ))}
@@ -231,7 +231,7 @@ export function ServiceHero({
           </div>
 
           {/* Right - Quote Form */}
-          <aside aria-labelledby="quote-form-title" className="bg-white rounded-2xl shadow-2xl shadow-slate-200/50 border border-slate-100 p-6 md:p-8">
+          <aside aria-labelledby="quote-form-title" className="bg-white rounded-2xl shadow-2xl shadow-black/5 border border-border p-6 md:p-8">
             {formStatus === "success" ? (
               <div className="py-12 text-center space-y-4">
                 <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
@@ -262,7 +262,7 @@ export function ServiceHero({
 
                 {/* Tab Switcher */}
                 {tabs.length > 1 && (
-                  <div className="flex rounded-lg bg-gray-100 p-1 mb-6" role="tablist">
+                  <div className="flex rounded-lg bg-muted p-1 mb-6" role="tablist">
                     {tabs.map((tab) => {
                       const Icon = tab.icon
                       const isActive = activeTab === tab.id
