@@ -45,7 +45,7 @@ const stories = [
     icon: Briefcase,
     issue: 'No Personal Safety Net',
     issueDetail:
-      'As a sole proprietor, all business revenue depended on the owner\'s ability to work. An injury would have meant zero income and mounting overhead.',
+      "As a sole proprietor, all business revenue depended on the owner's ability to work. An injury would have meant zero income and mounting overhead.",
     metric: '3',
     metricLabel: 'Products Placed',
     products: ['Income Replacement', 'Term Life', 'Health Plan'],

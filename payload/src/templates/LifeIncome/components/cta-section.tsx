@@ -57,7 +57,7 @@ export function CTASection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Contact methods */}
         <div className="text-center mb-12">
-          <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-3">
+          <p className="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-3">
             Take the First Step
           </p>
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
@@ -76,14 +76,14 @@ export function CTASection() {
               <li key={method.title}>
                 <button
                   aria-label={`Contact us by ${method.title} at ${method.action}`}
-                  className="w-full h-full group bg-muted/30 hover:bg-primary/5 rounded-2xl p-6 text-left transition-all hover:shadow-lg border border-transparent hover:border-primary/10"
+                  className="w-full h-full group bg-muted/30 hover:bg-emerald-50 rounded-2xl p-6 text-left transition-all hover:shadow-lg border border-transparent hover:border-emerald-100"
                 >
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:bg-primary/10 transition-colors">
-                    <Icon className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm group-hover:bg-emerald-100 transition-colors">
+                    <Icon className="w-6 h-6 text-emerald-600" />
                   </div>
                   <h3 className="font-semibold text-foreground mb-1">{method.title}</h3>
                   <p className="text-sm text-muted-foreground mb-3">{method.description}</p>
-                  <div className="text-sm font-semibold text-primary">{method.action}</div>
+                  <div className="text-sm font-semibold text-emerald-600">{method.action}</div>
                   <div className="text-xs text-muted-foreground mt-1">{method.available}</div>
                 </button>
               </li>
@@ -92,7 +92,7 @@ export function CTASection() {
         </ul>
 
         {/* Email capture banner */}
-        <div className="bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-3xl p-8 md:p-12 lg:p-16 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-800 rounded-3xl p-8 md:p-12 lg:p-16 relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
@@ -140,7 +140,7 @@ export function CTASection() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="flex-1 h-14 bg-white text-primary hover:opacity-90 rounded-xl font-semibold"
+                    className="flex-1 h-14 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl font-semibold"
                   >
                     Request Needs Analysis
                     <ArrowRight className="w-4 h-4 ml-2" />

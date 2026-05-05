@@ -4,6 +4,7 @@ import { PartnersCarousel } from '@/templates/PersonalLines/components/partners-
 import { CoverageSection } from './components/coverage-section'
 import { AdvisorySection } from './components/advisory-section'
 import { ClientSuccessStories } from './components/client-success-stories'
+import { WhyLifeInsuranceSection } from './components/why-life-insurance-section'
 import { CTASection } from './components/cta-section'
 import { FaqBlock } from '@/blocks/FaqBlock/Component'
 import { PromotionBlock } from '@/blocks/PromotionBlock/Component'
@@ -19,9 +20,10 @@ export const LifeIncomeTemplate: React.FC<{ data?: any; promotion?: PromotionBlo
         </div>
       )}
       <PartnersCarousel />
-      <CoverageSection />
-      <AdvisorySection />
+      <WhyLifeInsuranceSection />
       <ClientSuccessStories />
+      <AdvisorySection />
+      <CoverageSection />
       <FaqBlock 
         blockType="faq"
         eyebrow="Life & Income FAQs"
