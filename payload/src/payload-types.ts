@@ -161,7 +161,7 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
-  template?: ('default' | 'personal-lines' | 'commercial-lines') | null;
+  template?: ('default' | 'personal-lines' | 'commercial-lines' | 'life-income') | null;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'impact';
     eyebrow?: string | null;
@@ -228,6 +228,15 @@ export interface Page {
    * Optional promotion banner displayed between the Hero section and the Partners carousel.
    */
   clPromotion?: PromotionBlockType[] | null;
+  lifeIncome?: {
+    heroHeadlineTop?: string | null;
+    heroHeadlineBottom?: string | null;
+    heroDescription?: string | null;
+  };
+  /**
+   * Optional promotion banner displayed between the Hero section and the Partners carousel.
+   */
+  liPromotion?: PromotionBlockType[] | null;
   layout: (
     | CallToActionBlock
     | ContentBlock
@@ -1676,6 +1685,18 @@ export interface PagesSelect<T extends boolean = true> {
         heroDescription?: T;
       };
   clPromotion?:
+    | T
+    | {
+        promotion?: T | PromotionBlockTypeSelect<T>;
+      };
+  lifeIncome?:
+    | T
+    | {
+        heroHeadlineTop?: T;
+        heroHeadlineBottom?: T;
+        heroDescription?: T;
+      };
+  liPromotion?:
     | T
     | {
         promotion?: T | PromotionBlockTypeSelect<T>;

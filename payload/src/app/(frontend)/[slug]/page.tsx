@@ -14,6 +14,7 @@ import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PersonalLinesTemplate } from '@/templates/PersonalLines'
 import { CommercialLinesTemplate } from '@/templates/CommercialLines'
+import { LifeIncomeTemplate } from '@/templates/LifeIncome'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -66,7 +67,7 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  const { hero, layout, template, personalLines, commercialLines, plPromotion, clPromotion } = page
+  const { hero, layout, template, personalLines, commercialLines, plPromotion, clPromotion, lifeIncome, liPromotion } = page
 
   if (template === 'personal-lines') {
     return (
@@ -86,6 +87,17 @@ export default async function Page({ params: paramsPromise }: Args) {
         <PayloadRedirects disableNotFound url={url} />
         {draft && <LivePreviewListener />}
         <CommercialLinesTemplate data={commercialLines} promotion={clPromotion} />
+      </article>
+    )
+  }
+
+  if (template === 'life-income') {
+    return (
+      <article className="pt-16 pb-24">
+        <PageClient />
+        <PayloadRedirects disableNotFound url={url} />
+        {draft && <LivePreviewListener />}
+        <LifeIncomeTemplate data={lifeIncome} promotion={liPromotion} />
       </article>
     )
   }

@@ -90,6 +90,10 @@ export const Pages: CollectionConfig<'pages'> = {
           label: 'Commercial Lines',
           value: 'commercial-lines',
         },
+        {
+          label: 'Life & Income',
+          value: 'life-income',
+        },
       ],
     },
     {
@@ -178,6 +182,45 @@ export const Pages: CollectionConfig<'pages'> = {
           ],
           admin: {
             condition: (_, siblingData) => siblingData?.template === 'commercial-lines',
+          },
+        },
+        {
+          label: 'Life & Income Template Settings',
+          fields: [
+            {
+              name: 'lifeIncome',
+              type: 'group',
+              fields: [
+                {
+                  name: 'heroHeadlineTop',
+                  type: 'text',
+                  defaultValue: 'Protect What Matters.',
+                },
+                {
+                  name: 'heroHeadlineBottom',
+                  type: 'text',
+                  defaultValue: 'Plan With Confidence.',
+                },
+                {
+                  name: 'heroDescription',
+                  type: 'textarea',
+                  defaultValue: 'Life insurance, income protection, and health benefits tailored for individuals, families, and business owners. Quality guidance for the moments that matter most.',
+                },
+              ],
+            },
+            {
+              name: 'liPromotion',
+              label: 'Promotion Banner (below Hero)',
+              type: 'blocks',
+              blocks: [PromotionBlock],
+              maxRows: 1,
+              admin: {
+                description: 'Optional promotion banner displayed between the Hero section and the Partners carousel.',
+              },
+            },
+          ],
+          admin: {
+            condition: (_, siblingData) => siblingData?.template === 'life-income',
           },
         },
         {
