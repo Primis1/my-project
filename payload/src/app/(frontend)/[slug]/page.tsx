@@ -13,6 +13,7 @@ import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PersonalLinesTemplate } from '@/templates/PersonalLines'
+import { CommercialLinesTemplate } from '@/templates/CommercialLines'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -65,7 +66,7 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  const { hero, layout, template, personalLines } = page
+  const { hero, layout, template, personalLines, commercialLines, plPromotion, clPromotion } = page
 
   if (template === 'personal-lines') {
     return (
@@ -73,7 +74,18 @@ export default async function Page({ params: paramsPromise }: Args) {
         <PageClient />
         <PayloadRedirects disableNotFound url={url} />
         {draft && <LivePreviewListener />}
-        <PersonalLinesTemplate data={personalLines} />
+        <PersonalLinesTemplate data={personalLines} promotion={plPromotion} />
+      </article>
+    )
+  }
+
+  if (template === 'commercial-lines') {
+    return (
+      <article className="pt-16 pb-24">
+        <PageClient />
+        <PayloadRedirects disableNotFound url={url} />
+        {draft && <LivePreviewListener />}
+        <CommercialLinesTemplate data={commercialLines} promotion={clPromotion} />
       </article>
     )
   }

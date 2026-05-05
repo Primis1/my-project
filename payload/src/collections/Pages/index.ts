@@ -16,6 +16,7 @@ import { CardLinkBlock } from '../../blocks/CardLinkBlock/config'
 import { EventsBlock } from '../../blocks/EventsBlock/config'
 import { ContactBlock } from '../../blocks/ContactBlock/config'
 import { PartnerCardsBlock } from '../../blocks/PartnerCards/config'
+import { PromotionBlock } from '../../blocks/PromotionBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -85,6 +86,10 @@ export const Pages: CollectionConfig<'pages'> = {
           label: 'Personal Lines',
           value: 'personal-lines',
         },
+        {
+          label: 'Commercial Lines',
+          value: 'commercial-lines',
+        },
       ],
     },
     {
@@ -121,9 +126,58 @@ export const Pages: CollectionConfig<'pages'> = {
                 },
               ],
             },
+            {
+              name: 'plPromotion',
+              label: 'Promotion Banner (below Hero)',
+              type: 'blocks',
+              blocks: [PromotionBlock],
+              maxRows: 1,
+              admin: {
+                description: 'Optional promotion banner displayed between the Hero section and the Partners carousel.',
+              },
+            },
           ],
           admin: {
             condition: (_, siblingData) => siblingData?.template === 'personal-lines',
+          },
+        },
+        {
+          label: 'Commercial Template Settings',
+          fields: [
+            {
+              name: 'commercialLines',
+              type: 'group',
+              fields: [
+                {
+                  name: 'heroHeadlineTop',
+                  type: 'text',
+                  defaultValue: 'Protect Your Business.',
+                },
+                {
+                  name: 'heroHeadlineBottom',
+                  type: 'text',
+                  defaultValue: 'Secure Your Future.',
+                },
+                {
+                  name: 'heroDescription',
+                  type: 'textarea',
+                  defaultValue: 'Comprehensive commercial insurance solutions tailored for your industry. We help you manage risk and protect your bottom line.',
+                },
+              ],
+            },
+            {
+              name: 'clPromotion',
+              label: 'Promotion Banner (below Hero)',
+              type: 'blocks',
+              blocks: [PromotionBlock],
+              maxRows: 1,
+              admin: {
+                description: 'Optional promotion banner displayed between the Hero section and the Partners carousel.',
+              },
+            },
+          ],
+          admin: {
+            condition: (_, siblingData) => siblingData?.template === 'commercial-lines',
           },
         },
         {

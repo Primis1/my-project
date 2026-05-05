@@ -161,7 +161,7 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
-  template?: ('default' | 'personal-lines') | null;
+  template?: ('default' | 'personal-lines' | 'commercial-lines') | null;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'impact';
     eyebrow?: string | null;
@@ -215,6 +215,19 @@ export interface Page {
     heroHeadlineBottom?: string | null;
     heroDescription?: string | null;
   };
+  /**
+   * Optional promotion banner displayed between the Hero section and the Partners carousel.
+   */
+  plPromotion?: PromotionBlockType[] | null;
+  commercialLines?: {
+    heroHeadlineTop?: string | null;
+    heroHeadlineBottom?: string | null;
+    heroDescription?: string | null;
+  };
+  /**
+   * Optional promotion banner displayed between the Hero section and the Partners carousel.
+   */
+  clPromotion?: PromotionBlockType[] | null;
   layout: (
     | CallToActionBlock
     | ContentBlock
@@ -466,6 +479,50 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PromotionBlockType".
+ */
+export interface PromotionBlockType {
+  /**
+   * Sets the visual tone of the promotion banner.
+   */
+  variant?: ('info' | 'success' | 'warning' | 'brand') | null;
+  eyebrow?: string | null;
+  title: string;
+  description?: string | null;
+  /**
+   * Allow visitors to dismiss/close the banner.
+   */
+  dismissible?: boolean | null;
+  cta?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'promotion';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1606,6 +1663,23 @@ export interface PagesSelect<T extends boolean = true> {
         heroHeadlineBottom?: T;
         heroDescription?: T;
       };
+  plPromotion?:
+    | T
+    | {
+        promotion?: T | PromotionBlockTypeSelect<T>;
+      };
+  commercialLines?:
+    | T
+    | {
+        heroHeadlineTop?: T;
+        heroHeadlineBottom?: T;
+        heroDescription?: T;
+      };
+  clPromotion?:
+    | T
+    | {
+        promotion?: T | PromotionBlockTypeSelect<T>;
+      };
   layout?:
     | T
     | {
@@ -1637,6 +1711,34 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PromotionBlockType_select".
+ */
+export interface PromotionBlockTypeSelect<T extends boolean = true> {
+  variant?: T;
+  eyebrow?: T;
+  title?: T;
+  description?: T;
+  dismissible?: T;
+  cta?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

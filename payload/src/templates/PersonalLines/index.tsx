@@ -7,11 +7,18 @@ import { ClientSuccessStories } from './components/client-success-stories'
 import { CTASection } from './components/cta-section'
 import { ServiceHero } from './components/service-hero'
 import { FaqBlock } from '@/blocks/FaqBlock/Component'
+import { PromotionBlock } from '@/blocks/PromotionBlock/Component'
+import type { PromotionBlockType } from '@/payload-types'
 
-export const PersonalLinesTemplate: React.FC<{ data?: any }> = ({ data }) => {
+export const PersonalLinesTemplate: React.FC<{ data?: any; promotion?: PromotionBlockType[] | null }> = ({ data, promotion }) => {
   return (
     <main aria-label="Personal Insurance Solutions">
       <HeroSection data={data} />
+      {promotion && promotion.length > 0 && (
+        <div className="py-6 px-6 lg:px-8">
+          <PromotionBlock {...promotion[0]} />
+        </div>
+      )}
       <PartnersCarousel />
       <CoverageSection />
       <AnnualReviewSection />
