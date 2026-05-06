@@ -17,6 +17,7 @@ import { EventsBlock } from '../../blocks/EventsBlock/config'
 import { ContactBlock } from '../../blocks/ContactBlock/config'
 import { PartnerCardsBlock } from '../../blocks/PartnerCards/config'
 import { PromotionBlock } from '../../blocks/PromotionBlock/config'
+import { link } from '../../fields/link'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -94,6 +95,10 @@ export const Pages: CollectionConfig<'pages'> = {
           label: 'Life & Income',
           value: 'life-income',
         },
+        {
+          label: 'Home Page',
+          value: 'home',
+        },
       ],
     },
     {
@@ -128,6 +133,16 @@ export const Pages: CollectionConfig<'pages'> = {
                   type: 'textarea',
                   defaultValue: 'We shop 20+ insurance companies to find you the best coverage at the lowest price. No sales pressure, just expert guidance tailored to your needs.',
                 },
+              ],
+            },
+            {
+              name: 'plLinks',
+              type: 'group',
+              label: 'Page Links',
+              admin: { description: 'Editable links used throughout the Personal Lines template.' },
+              fields: [
+                link({ appearances: false, overrides: { name: 'ctaPrimary', label: 'CTA Primary Link' } }),
+                link({ appearances: false, overrides: { name: 'ctaSecondary', label: 'CTA Secondary Link' } }),
               ],
             },
             {
@@ -170,6 +185,16 @@ export const Pages: CollectionConfig<'pages'> = {
               ],
             },
             {
+              name: 'clLinks',
+              type: 'group',
+              label: 'Page Links',
+              admin: { description: 'Editable links used throughout the Commercial Lines template.' },
+              fields: [
+                link({ appearances: false, overrides: { name: 'ctaPrimary', label: 'CTA Primary Link' } }),
+                link({ appearances: false, overrides: { name: 'ctaSecondary', label: 'CTA Secondary Link' } }),
+              ],
+            },
+            {
               name: 'clPromotion',
               label: 'Promotion Banner (below Hero)',
               type: 'blocks',
@@ -209,6 +234,16 @@ export const Pages: CollectionConfig<'pages'> = {
               ],
             },
             {
+              name: 'liLinks',
+              type: 'group',
+              label: 'Page Links',
+              admin: { description: 'Editable links used throughout the Life & Income template.' },
+              fields: [
+                link({ appearances: false, overrides: { name: 'ctaPrimary', label: 'CTA Primary Link' } }),
+                link({ appearances: false, overrides: { name: 'ctaSecondary', label: 'CTA Secondary Link' } }),
+              ],
+            },
+            {
               name: 'liPromotion',
               label: 'Promotion Banner (below Hero)',
               type: 'blocks',
@@ -221,6 +256,57 @@ export const Pages: CollectionConfig<'pages'> = {
           ],
           admin: {
             condition: (_, siblingData) => siblingData?.template === 'life-income',
+          },
+        },
+        {
+          label: 'Home Page Settings',
+          fields: [
+            {
+              name: 'homePage',
+              type: 'group',
+              fields: [
+                {
+                  name: 'heroHeadlineTop',
+                  type: 'text',
+                  defaultValue: 'Insurance That Works',
+                },
+                {
+                  name: 'heroHeadlineBottom',
+                  type: 'text',
+                  defaultValue: 'For You.',
+                },
+                {
+                  name: 'heroDescription',
+                  type: 'textarea',
+                  defaultValue: 'An independent brokerage protecting individuals, families, and businesses across personal, commercial, and life insurance — all under one roof.',
+                },
+              ],
+            },
+            {
+              name: 'homeLinks',
+              type: 'group',
+              label: 'Page Links',
+              admin: { description: 'Editable links used throughout the Home page template.' },
+              fields: [
+                link({ appearances: false, overrides: { name: 'divisionPL', label: 'Personal Lines Division Link' } }),
+                link({ appearances: false, overrides: { name: 'divisionCL', label: 'Commercial Lines Division Link' } }),
+                link({ appearances: false, overrides: { name: 'divisionLI', label: 'Life & Income Division Link' } }),
+                link({ appearances: false, overrides: { name: 'ctaPrimary', label: 'Why Us CTA Link' } }),
+              ],
+            },
+            {
+              name: 'homePromotion',
+              label: 'Promotion Banner (below Hero)',
+              type: 'blocks',
+              blocks: [PromotionBlock],
+              maxRows: 1,
+              admin: {
+                description: 'Optional promotion banner displayed below the hero section.',
+              },
+            },
+          ],
+          admin: {
+            condition: (_, siblingData) => siblingData?.template === 'home',
           },
         },
         {

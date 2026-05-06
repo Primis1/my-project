@@ -161,7 +161,7 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
-  template?: ('default' | 'personal-lines' | 'commercial-lines' | 'life-income') | null;
+  template?: ('default' | 'personal-lines' | 'commercial-lines' | 'life-income' | 'home') | null;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'impact';
     eyebrow?: string | null;
@@ -216,6 +216,41 @@ export interface Page {
     heroDescription?: string | null;
   };
   /**
+   * Editable links used throughout the Personal Lines template.
+   */
+  plLinks: {
+    ctaPrimary: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+    ctaSecondary: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+  };
+  /**
    * Optional promotion banner displayed between the Hero section and the Partners carousel.
    */
   plPromotion?: PromotionBlockType[] | null;
@@ -223,6 +258,41 @@ export interface Page {
     heroHeadlineTop?: string | null;
     heroHeadlineBottom?: string | null;
     heroDescription?: string | null;
+  };
+  /**
+   * Editable links used throughout the Commercial Lines template.
+   */
+  clLinks: {
+    ctaPrimary: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+    ctaSecondary: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
   };
   /**
    * Optional promotion banner displayed between the Hero section and the Partners carousel.
@@ -234,9 +304,118 @@ export interface Page {
     heroDescription?: string | null;
   };
   /**
+   * Editable links used throughout the Life & Income template.
+   */
+  liLinks: {
+    ctaPrimary: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+    ctaSecondary: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+  };
+  /**
    * Optional promotion banner displayed between the Hero section and the Partners carousel.
    */
   liPromotion?: PromotionBlockType[] | null;
+  homePage?: {
+    heroHeadlineTop?: string | null;
+    heroHeadlineBottom?: string | null;
+    heroDescription?: string | null;
+  };
+  /**
+   * Editable links used throughout the Home page template.
+   */
+  homeLinks: {
+    divisionPL: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+    divisionCL: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+    divisionLI: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+    ctaPrimary: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+  };
+  /**
+   * Optional promotion banner displayed below the hero section.
+   */
+  homePromotion?: PromotionBlockType[] | null;
   layout: (
     | CallToActionBlock
     | ContentBlock
@@ -1672,6 +1851,28 @@ export interface PagesSelect<T extends boolean = true> {
         heroHeadlineBottom?: T;
         heroDescription?: T;
       };
+  plLinks?:
+    | T
+    | {
+        ctaPrimary?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        ctaSecondary?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+      };
   plPromotion?:
     | T
     | {
@@ -1683,6 +1884,28 @@ export interface PagesSelect<T extends boolean = true> {
         heroHeadlineTop?: T;
         heroHeadlineBottom?: T;
         heroDescription?: T;
+      };
+  clLinks?:
+    | T
+    | {
+        ctaPrimary?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        ctaSecondary?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
       };
   clPromotion?:
     | T
@@ -1696,7 +1919,81 @@ export interface PagesSelect<T extends boolean = true> {
         heroHeadlineBottom?: T;
         heroDescription?: T;
       };
+  liLinks?:
+    | T
+    | {
+        ctaPrimary?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        ctaSecondary?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+      };
   liPromotion?:
+    | T
+    | {
+        promotion?: T | PromotionBlockTypeSelect<T>;
+      };
+  homePage?:
+    | T
+    | {
+        heroHeadlineTop?: T;
+        heroHeadlineBottom?: T;
+        heroDescription?: T;
+      };
+  homeLinks?:
+    | T
+    | {
+        divisionPL?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        divisionCL?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        divisionLI?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        ctaPrimary?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+      };
+  homePromotion?:
     | T
     | {
         promotion?: T | PromotionBlockTypeSelect<T>;

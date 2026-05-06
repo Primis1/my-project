@@ -15,6 +15,7 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PersonalLinesTemplate } from '@/templates/PersonalLines'
 import { CommercialLinesTemplate } from '@/templates/CommercialLines'
 import { LifeIncomeTemplate } from '@/templates/LifeIncome'
+import { HomeTemplate } from '@/templates/Home'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -67,7 +68,18 @@ export default async function Page({ params: paramsPromise }: Args) {
     return <PayloadRedirects url={url} />
   }
 
-  const { hero, layout, template, personalLines, commercialLines, plPromotion, clPromotion, lifeIncome, liPromotion } = page
+  const { hero, layout, template, personalLines, commercialLines, plPromotion, clPromotion, lifeIncome, liPromotion, homePage, homePromotion } = page
+
+  if (template === 'home') {
+    return (
+      <article className="pt-16 pb-24">
+        <PageClient />
+        <PayloadRedirects disableNotFound url={url} />
+        {draft && <LivePreviewListener />}
+        <HomeTemplate data={homePage} promotion={homePromotion} />
+      </article>
+    )
+  }
 
   if (template === 'personal-lines') {
     return (
