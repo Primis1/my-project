@@ -90,12 +90,12 @@ export function DivisionsSection() {
               >
                 {/* Icon & tag */}
                 <div className="flex items-center gap-4 mb-6">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${isEmerald ? 'bg-emerald-100 group-hover:bg-emerald-200' : 'bg-primary/10 group-hover:bg-primary/15'} transition-colors`}>
-                    <Icon className={`w-7 h-7 ${isEmerald ? 'text-emerald-600' : 'text-primary'}`} />
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${isEmerald ? 'bg-primary/10 group-hover:bg-primary/15' : 'bg-primary/10 group-hover:bg-primary/15'} transition-colors`}>
+                    <Icon className={`w-7 h-7 ${isEmerald ? 'text-primary' : 'text-primary'}`} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-foreground">{div.title}</h3>
-                    <p className={`text-sm font-medium ${isEmerald ? 'text-emerald-600' : 'text-primary'}`}>{div.tagline}</p>
+                    <p className={`text-sm font-medium ${isEmerald ? 'text-primary/80' : 'text-primary'}`}>{div.tagline}</p>
                   </div>
                 </div>
 
@@ -118,7 +118,7 @@ export function DivisionsSection() {
                 </div>
 
                 {/* CTA */}
-                <div className={`inline-flex items-center gap-2 text-sm font-semibold ${isEmerald ? 'text-emerald-600' : 'text-primary'}`}>
+                <div className={`inline-flex items-center gap-2 text-sm font-semibold ${isEmerald ? 'text-primary' : 'text-primary'}`}>
                   Explore {div.title}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </div>

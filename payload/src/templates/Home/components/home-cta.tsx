@@ -45,11 +45,23 @@ const benefits = [
 
 export function HomeCTA() {
   const [email, setEmail] = useState("")
+  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Email submitted:", email)
-    setEmail("")
+    setFormStatus("loading")
+    try {
+      const res = await fetch("/api/quote-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, status: "new" }),
+      })
+      if (!res.ok) throw new Error("Failed")
+      setFormStatus("success")
+      setEmail("")
+    } catch {
+      setFormStatus("error")
+    }
   }
 
   return (
@@ -111,7 +123,7 @@ export function HomeCTA() {
               <ul className="space-y-3">
                 {benefits.map((benefit) => (
                   <li key={benefit} className="flex items-center gap-3 text-sm text-white/90">
-                    <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
                     {benefit}
                   </li>
                 ))}
@@ -120,43 +132,56 @@ export function HomeCTA() {
 
             {/* Right form */}
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="home-cta-email" className="text-sm font-medium text-white mb-2 block">
-                    Email Address
-                  </label>
-                  <Input
-                    id="home-cta-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-14 bg-background/90 border-0 rounded-xl text-foreground placeholder:text-muted-foreground"
-                  />
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="flex-1 h-14 bg-white text-primary hover:bg-white/90 rounded-xl font-semibold"
-                  >
-                    Request a Review
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                  <Button
-                    type="button"
-                    size="lg"
-                    variant="outline"
-                    className="flex-1 h-14 bg-transparent border-2 border-white/50 text-white hover:bg-white/10 rounded-xl font-semibold"
-                  >
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Book a Call
-                  </Button>
-                </div>
-                <p className="text-xs text-white/60 text-center">
-                  No spam. No obligation. Your information stays strictly confidential.
-                </p>
-              </form>
+              {formStatus === "success" ? (
+                 <div className="py-6 text-center text-white">
+                   <CheckCircle2 className="w-12 h-12 text-success mx-auto mb-4" />
+                   <h4 className="text-xl font-bold mb-2">Request Received</h4>
+                   <p className="text-sm text-white/80">We&apos;ll be in touch shortly.</p>
+                 </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="home-cta-email" className="text-sm font-medium text-white mb-2 block">
+                      Email Address
+                    </label>
+                    <Input
+                      id="home-cta-email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      required
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-14 bg-background/90 border-0 rounded-xl text-foreground placeholder:text-muted-foreground"
+                    />
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button
+                      type="submit"
+                      disabled={formStatus === "loading"}
+                      size="lg"
+                      className="flex-1 h-14 bg-white text-primary hover:bg-white/90 rounded-xl font-semibold"
+                    >
+                      {formStatus === "loading" ? "Submitting..." : "Request a Review"}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="lg"
+                      variant="outline"
+                      className="flex-1 h-14 bg-transparent border-2 border-white/50 text-white hover:bg-white/10 rounded-xl font-semibold"
+                    >
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Book a Call
+                    </Button>
+                  </div>
+                  {formStatus === "error" && (
+                    <p className="text-sm text-destructive text-center mt-2">Error submitting request.</p>
+                  )}
+                  <p className="text-xs text-white/60 text-center">
+                    No spam. No obligation. Your information stays strictly confidential.
+                  </p>
+                </form>
+              )}
             </div>
           </div>
         </div>
