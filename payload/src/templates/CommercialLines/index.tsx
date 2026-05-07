@@ -1,7 +1,10 @@
 import React from 'react'
 import { HeroSection } from './components/hero-section'
 import { PartnersCarousel } from '@/templates/PersonalLines/components/partners-carousel-wrapper'
+import { IndustrySpecializationSection } from './components/industry-specialization-section'
 import { CoverageSection } from './components/coverage-section'
+import { WhyInsuranceMattersSection } from './components/why-insurance-matters-section'
+import { ClientJourneyTimeline } from './components/client-journey-timeline'
 import { RiskManagementSection } from './components/risk-management-section'
 import { ClientSuccessStories } from './components/client-success-stories'
 import { CTASection } from './components/cta-section'
@@ -19,7 +22,10 @@ export const CommercialLinesTemplate: React.FC<{ data?: any; promotion?: Promoti
         </div>
       )}
       <PartnersCarousel />
+      <IndustrySpecializationSection />
       <CoverageSection />
+      <WhyInsuranceMattersSection />
+      <ClientJourneyTimeline />
       <RiskManagementSection />
       <ClientSuccessStories />
       <FaqBlock 
@@ -65,3 +71,4 @@ export const CommercialLinesTemplate: React.FC<{ data?: any; promotion?: Promoti
     </main>
   )
 }
+

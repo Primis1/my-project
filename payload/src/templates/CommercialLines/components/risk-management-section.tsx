@@ -46,6 +46,7 @@ const stats = [
   { value: '4×', label: 'yearly touchpoints vs. industry standard 1×' },
   { value: '31%', label: 'average reduction in claims frequency' },
   { value: '100%', label: 'of reviews included at no additional cost' },
+  { value: '24/7', label: 'claims assistance — we advocate, not just refer' },
 ]
 
 export function RiskManagementSection() {
@@ -68,7 +69,7 @@ export function RiskManagementSection() {
             </p>
 
             {/* Stats */}
-            <ul className="grid sm:grid-cols-3 gap-6 mb-8">
+            <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {stats.map((stat) => (
                 <li key={stat.label} className="text-center sm:text-left">
                   <div className="text-3xl font-bold text-primary mb-1">{stat.value}</div>

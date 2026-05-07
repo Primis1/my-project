@@ -5,6 +5,7 @@ import { WhyUsSection } from './components/why-us-section'
 import { PartnersCarousel } from '@/templates/PersonalLines/components/partners-carousel-wrapper'
 import { HomeCTA } from './components/home-cta'
 import { PromotionBlock } from '@/blocks/PromotionBlock/Component'
+import { NewsGridBlock } from '@/blocks/NewsGrid/Component'
 import type { PromotionBlockType } from '@/payload-types'
 
 export const HomeTemplate: React.FC<{ data?: any; promotion?: PromotionBlockType[] | null }> = ({ data, promotion }) => {
@@ -19,6 +20,7 @@ export const HomeTemplate: React.FC<{ data?: any; promotion?: PromotionBlockType
       <DivisionsSection />
       <PartnersCarousel />
       <WhyUsSection />
+      <NewsGridBlock />
       <HomeCTA />
     </main>
   )
