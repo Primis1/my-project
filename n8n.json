@@ -1,0 +1,396 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "/* STREAMING_CHUNK:Defining constants and carrier lists... */\nconst CARRIERS = [\n  'Wawanesa', 'Dominion', 'Intact', 'Aviva', 'Economical', \n  'Pembridge', 'Gore Mutual', 'SGI', 'Travelers', 'Chubb', \n  'Belairdirect', 'TD Insurance', 'RSA', 'Northbridge'\n];\nconst CONSENT_KEYWORDS = ['personal', 'information', 'consent'];\nconst SUMMARY_KEYWORD  = 'summary';\nconst IGNORE_KEYWORDS   = ['pac', 'mac'];\n\nconst item = $input.first();\nconst subject = (item.json.subject || '').trim();\nconst subLow  = subject.toLowerCase();\n\n/* STREAMING_CHUNK:Extracting Business Type, Client ID, and Carrier... */\nconst businessType = subLow.includes('remarket') ? 'REMARKET' : 'NEW BUSINESS';\nconst ccMatch  = subject.match(/CC:\\\\s([A-Z0-9]+)/i);\nconst clientId = ccMatch ? ccMatch[1].toUpperCase() : 'UNKNOWN';\n\nlet carrier = 'UNKNOWN';\nfor (const c of CARRIERS) {\n  if (subLow.includes(c.toLowerCase())) {\n    carrier = c.toUpperCase();\n    break;\n  }\n}\n\n/* STREAMING_CHUNK:Sorting binary attachments into buckets... */\nconst binary  = item.binary || {};\nconst buckets = { home: [], auto: [], lpv: [], shared: [], ignored: [] };\n\nconst isConsentForm = (n) => CONSENT_KEYWORDS.every(kw => n.includes(kw));\n\nfor (const [key, binData] of Object.entries(binary)) {\n  const fname = (binData.fileName || '').toLowerCase();\n\n  if (IGNORE_KEYWORDS.some(kw => fname.includes(kw))) { \n    buckets.ignored.push(key); \n    continue; \n  }\n  \n  if (fname.includes('lpv')) {\n    buckets.lpv.push(key);\n    continue;\n  }\n\n  if (isConsentForm(fname) || fname.includes(SUMMARY_KEYWORD)) {\n    buckets.shared.push(key);\n    continue;\n  }\n\n  const isHome = fname.includes('home');\n  const isAuto = fname.includes('auto');\n\n  if (isHome) buckets.home.push(key);\n  if (isAuto) buckets.auto.push(key);\n  \n  if (!isHome && !isAuto) {\n    buckets.shared.push(key);\n  }\n}\n\n/* STREAMING_CHUNK:Calculating LPV specific product types... */\nconst lpvHasAuto   = buckets.lpv.some(k => (binary[k]?.fileName || '').toLowerCase().includes('auto'));\nconst lpvHasTenant = buckets.lpv.some(k => (binary[k]?.fileName || '').toLowerCase().includes('tenant'));\nlet lpvProductType = 'AUTO & TENANTS';\nif (lpvHasAuto && !lpvHasTenant) lpvProductType = 'AUTO';\nif (lpvHasTenant && !lpvHasAuto) lpvProductType = 'TENANTS';\n\n/* STREAMING_CHUNK:Formatting HTML Signature...*/\nconst signatureHtml = `\n<div style=\\\"font-family: Arial, sans-serif; font-size: 12px; color: #333;\\\">\n  <p>Please find the attached signed documents for your review and processing.</p>\n  <br>\n  <div style=\\\"color: #1a3a6e; font-weight: bold; font-size: 15px;\\\">Oleh(Finn) Babinskyi, RIBO & LLQP</div>\n  <div style=\\\"font-style: italic; color: #666;\\\">Customer Service Representative</div>\n  <br>\n  1430 Hurontario Street, Port Credit Mississauga, Ontario L5G 3H4<br>\n  Buss: (905) 486 0440 | Dir: (905) 486 0437 | Fax: (905) 486 0441<br>\n  Email: <a href=\\\"mailto:olehb@kmibrokers.com\\\">olehb@kmibrokers.com</a> | Website: <a href=\\\"https://www.kmibrokers.com\\\">www.kmibrokers.com</a>\n  <br><br>\n  <img src=\\\"cid:kmi_logo\\\" alt=\\\"KMI Brokers\\\" style=\\\"max-width: 200px;\\\">\n  <br><br>\n  <p style=\\\"font-size: 9px; color: #999; border-top: 1px solid #ddd; padding-top: 8px;\\\">\n    <strong>DISCLAIMER:</strong> This email (including any attachments) is intended for the sole use of the intended recipient/s and may contain material that is CONFIDENTIAL AND PRIVATE COMPANY INFORMATION. Any review or reliance by others or copying or distribution or forwarding of any or all of the contents in this message is STRICTLY PROHIBITED.\n  </p>\n</div>`;\n\n/* STREAMING_CHUNK:Preparing final routing flags and subjects... */\nreturn [{\n  json: {\n    hasHome: subLow.includes('home') || buckets.home.length > 0,\n    hasAuto: subLow.includes('auto') || buckets.auto.length > 0,\n    hasLPV: buckets.lpv.length > 0,\n    homeSubj: `${businessType} / CC: ${clientId} / HOME / BINDER:  / ${carrier}`,\n    autoSubj: `${businessType} / CC: ${clientId} / AUTO / BINDER:  / ${carrier}`,\n    lpvSubj: `LPV / CC: ${clientId} / ${lpvProductType} / POLICIES:  / ${carrier}`,\n    homeFiles: [...buckets.home, ...buckets.shared].join(','),\n    autoFiles: [...buckets.auto, ...buckets.shared].join(','),\n    lpvFiles: buckets.lpv.join(','),\n    signatureHtml\n  },\n  binary\n}];"
+      },
+      "id": "181e6f82-3bdb-45af-bc03-ff51b0f1a941",
+      "name": "🔍 Classify & Sort",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1088,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "cond-home",
+              "leftValue": "={{ $json.hasHome }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e3c693f1-6ee4-4f09-bff0-34a4095f63c2",
+      "name": "🏠 Has Home?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-auto",
+              "leftValue": "={{ $json.hasAuto }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6f950d89-5a25-4b2e-b38f-6601c0a5dcb3",
+      "name": "🚗 Has Auto?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-lpv",
+              "leftValue": "={{ $json.hasLPV }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9eedb17d-3cca-4128-a10e-5014b2536fa6",
+      "name": "📄 Has LPV?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.homeSubj }}",
+        "bodyContent": "={{ $json.signatureHtml }}",
+        "additionalFields": {}
+      },
+      "id": "19b75d00-e6a1-4f46-aced-0f4aa47902f8",
+      "name": "🏠 Create Home Draft",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        320
+      ],
+      "webhookId": "3d764520-2564-4f0d-a16f-b3f6507d2226",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.autoSubj }}",
+        "bodyContent": "={{ $json.signatureHtml }}",
+        "additionalFields": {}
+      },
+      "id": "3d1c12c7-917a-4d0d-be4d-23d0d36255c3",
+      "name": "🚗 Create Auto Draft",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        528
+      ],
+      "webhookId": "e0648e3f-84b6-4e15-a544-77b025dc6aba",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.lpvSubj }}",
+        "bodyContent": "={{ $json.signatureHtml }}",
+        "additionalFields": {}
+      },
+      "id": "c484dc91-57ab-4abf-aaa3-abfa1448eaf7",
+      "name": "📄 Create LPV Draft",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        720
+      ],
+      "webhookId": "c076f1b9-ae5e-49d7-ab5d-96f5460124a9",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.subject }}",
+              "rightValue": "Completed:",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "01602474-aa31-48e2-b169-67a920d2423e",
+      "name": "Filter by Recipient",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1312,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "output": "raw",
+        "filters": {
+          "readStatus": "both"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "id": "a160fba7-ffae-46df-bbcb-d9c90cac011b",
+      "name": "Incoming Email Trigger",
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        416
+      ],
+      "notesInFlow": false,
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": {
+          "__rl": true,
+          "value": "AQMkADAwATM3ZmYBLWFjYjEtM2FkNy0wMAItMDAKAEYAAAPqEqGQwoj1Q7zb39jiaMgjBwBjmb-I1OSBTre9Ecwrhil0AAACAQ8AAABjmb-I1OSBTre9Ecwrhil0AAAAKxezYgAAAA==",
+          "mode": "list",
+          "cachedResultName": "LPV / CC: UNKNOWN / AUTO & TENANTS / POLICIES:  / UNKNOWN",
+          "cachedResultUrl": "https://outlook.live.com/owa/?ItemID=AQMkADAwATM3ZmYBLWFjYjEtM2FkNy0wMAItMDAKAEYAAAPqEqGQwoj1Q7zb39jiaMgjBwBjmb%2FI1OSBTre9Ecwrhil0AAACAQ8AAABjmb%2FI1OSBTre9Ecwrhil0AAAAKxezYgAAAA%3D%3D&exvsurl=1&viewmodel=ReadMessageItem"
+        },
+        "output": "raw",
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -1376,
+        672
+      ],
+      "id": "0cdede94-86df-4e91-833f-0419cab742c5",
+      "name": "Get a message",
+      "webhookId": "368421a8-c227-488e-9fd9-e5507876c85a",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        672
+      ],
+      "id": "0bae89df-d239-4509-8282-7b3230833c7c",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "connections": {
+    "🔍 Classify & Sort": {
+      "main": [
+        [
+          {
+            "node": "🏠 Has Home?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "🚗 Has Auto?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📄 Has LPV?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🏠 Has Home?": {
+      "main": [
+        [
+          {
+            "node": "🏠 Create Home Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🚗 Has Auto?": {
+      "main": [
+        [
+          {
+            "node": "🚗 Create Auto Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📄 Has LPV?": {
+      "main": [
+        [
+          {
+            "node": "📄 Create LPV Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter by Recipient": {
+      "main": [
+        [
+          {
+            "node": "🔍 Classify & Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incoming Email Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter by Recipient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "🔍 Classify & Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "38aabbab5e958e956ebfee40226704683671d4f3e743a83aac01729004aa503e"
+  }
+}

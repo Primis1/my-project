@@ -1,0 +1,492 @@
+{
+  "name": "DocuSign → Outlook Draft Processor (KMI Brokers) v2",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "output": "raw",
+        "filters": {
+          "readStatus": "both"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "id": "a160fba7-ffae-46df-bbcb-d9c90cac011b",
+      "name": "Incoming Email Trigger",
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        416
+      ],
+      "notesInFlow": false,
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.subject }}",
+              "rightValue": "Completed:",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "01602474-aa31-48e2-b169-67a920d2423e",
+      "name": "Filter by Recipient",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1312,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "/* ════════════════════════════════════════════════════════════\n   KMI BROKERS — DocuSign Email Classifier & File Sorter\n   ════════════════════════════════════════════════════════════\n   CONFIGURATION: Edit CARRIERS array to add/remove carriers.\n   All keyword matching is CASE-INSENSITIVE.\n   ═══════════════════════════════════════════════════════════ */\n\n// ── EDITABLE CONFIG ──────────────────────────────────────────\nconst CARRIERS = [\n  'Wawanesa', 'Dominion', 'Intact', 'Aviva', 'Economical',\n  'Pembridge', 'Gore Mutual', 'SGI', 'Travelers', 'Chubb',\n  'Belairdirect', 'TD Insurance', 'RSA', 'Northbridge'\n  // ← Add more carriers here\n];\n\n// Shared files: ALL three words must appear in the filename\nconst CONSENT_KEYWORDS = ['personal', 'information', 'consent'];\n// Shared files: this word anywhere in the filename\nconst SUMMARY_KEYWORD  = 'summary';\n// Files with any of these → IGNORED (never attached anywhere)\nconst IGNORE_KEYWORDS  = ['pac', 'mac'];\n// ─────────────────────────────────────────────────────────────\n\nconst HTML_BODY = `<div style=\"font-family: Arial, sans-serif; font-size: 12px; color: #333; line-height: 1.6;\">\n  <p style=\"margin: 0 0 14px;\">Please find the attached signed documents for your review and processing.</p>\n  <hr style=\"border: none; border-top: 1px solid #ccc; margin: 16px 0;\">\n  <table cellpadding=\"0\" cellspacing=\"0\"><tr><td>\n    <span style=\"font-size: 15px; font-weight: bold; color: #1a3a6e;\">Oleh (Finn) Babinskyi</span>&nbsp;<span style=\"color: #444; font-size: 11px;\">RIBO &amp; LLQP</span><br>\n    <span style=\"color: #666; font-style: italic;\">Customer Service Representative</span><br><br>\n    1430 Hurontario Street, Port Credit<br>\n    Mississauga, Ontario&nbsp; L5G 3H4<br><br>\n    <span style=\"color:#555\">Buss:</span> (905) 486-0440&nbsp;&nbsp;\n    <span style=\"color:#555\">Dir:</span> (905) 486-0437&nbsp;&nbsp;\n    <span style=\"color:#555\">Fax:</span> (905) 486-0441<br>\n    <span style=\"color:#555\">Email:</span> <a href=\"mailto:olehb@kmibrokers.com\" style=\"color:#1a3a6e;text-decoration:none;\">olehb@kmibrokers.com</a>&nbsp;&nbsp;\n    <span style=\"color:#555\">Web:</span> <a href=\"https://www.kmibrokers.com\" style=\"color:#1a3a6e;text-decoration:none;\">www.kmibrokers.com</a><br><br>\n    <img src=\"UPDATE_WITH_YOUR_LOGO_URL\" alt=\"KMI Brokers\" style=\"max-width:200px;height:auto;display:block;\"><br>\n    <p style=\"font-size:9px;color:#999;max-width:560px;border-top:1px solid #e0e0e0;padding-top:8px;margin:0;line-height:1.4;\">\n      <strong>DISCLAIMER:</strong> This email (including any attachments) is intended for the sole use of the intended recipient/s and may contain material that is CONFIDENTIAL AND PRIVATE COMPANY INFORMATION. Any review or reliance by others or copying or distribution or forwarding of any or all of the contents in this message is STRICTLY PROHIBITED. If you are not the intended recipient, please contact the sender by email and delete all copies; your cooperation in this regard is appreciated.\n    </p>\n  </td></tr></table>\n</div>`;\n\n// ═══════════════════════════ PROCESSING ═════════════════════\nconst item    = $input.first();\nconst subject = (item.json.subject || '').trim();\nconst subLow  = subject.toLowerCase();\n\n// 1. BUSINESS TYPE\nconst businessType = subLow.includes('remarket') ? 'REMARKET' : 'NEW BUSINESS';\n\n// 2. CLIENT ID  (fixed regex: \\s* matches optional whitespace after \"CC:\")\nconst ccMatch  = subject.match(/CC:\\s*([A-Z0-9]+)/i);\nconst clientId = ccMatch ? ccMatch[1].toUpperCase() : 'UNKNOWN';\n\n// 3. CARRIER\nlet carrier = 'UNKNOWN';\nfor (const c of CARRIERS) {\n  if (subLow.includes(c.toLowerCase())) { carrier = c.toUpperCase(); break; }\n}\n\n// 4. FILE SORTING\nconst binary  = item.binary || {};\nconst buckets = { home: [], auto: [], lpv: [], shared: [], ignored: [] };\n\nconst isConsentForm = (n) => CONSENT_KEYWORDS.every(kw => n.includes(kw));\n\nfor (const [key, binData] of Object.entries(binary)) {\n  const fname = (binData.fileName || '').toLowerCase();\n  if (IGNORE_KEYWORDS.some(kw => fname.includes(kw)))          { buckets.ignored.push(key); continue; }\n  if (fname.includes('lpv'))                                    { buckets.lpv.push(key);     continue; }\n  if (isConsentForm(fname) || fname.includes(SUMMARY_KEYWORD)) { buckets.shared.push(key);  continue; }\n  const isHome = fname.includes('home');\n  const isAuto = fname.includes('auto');\n  if (isHome) buckets.home.push(key);\n  if (isAuto) buckets.auto.push(key);\n  if (!isHome && !isAuto) buckets.shared.push(key); // safe fallback\n}\n\n// 5. LPV PRODUCT TYPE\nconst lpvHasAuto   = buckets.lpv.some(k => (binary[k]?.fileName || '').toLowerCase().includes('auto'));\nconst lpvHasTenant = buckets.lpv.some(k => (binary[k]?.fileName || '').toLowerCase().includes('tenant'));\nlet lpvProductType = 'AUTO & TENANTS';\nif (lpvHasAuto  && !lpvHasTenant) lpvProductType = 'AUTO';\nif (lpvHasTenant && !lpvHasAuto)  lpvProductType = 'TENANTS';\n\n// 6. ROUTE FLAGS\nconst hasHome = subLow.includes('home') || buckets.home.length > 0;\nconst hasAuto = subLow.includes('auto') || buckets.auto.length > 0;\nconst hasLPV  = buckets.lpv.length > 0;\n\n// 7. SUBJECT LINES  (BINDER and POLICIES left blank for manual entry)\nconst homeSubj = `${businessType} / CC: ${clientId} / HOME / BINDER:  / ${carrier}`;\nconst autoSubj = `${businessType} / CC: ${clientId} / AUTO / BINDER:  / ${carrier}`;\nconst lpvSubj  = `LPV / CC: ${clientId} / ${lpvProductType} / POLICIES:  / ${carrier}`;\n\nreturn [{\n  json: {\n    hasHome, hasAuto, hasLPV,\n    homeSubj, autoSubj, lpvSubj,\n    // Comma-joined binary keys for each route — used by the Build Payload nodes\n    homeFiles: [...buckets.home, ...buckets.shared].join(','),\n    autoFiles: [...buckets.auto, ...buckets.shared].join(','),\n    lpvFiles:  buckets.lpv.join(','),\n    signatureHtml: HTML_BODY\n  },\n  binary  // pass ALL binary data downstream — each Build Payload node filters its own\n}];\n"
+      },
+      "id": "181e6f82-3bdb-45af-bc03-ff51b0f1a941",
+      "name": "🔍 Classify & Sort",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1088,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "cond-home",
+              "leftValue": "={{ $json.hasHome }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e3c693f1-6ee4-4f09-bff0-34a4095f63c2",
+      "name": "🏠 Has Home?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-auto",
+              "leftValue": "={{ $json.hasAuto }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6f950d89-5a25-4b2e-b38f-6601c0a5dcb3",
+      "name": "🚗 Has Auto?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-lpv",
+              "leftValue": "={{ $json.hasLPV }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9eedb17d-3cca-4128-a10e-5014b2536fa6",
+      "name": "📄 Has LPV?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item          = $input.first();\nconst allBin        = item.binary || {};\nconst subject       = item.json['homeSubj'];\nconst signatureHtml = item.json.signatureHtml;\n\n// Split comma-joined file keys back to array; skip any that don't exist in binary\nconst rawKeys = (item.json['homeFiles'] || '').split(',');\nconst keys    = rawKeys.map(k => k.trim()).filter(k => k && allBin[k]);\n\n// Build Graph API attachment objects\n// n8n stores binary data as base64 in binData.data — exactly what Graph API needs\nconst attachments = keys.map(k => ({\n  \"@odata.type\":  \"#microsoft.graph.fileAttachment\",\n  \"name\":         allBin[k].fileName || k,\n  \"contentType\":  allBin[k].mimeType  || \"application/pdf\",\n  \"contentBytes\": allBin[k].data\n}));\n\nreturn [{\n  json: {\n    subject,\n    body: { contentType: \"HTML\", content: signatureHtml },\n    toRecipients: [{ emailAddress: { address: \"plprocessing@kmibrokers.com\" } }],\n    attachments\n  }\n}];\n"
+      },
+      "id": "bp-home-0001-0001-0001-000000000001",
+      "name": "📎 Build Home Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -580,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item          = $input.first();\nconst allBin        = item.binary || {};\nconst subject       = item.json['autoSubj'];\nconst signatureHtml = item.json.signatureHtml;\n\n// Split comma-joined file keys back to array; skip any that don't exist in binary\nconst rawKeys = (item.json['autoFiles'] || '').split(',');\nconst keys    = rawKeys.map(k => k.trim()).filter(k => k && allBin[k]);\n\n// Build Graph API attachment objects\n// n8n stores binary data as base64 in binData.data — exactly what Graph API needs\nconst attachments = keys.map(k => ({\n  \"@odata.type\":  \"#microsoft.graph.fileAttachment\",\n  \"name\":         allBin[k].fileName || k,\n  \"contentType\":  allBin[k].mimeType  || \"application/pdf\",\n  \"contentBytes\": allBin[k].data\n}));\n\nreturn [{\n  json: {\n    subject,\n    body: { contentType: \"HTML\", content: signatureHtml },\n    toRecipients: [{ emailAddress: { address: \"plprocessing@kmibrokers.com\" } }],\n    attachments\n  }\n}];\n"
+      },
+      "id": "bp-auto-0002-0002-0002-000000000002",
+      "name": "📎 Build Auto Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -580,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item          = $input.first();\nconst allBin        = item.binary || {};\nconst subject       = item.json['lpvSubj'];\nconst signatureHtml = item.json.signatureHtml;\n\n// Split comma-joined file keys back to array; skip any that don't exist in binary\nconst rawKeys = (item.json['lpvFiles'] || '').split(',');\nconst keys    = rawKeys.map(k => k.trim()).filter(k => k && allBin[k]);\n\n// Build Graph API attachment objects\n// n8n stores binary data as base64 in binData.data — exactly what Graph API needs\nconst attachments = keys.map(k => ({\n  \"@odata.type\":  \"#microsoft.graph.fileAttachment\",\n  \"name\":         allBin[k].fileName || k,\n  \"contentType\":  allBin[k].mimeType  || \"application/pdf\",\n  \"contentBytes\": allBin[k].data\n}));\n\nreturn [{\n  json: {\n    subject,\n    body: { contentType: \"HTML\", content: signatureHtml },\n    toRecipients: [{ emailAddress: { address: \"plprocessing@kmibrokers.com\" } }],\n    attachments\n  }\n}];\n"
+      },
+      "id": "bp-lpv--0003-0003-0003-000000000003",
+      "name": "📎 Build LPV Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -580,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.microsoft.com/v1.0/me/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOutlookOAuth2Api",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "gapi-home-0004-0004-0004-000000000004",
+      "name": "✉️ Create Home Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -280,
+        260
+      ],
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.microsoft.com/v1.0/me/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOutlookOAuth2Api",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "gapi-auto-0005-0005-0005-000000000005",
+      "name": "✉️ Create Auto Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -280,
+        470
+      ],
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.microsoft.com/v1.0/me/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOutlookOAuth2Api",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "gapi-lpv--0006-0006-0006-000000000006",
+      "name": "✉️ Create LPV Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -280,
+        680
+      ],
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        672
+      ],
+      "id": "0bae89df-d239-4509-8282-7b3230833c7c",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": {
+          "__rl": true,
+          "value": "AQMkADAwATM3ZmYBLWFjYjEtM2FkNy0wMAItMDAKAEYAAAPqEqGQwoj1Q7zb39jiaMgjBwBjmb-I1OSBTre9Ecwrhil0AAACAQ8AAABjmb-I1OSBTre9Ecwrhil0AAAAKxezYgAAAA==",
+          "mode": "list",
+          "cachedResultName": "LPV / CC: UNKNOWN / AUTO & TENANTS / POLICIES:  / UNKNOWN"
+        },
+        "output": "raw",
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -1376,
+        672
+      ],
+      "id": "0cdede94-86df-4e91-833f-0419cab742c5",
+      "name": "Get a message",
+      "webhookId": "368421a8-c227-488e-9fd9-e5507876c85a",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "R5v7qXBD2Pym3dkO",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Incoming Email Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter by Recipient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter by Recipient": {
+      "main": [
+        [
+          {
+            "node": "🔍 Classify & Sort",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "🔍 Classify & Sort": {
+      "main": [
+        [
+          {
+            "node": "🏠 Has Home?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "🚗 Has Auto?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📄 Has LPV?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🏠 Has Home?": {
+      "main": [
+        [
+          {
+            "node": "📎 Build Home Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "🚗 Has Auto?": {
+      "main": [
+        [
+          {
+            "node": "📎 Build Auto Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "📄 Has LPV?": {
+      "main": [
+        [
+          {
+            "node": "📎 Build LPV Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "📎 Build Home Payload": {
+      "main": [
+        [
+          {
+            "node": "✉️ Create Home Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📎 Build Auto Payload": {
+      "main": [
+        [
+          {
+            "node": "✉️ Create Auto Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📎 Build LPV Payload": {
+      "main": [
+        [
+          {
+            "node": "✉️ Create LPV Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "🔍 Classify & Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "38aabbab5e958e956ebfee40226704683671d4f3e743a83aac01729004aa503e"
+  }
+}
