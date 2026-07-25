@@ -323,32 +323,48 @@ export const Pages: CollectionConfig<'pages'> = {
                 {
                   name: 'heroHeading',
                   type: 'text',
-                  defaultValue: 'Get Your Free Guide Today!',
+                  defaultValue: 'Thank You!',
                   required: true,
                 },
                 {
                   name: 'heroSubtitle',
                   type: 'textarea',
-                  defaultValue: 'Complete the form to receive high-value materials and build immediate trust.',
-                },
-                {
-                  name: 'lureImage',
-                  type: 'upload',
-                  relationTo: 'media',
-                  required: true,
+                  defaultValue: 'We appreciate your interest! Review your 3 exclusive giveaways below and submit the form for instant access.',
                 },
                 {
                   name: 'lureTitle',
                   type: 'text',
-                  defaultValue: 'Inside the Free Guide',
-                  required: true,
+                  defaultValue: 'Your 3 Free Giveaways',
                 },
                 {
                   name: 'lureDescription',
                   type: 'richText',
-                  admin: {
-                    description: 'Detailed copywriting highlighting the benefits of the lead magnet.',
-                  },
+                },
+                {
+                  name: 'giveaways',
+                  type: 'array',
+                  label: 'Giveaways (3 Sub-Sections)',
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      required: true,
+                    },
+                    {
+                      name: 'description',
+                      type: 'textarea',
+                    },
+                    {
+                      name: 'bullets',
+                      type: 'array',
+                      fields: [
+                        {
+                          name: 'bullet',
+                          type: 'text',
+                        },
+                      ],
+                    },
+                  ],
                 },
                 {
                   name: 'lureBulletPoints',
@@ -363,10 +379,26 @@ export const Pages: CollectionConfig<'pages'> = {
                   ],
                 },
                 {
+                  name: 'lureImage',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: false,
+                },
+                {
+                  name: 'formTitle',
+                  type: 'text',
+                  defaultValue: 'Claim Your Free Resources',
+                },
+                {
+                  name: 'formSubtitle',
+                  type: 'text',
+                  defaultValue: 'Fill out the form below for instant access and a personalized assessment.',
+                },
+                {
                   name: 'form',
                   type: 'relationship',
                   relationTo: 'forms',
-                  required: true,
+                  required: false,
                   admin: {
                     description: 'Select the form that prospects will fill out.',
                   },

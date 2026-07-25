@@ -1,26 +1,156 @@
-import React from 'react'
-import { Media } from '@/components/Media'
+"use client"
+
+import React, { useState } from 'react'
 import RichText from '@/components/RichText'
 import { FormBlock } from '@/blocks/Form/Component'
-import { CheckCircle2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { 
+  CheckCircle2, 
+  Gift, 
+  FileText, 
+  ShieldCheck, 
+  Sparkles, 
+  ArrowRight, 
+  Home, 
+  Building2, 
+  Heart, 
+  BadgeCheck
+} from 'lucide-react'
+import { cn } from '@/utilities/ui'
 
 export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
   if (!data) return null
 
   const {
-    heroHeading,
-    heroSubtitle,
-    lureImage,
-    lureTitle,
+    heroHeading = 'Thank You!',
+    heroSubtitle = 'We appreciate your interest! Review your 3 exclusive giveaways below and submit your request for instant access.',
+    lureTitle = 'Your 3 Exclusive Free Giveaways',
     lureDescription,
+    giveaways: cmsGiveaways,
     lureBulletPoints,
     form,
+    formTitle = 'Start Your Protection Plan',
+    formSubtitle = 'Confidential assessment — no obligation',
     hideHeader,
     hideFooter,
   } = data
 
   const shouldHideHeader = hideHeader !== false
   const shouldHideFooter = hideFooter !== false
+
+  // Form State matching ServiceHero in LifeIncome/CommercialLines templates
+  const [activeTab, setActiveTab] = useState('home-auto')
+  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const tabs = [
+    { id: 'home-auto', label: 'Home or Auto', icon: Home },
+    { id: 'business', label: 'Business', icon: Building2 },
+    { id: 'life-income', label: 'Life & Income', icon: Heart },
+  ]
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormStatus('loading')
+    setErrorMessage('')
+
+    const formData = new FormData(e.currentTarget)
+    
+    const requestData = {
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      additionalNotes: formData.get('zipCode') ? `ZIP Code: ${formData.get('zipCode')}` : undefined,
+      selectedCoverages: [{ value: activeTab }],
+      status: 'new',
+    }
+
+    try {
+      const res = await fetch('/api/quote-requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to submit quote request')
+      }
+
+      setFormStatus('success')
+    } catch (err) {
+      console.error(err)
+      setFormStatus('error')
+      setErrorMessage('Something went wrong. Please try again or call us directly.')
+    }
+  }
+
+  // Construct 3 default giveaway sub-sections if not populated from CMS
+  const defaultGiveaways = [
+    {
+      id: 'g1',
+      number: '01',
+      badge: 'Giveaway #1',
+      icon: FileText,
+      title: 'Complete Insurance & Risk Audit Guide',
+      description: 'A comprehensive step-by-step framework to identify hidden coverage gaps, eliminate unnecessary policy add-ons, and safeguard your key assets.',
+      bullets: [
+        'Step-by-step policy health checklist',
+        'Hidden coverage gap identification framework',
+        'Asset-to-liability protection ratio guide'
+      ]
+    },
+    {
+      id: 'g2',
+      number: '02',
+      badge: 'Giveaway #2',
+      icon: Gift,
+      title: 'Premium & Deductible Optimization Playbook',
+      description: 'Proven strategies for optimizing your deductibles and unlocking multi-policy bundling discounts to save significantly on annual premiums.',
+      bullets: [
+        'Multi-policy bundling discount strategies',
+        'Deductible vs. out-of-pocket risk breakdown',
+        'Annual rate comparison & review schedule'
+      ]
+    },
+    {
+      id: 'g3',
+      number: '03',
+      badge: 'Giveaway #3',
+      icon: ShieldCheck,
+      title: 'Exclusive 1-on-1 Advisory & Multi-Carrier Rate Scan',
+      description: 'Direct access to our independent advisors to compare real-time rates across 20+ top-rated insurance carriers with zero sales pressure.',
+      bullets: [
+        'Customized multi-carrier rate lookup',
+        'Independent & unbiased expert review',
+        'Zero obligation & 100% confidential'
+      ]
+    }
+  ]
+
+  // Determine giveaway sub-sections to render
+  const giveawayItems: Array<{
+    id: string
+    number: string
+    badge: string
+    icon: any
+    title: string
+    description?: string
+    bullets?: string[]
+  }> = (cmsGiveaways && cmsGiveaways.length > 0) 
+    ? cmsGiveaways.map((item: any, idx: number) => ({
+        id: item.id || `cms-g-${idx}`,
+        number: `0${idx + 1}`,
+        badge: `Giveaway #${idx + 1}`,
+        icon: [FileText, Gift, ShieldCheck][idx % 3],
+        title: item.title,
+        description: item.description,
+        bullets: item.bullets?.map((b: any) => b.bullet) || []
+      }))
+    : defaultGiveaways
 
   const formBlockProps = {
     blockType: 'formBlock' as const,
@@ -36,97 +166,297 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
       {shouldHideFooter && (
         <style dangerouslySetInnerHTML={{ __html: `footer { display: none !important; }` }} />
       )}
-      <div className="relative min-h-screen bg-gradient-to-br from-muted/30 via-background to-primary/5 py-12 lg:py-20">
-      {/* Decorative Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 w-full">
-        {/* Main Grid: Left Lure, Right Form */}
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <div className="relative min-h-screen bg-gradient-to-b from-background via-muted/20 to-background py-12 lg:py-20 overflow-hidden">
+        {/* Background Ambient Glowing Orbs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-primary/10 rounded-full blur-[120px]" />
+          <div className="absolute top-[40%] right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px]" />
+        </div>
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-16 lg:space-y-20">
           
-          {/* Left Column: Lure / Free Offer Info */}
-          <div className="lg:col-span-7 space-y-8">
-            <header className="space-y-4">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-foreground">
-                {heroHeading}
-              </h1>
-              {heroSubtitle && (
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                  {heroSubtitle}
-                </p>
-              )}
-            </header>
+          {/* ========================================================================= */}
+          {/* TOP CENTERED HERO TEXT */}
+          {/* ========================================================================= */}
+          <header className="text-center max-w-3xl mx-auto space-y-4 pt-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full shadow-sm">
+              <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+              <span className="text-xs font-semibold tracking-wide text-primary uppercase">
+                Special Offer Unlocked
+              </span>
+            </div>
 
-            {/* Free giveaway graphic section */}
-            <div className="bg-card/40 backdrop-blur-sm border border-border/80 rounded-2xl p-6 lg:p-8 shadow-sm space-y-6">
-              {lureImage && (
-                <div className="relative rounded-xl overflow-hidden shadow-lg border border-border max-w-md mx-auto lg:mx-0 aspect-[4/3] bg-muted flex items-center justify-center">
-                  <Media 
-                    resource={lureImage} 
-                    className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-500" 
-                  />
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-foreground tracking-tight leading-tight">
+              {heroHeading}
+            </h1>
+
+            {heroSubtitle && (
+              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto pt-1 font-normal">
+                {heroSubtitle}
+              </p>
+            )}
+          </header>
+
+          {/* ========================================================================= */}
+          {/* FIRST SECTION: GIVEAWAYS LIST STRUCTURE (3 SUB-SECTIONS, NO IMAGES) */}
+          {/* ========================================================================= */}
+          <section className="space-y-8" aria-label="Exclusive Giveaways">
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+                {lureTitle}
+              </h2>
+              {lureDescription && (
+                <div className="prose prose-sm dark:prose-invert text-muted-foreground max-w-2xl mx-auto">
+                  <RichText data={lureDescription} enableGutter={false} />
                 </div>
               )}
+            </div>
 
-              <div className="space-y-4">
-                <h2 className="text-2xl font-semibold text-foreground">
-                  {lureTitle || "Free Resource Details"}
-                </h2>
-                
-                {lureDescription && (
-                  <div className="prose prose-sm dark:prose-invert text-muted-foreground max-w-none">
-                    <RichText data={lureDescription} enableGutter={false} />
-                  </div>
-                )}
-
-                {lureBulletPoints && lureBulletPoints.length > 0 && (
-                  <ul className="grid sm:grid-cols-2 gap-4 pt-2" aria-label="Key highlights">
-                    {lureBulletPoints.map((item: any, idx: number) => (
-                      <li key={item.id || idx} className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
-                        <span className="text-sm font-medium text-foreground leading-snug">
-                          {item.bullet}
+            {/* List Structure with 3 Sub-Sections */}
+            <div className="grid gap-6 md:gap-8">
+              {giveawayItems.map((item, idx: number) => {
+                const IconComponent = item.icon
+                return (
+                  <div
+                    key={item.id || idx}
+                    className="relative group bg-card/60 backdrop-blur-md border border-border/80 hover:border-primary/40 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-primary/5"
+                  >
+                    <div className="flex flex-col md:flex-row md:items-start gap-6">
+                      
+                      {/* Sub-section Header Badge & Icon */}
+                      <div className="flex items-center md:flex-col shrink-0 gap-4 md:gap-2">
+                        <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
+                          <IconComponent className="w-6 h-6" />
+                        </div>
+                        <span className="text-xs font-bold text-primary tracking-wider uppercase bg-primary/10 px-2.5 py-1 rounded-full">
+                          {item.badge}
                         </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </div>
+                      </div>
 
-          {/* Right Column: Lead Capture Form */}
-          <aside className="lg:col-span-5 lg:sticky lg:top-8 bg-white dark:bg-card rounded-2xl shadow-xl shadow-black/5 border border-border/80 p-6 md:p-8 space-y-6">
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold text-foreground tracking-tight">
-                Get Instant Access
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Submit your contact information below to claim your free material.
-              </p>
+                      {/* Sub-section Details */}
+                      <div className="space-y-3 flex-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
+                            {item.title}
+                          </h3>
+                          <span className="text-2xl font-black text-muted-foreground/30 hidden sm:inline-block">
+                            {item.number}
+                          </span>
+                        </div>
+
+                        {item.description && (
+                          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                            {item.description}
+                          </p>
+                        )}
+
+                        {/* Bullet Points */}
+                        {item.bullets && item.bullets.length > 0 && (
+                          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-3 border-t border-border/60">
+                            {item.bullets.map((bulletText: string, bIdx: number) => (
+                              <li key={bIdx} className="flex items-start gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                                <span className="text-xs sm:text-sm font-medium text-foreground leading-snug">
+                                  {bulletText}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+
+                    </div>
+                  </div>
+                )
+              })}
             </div>
 
-            {form ? (
-              <div className="landing-page-form">
-                <FormBlock {...formBlockProps} />
-              </div>
-            ) : (
-              <div className="py-8 text-center text-sm text-muted-foreground border border-dashed border-border rounded-lg">
-                No form selected yet in page settings.
+            {/* Fallback Bullet list if lureBulletPoints provided without CMS giveaways */}
+            {(!cmsGiveaways || cmsGiveaways.length === 0) && lureBulletPoints && lureBulletPoints.length > 0 && (
+              <div className="bg-card/40 border border-border/80 rounded-2xl p-6 space-y-4">
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  Additional Included Benefits
+                </h4>
+                <ul className="grid sm:grid-cols-2 gap-3">
+                  {lureBulletPoints.map((item: any, idx: number) => (
+                    <li key={item.id || idx} className="flex items-center gap-2.5">
+                      <BadgeCheck className="w-5 h-5 text-primary shrink-0" />
+                      <span className="text-sm font-medium text-foreground">
+                        {item.bullet}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
+          </section>
 
-            <p className="text-xs text-center text-muted-foreground leading-normal px-4">
-              We respect your privacy. Your information is 100% secure and will never be shared.
-            </p>
-          </aside>
+          {/* ========================================================================= */}
+          {/* SECOND SECTION: FORM SECTION (EXACT FORM FROM LIFEINCOME/COMMERCIAL TEMPLATE) */}
+          {/* ========================================================================= */}
+          <section className="max-w-2xl mx-auto space-y-8 w-full" aria-labelledby="quote-form-title">
+            <aside aria-labelledby="quote-form-title" className="bg-white dark:bg-card rounded-2xl shadow-2xl shadow-black/5 border border-border p-6 md:p-8">
+              
+              {form ? (
+                <div className="landing-page-form">
+                  <div className="text-center mb-6">
+                    <h2 id="quote-form-title" className="text-xl font-semibold text-foreground mb-1">
+                      {formTitle}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {formSubtitle}
+                    </p>
+                  </div>
+                  <FormBlock {...formBlockProps} />
+                </div>
+              ) : formStatus === 'success' ? (
+                <div className="py-12 text-center space-y-4">
+                  <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
+                    <CheckCircle2 className="w-8 h-8 text-success" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground">Request Received</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Thank you! One of our advisors will be in touch shortly with your personalized assessment.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setFormStatus('idle')}
+                    className="mt-4"
+                  >
+                    Submit Another Request
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <div className="text-center mb-6">
+                    <h2 id="quote-form-title" className="text-xl font-semibold text-foreground mb-1">
+                      {formTitle}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {formSubtitle}
+                    </p>
+                  </div>
+
+                  {/* Tab Switcher: Home or Auto, Business, Life & Income */}
+                  <div className="flex rounded-lg bg-muted p-1 mb-6" role="tablist">
+                    {tabs.map((tab) => {
+                      const Icon = tab.icon
+                      const isActive = activeTab === tab.id
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          aria-controls="form-container"
+                          onClick={() => setActiveTab(tab.id)}
+                          aria-pressed={isActive}
+                          aria-label={`Switch to ${tab.label} form`}
+                          className={cn(
+                            "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-xs sm:text-sm font-medium transition-all",
+                            isActive
+                              ? "bg-white dark:bg-background text-foreground shadow-sm font-semibold"
+                              : "text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          <Icon className="w-4 h-4" />
+                          <span>{tab.label}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  <form onSubmit={handleSubmit}>
+                    {/* Form Fields matching LifeIncome / CommercialLines form grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-foreground mb-1.5">
+                          First Name
+                        </label>
+                        <Input
+                          type="text"
+                          name="firstName"
+                          placeholder="Jane"
+                          className="rounded-lg h-11"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-foreground mb-1.5">
+                          Last Name
+                        </label>
+                        <Input
+                          type="text"
+                          name="lastName"
+                          placeholder="Doe"
+                          className="rounded-lg h-11"
+                          required
+                        />
+                      </div>
+                      <div className="col-span-2 sm:col-span-1">
+                        <label className="block text-xs font-medium text-foreground mb-1.5">
+                          Email Address
+                        </label>
+                        <Input
+                          type="email"
+                          name="email"
+                          placeholder="jane@example.com"
+                          className="rounded-lg h-11"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-foreground mb-1.5">
+                          Phone
+                        </label>
+                        <Input
+                          type="tel"
+                          name="phone"
+                          placeholder="(555) 123-4567"
+                          className="rounded-lg h-11"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-foreground mb-1.5">
+                          ZIP Code
+                        </label>
+                        <Input
+                          type="text"
+                          name="zipCode"
+                          placeholder="12345"
+                          className="rounded-lg h-11"
+                        />
+                      </div>
+                    </div>
+
+                    {formStatus === 'error' && (
+                      <p className="text-sm text-destructive mt-4 text-center">
+                        {errorMessage}
+                      </p>
+                    )}
+
+                    <Button 
+                      type="submit"
+                      disabled={formStatus === 'loading'}
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-3 h-12 text-sm font-semibold shadow-md mt-6"
+                    >
+                      {formStatus === 'loading' ? 'Submitting...' : 'Get a Personalized Assessment'}
+                      {formStatus !== 'loading' && <ArrowRight className="w-4 h-4 ml-2" />}
+                    </Button>
+                  </form>
+
+                  <p className="text-xs text-muted-foreground text-center mt-4">
+                    Your information is kept strictly confidential.
+                  </p>
+                </>
+              )}
+            </aside>
+          </section>
 
         </div>
       </div>
-    </div>
     </>
   )
 }
