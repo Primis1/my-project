@@ -99,6 +99,10 @@ export const Pages: CollectionConfig<'pages'> = {
           label: 'Home Page',
           value: 'home',
         },
+        {
+          label: 'Landing Page',
+          value: 'landing-page',
+        },
       ],
     },
     {
@@ -307,6 +311,81 @@ export const Pages: CollectionConfig<'pages'> = {
           ],
           admin: {
             condition: (_, siblingData) => siblingData?.template === 'home',
+          },
+        },
+        {
+          label: 'Landing Page Settings',
+          fields: [
+            {
+              name: 'landingPage',
+              type: 'group',
+              fields: [
+                {
+                  name: 'heroHeading',
+                  type: 'text',
+                  defaultValue: 'Get Your Free Guide Today!',
+                  required: true,
+                },
+                {
+                  name: 'heroSubtitle',
+                  type: 'textarea',
+                  defaultValue: 'Complete the form to receive high-value materials and build immediate trust.',
+                },
+                {
+                  name: 'lureImage',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                },
+                {
+                  name: 'lureTitle',
+                  type: 'text',
+                  defaultValue: 'Inside the Free Guide',
+                  required: true,
+                },
+                {
+                  name: 'lureDescription',
+                  type: 'richText',
+                  admin: {
+                    description: 'Detailed copywriting highlighting the benefits of the lead magnet.',
+                  },
+                },
+                {
+                  name: 'lureBulletPoints',
+                  type: 'array',
+                  label: 'Value Bullet Points',
+                  fields: [
+                    {
+                      name: 'bullet',
+                      type: 'text',
+                      required: true,
+                    },
+                  ],
+                },
+                {
+                  name: 'form',
+                  type: 'relationship',
+                  relationTo: 'forms',
+                  required: true,
+                  admin: {
+                    description: 'Select the form that prospects will fill out.',
+                  },
+                },
+                {
+                  name: 'hideHeader',
+                  type: 'checkbox',
+                  defaultValue: true,
+                },
+                {
+                  name: 'hideFooter',
+                  type: 'checkbox',
+                  defaultValue: true,
+                },
+              ],
+            },
+          ],
+          admin: {
+            condition: (_, siblingData) => siblingData?.template === 'landing-page',
           },
         },
         {
