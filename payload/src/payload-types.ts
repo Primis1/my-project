@@ -161,7 +161,9 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   title: string;
-  template?: ('default' | 'personal-lines' | 'commercial-lines' | 'life-income' | 'home' | 'landing-page') | null;
+  template?:
+    | ('default' | 'personal-lines' | 'commercial-lines' | 'life-income' | 'home' | 'landing-page' | 'landing-page-uk')
+    | null;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'impact';
     eyebrow?: string | null;
@@ -419,6 +421,12 @@ export interface Page {
   landingPage: {
     heroHeading: string;
     heroSubtitle?: string | null;
+    heroBadges?:
+      | {
+          badge: string;
+          id?: string | null;
+        }[]
+      | null;
     lureTitle?: string | null;
     lureDescription?: {
       root: {
@@ -2051,6 +2059,12 @@ export interface PagesSelect<T extends boolean = true> {
     | {
         heroHeading?: T;
         heroSubtitle?: T;
+        heroBadges?:
+          | T
+          | {
+              badge?: T;
+              id?: T;
+            };
         lureTitle?: T;
         lureDescription?: T;
         giveaways?:

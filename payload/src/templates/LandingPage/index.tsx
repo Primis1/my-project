@@ -22,7 +22,7 @@ import {
 import { cn } from '@/utilities/ui'
 
 export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
-  if (!data) return null
+  const pageData = data || {}
 
   const {
     heroHeading = '2 Free Giveaways!',
@@ -36,7 +36,7 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
     formSubtitle = 'Confidential assessment — no obligation',
     hideHeader,
     hideFooter,
-  } = data
+  } = pageData
 
   const shouldHideHeader = hideHeader !== false
   const shouldHideFooter = hideFooter !== false
@@ -45,6 +45,14 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
   const [activeTab, setActiveTab] = useState('home-auto')
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [checkedFactors, setCheckedFactors] = useState<Record<number, boolean>>({})
+
+  const toggleFactor = (index: number) => {
+    setCheckedFactors(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }))
+  }
 
   const tabs = [
     { id: 'home-auto', label: 'Home or Auto', icon: Home },
@@ -95,6 +103,23 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
     }
   }
 
+  // 11+ Factors That Can Lower Your Premium
+  const premiumFactors = [
+    { title: "Driving record", desc: "a clean history over the past several years works in your favour." },
+    { title: "Age", desc: "premiums typically drop once you're past your mid-20s." },
+    { title: "Marital status", desc: "being married is often treated as a lower-risk profile by insurers." },
+    { title: "Where you live", desc: "rural and lower-traffic areas tend to see lower rates than dense urban zones." },
+    { title: "Annual mileage", desc: "driving fewer kilometres a year can reduce your rate." },
+    { title: "Commute habits", desc: "not driving to work or school daily can work in your favour." },
+    { title: "Vehicle type", desc: "cars with lower claims history (theft, repair cost, collision) cost less to insure." },
+    { title: "Winter tires", desc: "many insurers offer a discount for installing them seasonally." },
+    { title: "Anti-theft devices", desc: "alarms, immobilizers, or tracking systems can reduce comprehensive coverage costs." },
+    { title: "Occupation", desc: "some professions are classified as lower-risk by certain insurers." },
+    { title: "Deductible level", desc: "choosing a higher deductible generally lowers your premium." },
+    { title: "Business use vs. personal use", desc: "how you use the vehicle affects your risk classification and rate." },
+    { title: "Bundling policies", desc: "combining auto with home/tenant insurance often unlocks a multi-policy discount." },
+  ]
+
   // Construct 2 default giveaway sub-sections if not populated from CMS
   const defaultGiveaways = [
     {
@@ -115,12 +140,12 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
       number: '02',
       badge: 'Giveaway #2',
       icon: Gift,
-      title: 'Premium & Deductible Optimization Playbook',
-      description: 'Proven strategies for optimizing your deductibles and unlocking multi-policy bundling discounts to save significantly on annual premiums.',
+      title: '11+ Factors That Can Lower Your Premium',
+      description: 'Discover key factors insurers consider when calculating your rate and how you can optimize your profile for max savings.',
       bullets: [
-        'Multi-policy bundling discount strategies',
-        'Deductible vs. out-of-pocket risk breakdown',
-        'Annual rate comparison & review schedule'
+        'Comprehensive premium reduction checklist',
+        'Actionable discount opportunities',
+        'Key driver & policy profile factors'
       ]
     }
   ]
@@ -155,7 +180,7 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
   return (
     <>
       {shouldHideHeader && (
-        <style dangerouslySetInnerHTML={{ __html: `header { display: none !important; }` }} />
+        <style dangerouslySetInnerHTML={{ __html: `header:not(.landing-page-hero) { display: none !important; }` }} />
       )}
       {shouldHideFooter && (
         <style dangerouslySetInnerHTML={{ __html: `footer { display: none !important; }` }} />
@@ -171,30 +196,57 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-16 lg:space-y-20">
           
           {/* ========================================================================= */}
-          {/* TOP CENTERED HIGH IMPACT HERO TEXT */}
+          {/* TOP CENTERED HIGH IMPACT HERO BLOCK */}
           {/* ========================================================================= */}
-          <header className="text-center max-w-4xl mx-auto space-y-6 pt-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full shadow-sm">
+          <div className="landing-page-hero text-center max-w-4xl mx-auto space-y-6 pt-2 relative">
+            {/* Top Pill Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full shadow-sm backdrop-blur-md">
               <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-              <span className="text-xs font-semibold tracking-wide text-primary uppercase">
-                Special Offer Unlocked
+              <span className="text-xs font-bold tracking-widest text-primary uppercase">
+                Exclusive Giveaway Unlocked
               </span>
             </div>
 
-            <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 p-6 md:p-10 rounded-3xl border border-primary/20 shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)] backdrop-blur-sm">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-foreground tracking-tight leading-[1.1] drop-shadow-sm">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-                  {heroHeading}
-                </span>
-              </h1>
+            {/* Main Glassmorphic Hero Container */}
+            <div className="relative group bg-gradient-to-b from-card/80 via-card/50 to-card/30 p-8 sm:p-12 md:p-14 rounded-3xl border border-primary/20 shadow-[0_20px_50px_-15px_rgba(var(--primary),0.15)] backdrop-blur-xl transition-all duration-300">
               
-              {heroSubtitle && (
-                <p className="text-xl sm:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto pt-4 font-medium">
-                  {heroSubtitle}
-                </p>
-              )}
+              {/* Decorative Ambient Glow Effects */}
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/30 transition-all" />
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 space-y-6">
+                {/* Hero Title */}
+                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-foreground tracking-tight leading-[1.05] drop-shadow-sm">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary/70">
+                    {heroHeading}
+                  </span>
+                </h1>
+                
+                {/* Subtitle */}
+                {heroSubtitle && (
+                  <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl mx-auto font-medium">
+                    {heroSubtitle}
+                  </p>
+                )}
+
+                {/* Quick Trust Badges Bridge */}
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-border/40">
+                  <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>Instant Digital Access</span>
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>100% Free — No Obligation</span>
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <BadgeCheck className="w-3.5 h-3.5" />
+                    <span>Verified Risk Audit</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </header>
+          </div>
 
           {/* ========================================================================= */}
           {/* 1. FORM SECTION (MOVED TO BE ABOVE GIVEAWAYS) */}
@@ -359,12 +411,12 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                 return (
                   <div
                     key={item.id || idx}
-                    className="relative group bg-card/60 backdrop-blur-md border border-border/80 hover:border-primary/40 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-primary/5"
+                    className="relative group bg-card/60 backdrop-blur-md rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-md"
                   >
-                    <div className="flex flex-col md:flex-row md:items-start gap-6">
+                    <div className="flex flex-col md:flex-row md:items-center gap-6">
                       
-                      {/* Sub-section Header Badge & Icon */}
-                      <div className="flex items-center md:flex-col shrink-0 gap-4 md:gap-2">
+                      {/* Sub-section Header Badge & Icon - Centered Vertically */}
+                      <div className="flex items-center md:flex-col shrink-0 gap-4 md:gap-2 justify-center">
                         <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
                           <IconComponent className="w-6 h-6" />
                         </div>
@@ -384,15 +436,9 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                           </span>
                         </div>
 
-                        {item.description && (
-                          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                            {item.description}
-                          </p>
-                        )}
-
-                        {/* Bullet Points */}
+                        {/* Bullet Points ("checks" only - description section removed) */}
                         {item.bullets && item.bullets.length > 0 && (
-                          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-3 border-t border-border/60">
+                          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
                             {item.bullets.map((bulletText: string, bIdx: number) => (
                               <li key={bIdx} className="flex items-start gap-2">
                                 <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
@@ -406,7 +452,7 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
 
                         {/* First Giveaway: External Link Button */}
                         {idx === 0 && (
-                          <div className="pt-4 mt-4 border-t border-border/40">
+                          <div className="pt-3 mt-3">
                             <a href="#" className="inline-block w-full sm:w-auto" target="_blank" rel="noopener noreferrer">
                               <Button className="w-full sm:w-auto shadow-sm gap-2" variant="default">
                                 Access Resource <ExternalLink className="w-4 h-4" />
@@ -415,29 +461,56 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                           </div>
                         )}
 
-                        {/* Second Giveaway: Hide/Reveal List */}
+                        {/* Second Giveaway: Hide/Reveal List - Linear Single Column with Rounded Interactive Checkboxes */}
                         {idx === 1 && (
-                          <div className="pt-4 mt-4 border-t border-border/40">
-                            <details className="group border border-border/60 rounded-xl overflow-hidden bg-background/50 hover:border-primary/30 transition-colors">
+                          <div className="pt-3 mt-3">
+                            <details className="group rounded-xl overflow-hidden bg-background/60 hover:bg-background/80 transition-colors">
                               <summary className="p-4 font-semibold text-foreground cursor-pointer list-none flex justify-between items-center outline-none select-none">
                                 <span className="flex items-center gap-2">
                                   <BadgeCheck className="w-4 h-4 text-primary" />
-                                  View the 11 Key Factors
+                                  View the 11+ Key Factors That Can Lower Your Premium
                                 </span>
                                 <div className="p-1 rounded-full bg-primary/10 group-open:bg-primary/20 transition-colors">
                                   <ChevronDown className="w-4 h-4 text-primary transition-transform duration-300 group-open:rotate-180" />
                                 </div>
                               </summary>
-                              <div className="p-4 pt-0 border-t border-border/30 bg-muted/30">
-                                <ul className="grid sm:grid-cols-2 gap-3 mt-4 text-sm text-muted-foreground">
-                                  {Array.from({ length: 11 }).map((_, i) => (
-                                    <li key={i} className="flex items-start gap-2">
-                                      <span className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">
-                                        {i + 1}
-                                      </span>
-                                      <span className="leading-tight">Factor {i + 1}</span>
-                                    </li>
-                                  ))}
+                              <div className="p-4 pt-1 bg-muted/20">
+                                <ul className="flex flex-col space-y-2 mt-2">
+                                  {premiumFactors.map((factor, i) => {
+                                    const isChecked = !!checkedFactors[i]
+                                    return (
+                                      <li key={i}>
+                                        <button
+                                          type="button"
+                                          onClick={() => toggleFactor(i)}
+                                          className="flex items-start gap-3 text-left w-full p-2 rounded-xl hover:bg-background/80 transition-colors group cursor-pointer"
+                                        >
+                                          <div className={cn(
+                                            "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all shadow-sm",
+                                            isChecked 
+                                              ? "border-primary bg-primary text-primary-foreground" 
+                                              : "border-muted-foreground/40 group-hover:border-primary/60 bg-background"
+                                          )}>
+                                            <CheckCircle2 className={cn(
+                                              "w-3.5 h-3.5 transition-opacity stroke-[3]",
+                                              isChecked ? "opacity-100" : "opacity-0"
+                                            )} />
+                                          </div>
+                                          <span className={cn(
+                                            "text-xs sm:text-sm leading-relaxed transition-all",
+                                            isChecked ? "line-through text-muted-foreground/50" : "text-muted-foreground"
+                                          )}>
+                                            <strong className={cn(
+                                              "font-semibold transition-colors",
+                                              isChecked ? "text-muted-foreground/50 font-normal" : "text-foreground"
+                                            )}>
+                                              {i + 1}. {factor.title}
+                                            </strong> — {factor.desc}
+                                          </span>
+                                        </button>
+                                      </li>
+                                    )
+                                  })}
                                 </ul>
                               </div>
                             </details>

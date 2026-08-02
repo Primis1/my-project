@@ -323,18 +323,18 @@ export const Pages: CollectionConfig<'pages'> = {
                 {
                   name: 'heroHeading',
                   type: 'text',
-                  defaultValue: 'Thank You!',
+                  defaultValue: '2 Free Giveaways!',
                   required: true,
                 },
                 {
                   name: 'heroSubtitle',
                   type: 'textarea',
-                  defaultValue: 'We appreciate your interest! Review your 3 exclusive giveaways below and submit the form for instant access.',
+                  defaultValue: 'We appreciate your interest! Review your 2 exclusive giveaways below and submit your request for instant access.',
                 },
                 {
                   name: 'lureTitle',
                   type: 'text',
-                  defaultValue: 'Your 3 Free Giveaways',
+                  defaultValue: 'Your 2 Exclusive Free Giveaways',
                 },
                 {
                   name: 'lureDescription',
@@ -343,7 +343,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 {
                   name: 'giveaways',
                   type: 'array',
-                  label: 'Giveaways (3 Sub-Sections)',
+                  label: 'Giveaways (2 Sub-Sections)',
                   fields: [
                     {
                       name: 'title',
