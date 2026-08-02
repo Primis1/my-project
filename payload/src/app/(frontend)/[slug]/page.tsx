@@ -17,6 +17,7 @@ import { CommercialLinesTemplate } from '@/templates/CommercialLines'
 import { LifeIncomeTemplate } from '@/templates/LifeIncome'
 import { HomeTemplate } from '@/templates/Home'
 import { LandingPageTemplate } from '@/templates/LandingPage'
+import { LandingPageUkTemplate } from '@/templates/LandingPageUk'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -122,6 +123,17 @@ export default async function Page({ params: paramsPromise }: Args) {
         <PayloadRedirects disableNotFound url={url} />
         {draft && <LivePreviewListener />}
         <LandingPageTemplate data={landingPage} />
+      </article>
+    )
+  }
+
+  if (template === 'landing-page-uk') {
+    return (
+      <article className="pt-16 pb-24">
+        <PageClient />
+        <PayloadRedirects disableNotFound url={url} />
+        {draft && <LivePreviewListener />}
+        <LandingPageUkTemplate data={landingPage} />
       </article>
     )
   }

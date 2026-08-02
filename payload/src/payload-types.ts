@@ -421,12 +421,6 @@ export interface Page {
   landingPage: {
     heroHeading: string;
     heroSubtitle?: string | null;
-    heroBadges?:
-      | {
-          badge: string;
-          id?: string | null;
-        }[]
-      | null;
     lureTitle?: string | null;
     lureDescription?: {
       root: {
@@ -2059,12 +2053,6 @@ export interface PagesSelect<T extends boolean = true> {
     | {
         heroHeading?: T;
         heroSubtitle?: T;
-        heroBadges?:
-          | T
-          | {
-              badge?: T;
-              id?: T;
-            };
         lureTitle?: T;
         lureDescription?: T;
         giveaways?:

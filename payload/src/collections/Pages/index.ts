@@ -103,6 +103,10 @@ export const Pages: CollectionConfig<'pages'> = {
           label: 'Landing Page',
           value: 'landing-page',
         },
+        {
+          label: 'Landing Page (UK)',
+          value: 'landing-page-uk',
+        },
       ],
     },
     {
@@ -323,18 +327,18 @@ export const Pages: CollectionConfig<'pages'> = {
                 {
                   name: 'heroHeading',
                   type: 'text',
-                  defaultValue: '2 Free Giveaways!',
+                  defaultValue: 'Thank You',
                   required: true,
                 },
                 {
                   name: 'heroSubtitle',
                   type: 'textarea',
-                  defaultValue: 'We appreciate your interest! Review your 2 exclusive giveaways below and submit your request for instant access.',
+                  defaultValue: 'We appreciate your interest! Review your 2 free giveaways below and submit your request for instant access.',
                 },
                 {
                   name: 'lureTitle',
                   type: 'text',
-                  defaultValue: 'Your 2 Exclusive Free Giveaways',
+                  defaultValue: 'Your 2 Free Giveaways',
                 },
                 {
                   name: 'lureDescription',
@@ -417,7 +421,7 @@ export const Pages: CollectionConfig<'pages'> = {
             },
           ],
           admin: {
-            condition: (_, siblingData) => siblingData?.template === 'landing-page',
+            condition: (_, siblingData) => siblingData?.template === 'landing-page' || siblingData?.template === 'landing-page-uk',
           },
         },
         {

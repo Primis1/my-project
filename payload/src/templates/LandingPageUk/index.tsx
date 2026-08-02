@@ -21,7 +21,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/utilities/ui'
 
-export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
+export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
   const pageData = data || {}
 
   const {
@@ -55,9 +55,9 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
   }
 
   const tabs = [
-    { id: 'home-auto', label: 'Home or Auto', icon: Home },
-    { id: 'business', label: 'Business', icon: Building2 },
-    { id: 'life-income', label: 'Life & Income', icon: Heart },
+    { id: 'home-auto', label: 'Авто та Житло', icon: Home },
+    { id: 'business', label: 'Бізнес', icon: Building2 },
+    { id: 'life-income', label: 'Життя та Дохід', icon: Heart },
   ]
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,19 +105,19 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
 
   // 11+ Factors That Can Lower Your Premium
   const premiumFactors = [
-    { title: "Driving record", desc: "a clean history over the past several years works in your favour." },
-    { title: "Age", desc: "premiums typically drop once you're past your mid-20s." },
-    { title: "Marital status", desc: "being married is often treated as a lower-risk profile by insurers." },
-    { title: "Where you live", desc: "rural and lower-traffic areas tend to see lower rates than dense urban zones." },
-    { title: "Annual mileage", desc: "driving fewer kilometres a year can reduce your rate." },
-    { title: "Commute habits", desc: "not driving to work or school daily can work in your favour." },
-    { title: "Vehicle type", desc: "cars with lower claims history (theft, repair cost, collision) cost less to insure." },
-    { title: "Winter tires", desc: "many insurers offer a discount for installing them seasonally." },
-    { title: "Anti-theft devices", desc: "alarms, immobilizers, or tracking systems can reduce comprehensive coverage costs." },
-    { title: "Occupation", desc: "some professions are classified as lower-risk by certain insurers." },
-    { title: "Deductible level", desc: "choosing a higher deductible generally lowers your premium." },
-    { title: "Business use vs. personal use", desc: "how you use the vehicle affects your risk classification and rate." },
-    { title: "Bundling policies", desc: "combining auto with home/tenant insurance often unlocks a multi-policy discount." },
+    { title: "Історія водіння", desc: "чиста історія за останні кілька років працює на вашу користь." },
+    { title: "Вік", desc: "премії зазвичай знижуються, коли вам за 25." },
+    { title: "Сімейний стан", desc: "одружені водії часто розглядаються страховиками як профіль з нижчим ризиком." },
+    { title: "Місце проживання", desc: "сільські райони та райони з меншим трафіком, як правило, мають нижчі тарифи, ніж густонаселені міста." },
+    { title: "Щорічний пробіг", desc: "менша кількість кілометрів за рік може знизити ваш тариф." },
+    { title: "Поїздки на роботу", desc: "відсутність щоденних поїздок на роботу або навчання може працювати на вашу користь." },
+    { title: "Тип транспортного засобу", desc: "автомобілі з меншою історією претензій (крадіжки, вартість ремонту, зіткнення) дешевше страхувати." },
+    { title: "Зимові шини", desc: "багато страховиків пропонують знижку за їх сезонне встановлення." },
+    { title: "Протиугінні пристрої", desc: "сигналізації, іммобілайзери або системи стеження можуть зменшити витрати на комплексне покриття." },
+    { title: "Професія", desc: "деякі професії класифікуються певними страховиками як такі, що мають нижчий ризик." },
+    { title: "Рівень франшизи", desc: "вибір вищої франшизи зазвичай знижує вашу премію." },
+    { title: "Комерційне використання", desc: "те, як ви використовуєте транспортний засіб, впливає на вашу класифікацію ризику та тариф." },
+    { title: "Об'єднання полісів", desc: "об'єднання страхування авто зі страхуванням житла/орендаря часто відкриває знижку за кілька полісів." },
   ]
 
   // Construct 2 default giveaway sub-sections if not populated from CMS
@@ -125,27 +125,27 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
     {
       id: 'g1',
       number: '01',
-      badge: 'Giveaway #1',
+      badge: 'Подарунок #1',
       icon: FileText,
-      title: 'How Cars Measure Up (IBC Car Rater)',
-      description: 'Discover how insurance companies rate different vehicles. See how your car\'s claims history, safety features, and theft rates directly impact your insurance premiums.',
+      title: 'Як оцінюються автомобілі (IBC Car Rater)',
+      description: 'Дізнайтеся, як страхові компанії оцінюють різні транспортні засоби. Подивіться, як історія претензій, функції безпеки та рівень крадіжок вашого автомобіля безпосередньо впливають на ваші страхові премії.',
       bullets: [
-        'Check your vehicle\'s insurance rating',
-        'Compare safety and theft statistics',
-        'Understand how car choice affects your rate'
+        'Перевірте страховий рейтинг вашого авто',
+        'Порівняйте статистику безпеки та крадіжок',
+        'Зрозумійте, як вибір авто впливає на тариф'
       ]
     },
     {
       id: 'g2',
       number: '02',
-      badge: 'Giveaway #2',
+      badge: 'Подарунок #2',
       icon: Gift,
-      title: '11+ Factors That Can Lower Your Premium',
-      description: 'Discover key factors insurers consider when calculating your rate and how you can optimize your profile for max savings.',
+      title: '11+ факторів, які можуть вплинути на ціну автострахування',
+      description: 'Дізнайтеся про ключові фактори, які страховики враховують при розрахунку вашого тарифу, і як ви можете оптимізувати свій профіль для максимальної економії.',
       bullets: [
-        'Comprehensive premium reduction checklist',
-        'Actionable discount opportunities',
-        'Key driver & policy profile factors'
+        'Чек-лист зниження премії',
+        'Дієві можливості для знижок',
+        'Ключові фактори профілю водія та полісу'
       ]
     }
   ]
@@ -163,7 +163,7 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
     ? cmsGiveaways.slice(0, 2).map((item: any, idx: number) => ({
         id: item.id || `cms-g-${idx}`,
         number: `0${idx + 1}`,
-        badge: `Giveaway #${idx + 1}`,
+        badge: `Подарунок #${idx + 1}`,
         icon: [FileText, Gift][idx % 2],
         title: item.title,
         description: item.description,
@@ -232,15 +232,15 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-border/40">
                   <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                     <Home className="w-3.5 h-3.5" />
-                    <span>Auto & Home</span>
+                    <span>Авто та Житло</span>
                   </div>
                   <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                     <Building2 className="w-3.5 h-3.5" />
-                    <span>Business & Liability</span>
+                    <span>Бізнес та Відповідальність</span>
                   </div>
                   <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                     <Heart className="w-3.5 h-3.5" />
-                    <span>Life & Income</span>
+                    <span>Життя та Дохід</span>
                   </div>
                 </div>
               </div>
@@ -270,16 +270,16 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                   <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
                     <CheckCircle2 className="w-8 h-8 text-success" />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground">Request Received</h3>
+                  <h3 className="text-xl font-bold text-foreground">Запит отримано</h3>
                   <p className="text-sm text-muted-foreground">
-                    Thank you! One of our advisors will be in touch shortly with your personalized assessment.
+                    Дякуємо! Один з наших консультантів незабаром зв'яжеться з вами щодо вашої персональної оцінки.
                   </p>
                   <Button 
                     variant="outline" 
                     onClick={() => setFormStatus('idle')}
                     className="mt-4"
                   >
-                    Submit Another Request
+                    Надіслати ще один запит
                   </Button>
                 </div>
               ) : (
@@ -327,7 +327,7 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                       {/* Name - Merged visually, handled dynamically in submit */}
                       <div className="col-span-2">
                         <label className="block text-xs font-medium text-foreground mb-1.5">
-                          First & Last Name
+                          Ім'я та Прізвище
                         </label>
                         <Input
                           type="text"
@@ -340,19 +340,19 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                       
                       <div className="col-span-2 sm:col-span-1">
                         <label className="block text-xs font-medium text-foreground mb-1.5">
-                          Email Address
+                          Електронна пошта
                         </label>
                         <Input
                           type="email"
                           name="email"
-                          placeholder="jane@example.com"
+                          placeholder="taras@example.com"
                           className="rounded-lg h-11"
                           required
                         />
                       </div>
                       <div className="col-span-2 sm:col-span-1">
                         <label className="block text-xs font-medium text-foreground mb-1.5">
-                          Phone
+                          Телефон
                         </label>
                         <Input
                           type="tel"
@@ -375,13 +375,13 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                       disabled={formStatus === 'loading'}
                       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-3 h-12 text-sm font-semibold shadow-md mt-6"
                     >
-                      {formStatus === 'loading' ? 'Submitting...' : 'Get a Personalized Assessment'}
+                      {formStatus === 'loading' ? 'Надсилання...' : 'Отримати персональну оцінку'}
                       {formStatus !== 'loading' && <ArrowRight className="w-4 h-4 ml-2" />}
                     </Button>
                   </form>
 
                   <p className="text-xs text-muted-foreground text-center mt-4">
-                    Your information is kept strictly confidential.
+                    Ваша інформація є суворо конфіденційною.
                   </p>
                 </>
               )}
@@ -467,7 +467,7 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
                               <summary className="p-4 font-semibold text-foreground cursor-pointer list-none flex justify-between items-center outline-none select-none">
                                 <span className="flex items-center gap-2">
                                   <BadgeCheck className="w-4 h-4 text-primary" />
-                                  View the 11+ Key Factors That Can Lower Your Premium
+                                  Переглянути 11+ ключових факторів, які можуть знизити вашу премію
                                 </span>
                                 <div className="p-1 rounded-full bg-primary/10 group-open:bg-primary/20 transition-colors">
                                   <ChevronDown className="w-4 h-4 text-primary transition-transform duration-300 group-open:rotate-180" />
@@ -528,7 +528,7 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
             {(!cmsGiveaways || cmsGiveaways.length === 0) && lureBulletPoints && lureBulletPoints.length > 0 && (
               <div className="bg-card/40 border border-border/80 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow">
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                  Additional Included Benefits
+                  Додаткові переваги
                 </h4>
                 <ul className="grid sm:grid-cols-2 gap-3">
                   {lureBulletPoints.map((item: any, idx: number) => (

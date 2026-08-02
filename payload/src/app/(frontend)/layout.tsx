@@ -6,13 +6,13 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import React from 'react'
 
 const inter = Inter({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-inter',
   display: 'swap',
 })
 
 const playfair = Playfair_Display({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-playfair',
   display: 'swap',
 })
