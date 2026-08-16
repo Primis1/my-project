@@ -17,7 +17,9 @@ import {
   Heart, 
   BadgeCheck,
   ChevronDown,
-  ExternalLink
+  ExternalLink,
+  Download,
+  UserPlus
 } from 'lucide-react'
 import { cn } from '@/utilities/ui'
 
@@ -36,7 +38,32 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
     formSubtitle = 'Confidential assessment — no obligation',
     hideHeader,
     hideFooter,
+    cardHeading = 'Цифрова Візитка',
+    cardSubtitle = 'Завантажте офіційну PDF візитку або додайте мене в контакти.',
+    cardFront,
+    cardBack,
+    cardPdf,
   } = pageData
+
+  const cardFrontUrl = cardFront && typeof cardFront === 'object' ? cardFront.url : cardFront
+  const cardBackUrl = cardBack && typeof cardBack === 'object' ? cardBack.url : cardBack
+  const cardPdfUrl = cardPdf && typeof cardPdf === 'object' ? cardPdf.url : cardPdf
+
+  const downloadVCard = () => {
+    const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:Oleh Babinskyi
+TITLE:Insurance Advisor
+END:VCARD`
+    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'Oleh_Babinskyi.vcf')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   const shouldHideHeader = hideHeader !== false
   const shouldHideFooter = hideFooter !== false
@@ -543,6 +570,74 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
               </div>
             )}
           </section>
+
+          {/* ========================================================================= */}
+          {/* 3. DIGITAL BUSINESS CARD SECTION */}
+          {/* ========================================================================= */}
+          {(cardFrontUrl || cardBackUrl || cardPdfUrl) && (
+            <section className="relative group bg-card/60 backdrop-blur-md rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-lg border border-border/50" aria-label="Digital Business Card">
+              <div className="grid md:grid-cols-12 gap-8 items-center">
+                
+                {/* Left Description and Action Buttons */}
+                <div className="md:col-span-5 space-y-6">
+                  <div className="space-y-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+                      {cardHeading}
+                    </h2>
+                    {cardSubtitle && (
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {cardSubtitle}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    {cardPdfUrl && (
+                      <a href={cardPdfUrl} download target="_blank" rel="noopener noreferrer" className="inline-block flex-1 sm:flex-initial">
+                        <Button className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-3 h-12 text-sm font-semibold shadow-md">
+                          <Download className="w-4 h-4" />
+                          <span>Скачати картку PDF</span>
+                        </Button>
+                      </a>
+                    )}
+                    <Button 
+                      variant="outline" 
+                      onClick={downloadVCard}
+                      className="w-full sm:w-auto gap-2 rounded-full py-3 h-12 text-sm font-semibold border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+                    >
+                      <UserPlus className="w-4 h-4 text-primary" />
+                      <span>Додати в контакти</span>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Right Business Card Visual Mockups */}
+                <div className="md:col-span-7 flex flex-col md:flex-row gap-6 md:gap-4 items-center justify-center">
+                  {cardFrontUrl && (
+                    <div className="relative w-full max-w-[320px] aspect-[1.75/1] rounded-xl overflow-hidden shadow-lg border border-border/60 hover:-translate-y-1 transition-all duration-300 bg-white dark:bg-card">
+                      <img 
+                        src={cardFrontUrl} 
+                        alt="Візитка Лицьова" 
+                        className="w-full h-full object-cover select-none" 
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  {cardBackUrl && (
+                    <div className="relative w-full max-w-[320px] aspect-[1.75/1] rounded-xl overflow-hidden shadow-lg border border-border/60 hover:-translate-y-1 transition-all duration-300 bg-white dark:bg-card">
+                      <img 
+                        src={cardBackUrl} 
+                        alt="Візитка Зворотна" 
+                        className="w-full h-full object-cover select-none" 
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </section>
+          )}
 
         </div>
       </div>
