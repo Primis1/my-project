@@ -20,6 +20,7 @@ import {
   ExternalLink
 } from 'lucide-react'
 import { cn } from '@/utilities/ui'
+import { PostalCodeCalculator } from '@/components/PostalCodeCalculator'
 
 export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
   const pageData = data || {}
@@ -43,6 +44,7 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
 
   // Form State
   const [activeTab, setActiveTab] = useState('home-auto')
+  const [selectedPostalCode, setSelectedPostalCode] = useState('')
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [checkedFactors, setCheckedFactors] = useState<Record<number, boolean>>({})
@@ -78,6 +80,7 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
       lastName: lname,
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
+      postalCode: (formData.get('postalCode') as string) || selectedPostalCode,
       selectedCoverages: [{ value: activeTab }],
       status: 'new',
     }
@@ -248,150 +251,9 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
           </div>
 
           {/* ========================================================================= */}
-          {/* 1. FORM SECTION (MOVED TO BE ABOVE GIVEAWAYS) */}
+          {/* GIVEAWAYS & QUOTE REQUEST SECTION */}
           {/* ========================================================================= */}
-          <section className="max-w-2xl mx-auto space-y-8 w-full relative z-10" aria-labelledby="quote-form-title">
-            <aside aria-labelledby="quote-form-title" className="bg-white dark:bg-card rounded-2xl shadow-2xl shadow-black/5 border border-border p-6 md:p-8">
-              
-              {form ? (
-                <div className="landing-page-form">
-                  <div className="text-center mb-6">
-                    <h2 id="quote-form-title" className="text-xl font-semibold text-foreground mb-1">
-                      {formTitle}
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {formSubtitle}
-                    </p>
-                  </div>
-                  <FormBlock {...formBlockProps} />
-                </div>
-              ) : formStatus === 'success' ? (
-                <div className="py-12 text-center space-y-4">
-                  <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle2 className="w-8 h-8 text-success" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground">Запит отримано</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Дякуємо! Один з наших консультантів незабаром зв'яжеться з вами щодо вашої персональної оцінки.
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setFormStatus('idle')}
-                    className="mt-4"
-                  >
-                    Надіслати ще один запит
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <div className="text-center mb-6">
-                    <h2 id="quote-form-title" className="text-xl font-semibold text-foreground mb-1">
-                      {formTitle}
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {formSubtitle}
-                    </p>
-                  </div>
-
-                  {/* Tab Switcher: Home or Auto, Business, Life & Income */}
-                  <div className="flex rounded-lg bg-muted p-1 mb-6" role="tablist">
-                    {tabs.map((tab) => {
-                      const Icon = tab.icon
-                      const isActive = activeTab === tab.id
-                      return (
-                        <button
-                          key={tab.id}
-                          type="button"
-                          role="tab"
-                          aria-selected={isActive}
-                          aria-controls="form-container"
-                          onClick={() => setActiveTab(tab.id)}
-                          aria-pressed={isActive}
-                          aria-label={`Switch to ${tab.label} form`}
-                          className={cn(
-                            "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-xs sm:text-sm font-medium transition-all",
-                            isActive
-                              ? "bg-white dark:bg-background text-foreground shadow-sm font-semibold"
-                              : "text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          <Icon className="w-4 h-4" />
-                          <span>{tab.label}</span>
-                        </button>
-                      )
-                    })}
-                  </div>
-
-                  <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-2 gap-4">
-                      {/* Name - Merged visually, handled dynamically in submit */}
-                      <div className="col-span-2">
-                        <label className="block text-xs font-medium text-foreground mb-1.5">
-                          Ім'я та Прізвище
-                        </label>
-                        <Input
-                          type="text"
-                          name="firstName"
-                          placeholder="Taras Shevchenko"
-                          className="rounded-lg h-11"
-                          required
-                        />
-                      </div>
-                      
-                      <div className="col-span-2 sm:col-span-1">
-                        <label className="block text-xs font-medium text-foreground mb-1.5">
-                          Електронна пошта
-                        </label>
-                        <Input
-                          type="email"
-                          name="email"
-                          placeholder="taras@example.com"
-                          className="rounded-lg h-11"
-                          required
-                        />
-                      </div>
-                      <div className="col-span-2 sm:col-span-1">
-                        <label className="block text-xs font-medium text-foreground mb-1.5">
-                          Телефон
-                        </label>
-                        <Input
-                          type="tel"
-                          name="phone"
-                          placeholder="(555) 123-4567"
-                          className="rounded-lg h-11"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    {formStatus === 'error' && (
-                      <p className="text-sm text-destructive mt-4 text-center">
-                        {errorMessage}
-                      </p>
-                    )}
-
-                    <Button 
-                      type="submit"
-                      disabled={formStatus === 'loading'}
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-3 h-12 text-sm font-semibold shadow-md mt-6"
-                    >
-                      {formStatus === 'loading' ? 'Надсилання...' : 'Отримати персональну оцінку'}
-                      {formStatus !== 'loading' && <ArrowRight className="w-4 h-4 ml-2" />}
-                    </Button>
-                  </form>
-
-                  <p className="text-xs text-muted-foreground text-center mt-4">
-                    Ваша інформація є суворо конфіденційною.
-                  </p>
-                </>
-              )}
-            </aside>
-          </section>
-
-          {/* ========================================================================= */}
-          {/* 2. GIVEAWAYS LIST STRUCTURE (MOVED TO BOTTOM) */}
-          {/* ========================================================================= */}
-          <section className="space-y-8" aria-label="Exclusive Giveaways">
+          <section className="space-y-12" aria-label="Exclusive Giveaways and Quote Form">
             <div className="text-center space-y-2">
               <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
                 {lureTitle}
@@ -403,130 +265,299 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
               )}
             </div>
 
-            {/* List Structure with 2 Sub-Sections */}
-            <div className="grid gap-6 md:gap-8">
-              {giveawayItems.map((item, idx: number) => {
-                const IconComponent = item.icon
-                return (
-                  <div
-                    key={item.id || idx}
-                    className="relative group bg-card/60 backdrop-blur-md rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-md"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center gap-6">
-                      
-                      {/* Sub-section Header Badge & Icon - Centered Vertically */}
-                      <div className="flex items-center md:flex-col shrink-0 gap-4 md:gap-2 justify-center">
-                        <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
-                          <IconComponent className="w-6 h-6" />
-                        </div>
-                        <span className="text-xs font-bold text-primary tracking-wider uppercase bg-primary/10 px-2.5 py-1 rounded-full">
-                          {item.badge}
-                        </span>
-                      </div>
+            <div className="grid gap-8 max-w-4xl mx-auto">
 
-                      {/* Sub-section Details */}
-                      <div className="space-y-4 flex-1">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
-                            {item.title}
-                          </h3>
-                          <span className="text-2xl font-black text-muted-foreground/30 hidden sm:inline-block">
-                            {item.number}
-                          </span>
-                        </div>
+              {/* ========================================================================= */}
+              {/* GIVEAWAY #1: POSTAL CODE MEDIUM PREMIUM CALCULATOR */}
+              {/* ========================================================================= */}
+              <div id="giveaway-1">
+                <PostalCodeCalculator 
+                  badge="Подарунок #1" 
+                  number="01" 
+                  onQuoteRequested={(code) => setSelectedPostalCode(code)} 
+                />
+              </div>
 
-                        {/* Bullet Points ("checks" only - description section removed) */}
-                        {item.bullets && item.bullets.length > 0 && (
-                          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
-                            {item.bullets.map((bulletText: string, bIdx: number) => (
-                              <li key={bIdx} className="flex items-start gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
-                                <span className="text-xs sm:text-sm font-medium text-foreground leading-snug">
-                                  {bulletText}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-
-                        {/* First Giveaway: External Link Button */}
-                        {idx === 0 && (
-                          <div className="pt-3 mt-3">
-                            <a href="https://www.ibc.ca/insurance-basics/auto/how-cars-measure-up" className="inline-block w-full sm:w-auto" target="_blank" rel="noopener noreferrer">
-                              <Button className="w-full sm:w-auto shadow-sm gap-2" variant="default">
-                                IBC Car Rater <ExternalLink className="w-4 h-4" />
-                              </Button>
-                            </a>
-                          </div>
-                        )}
-
-                        {/* Second Giveaway: Hide/Reveal List - Linear Single Column with Rounded Interactive Checkboxes */}
-                        {idx === 1 && (
-                          <div className="pt-3 mt-3">
-                            <details className="group rounded-xl overflow-hidden bg-background/60 hover:bg-background/80 transition-colors">
-                              <summary className="p-4 font-semibold text-foreground cursor-pointer list-none flex justify-between items-center outline-none select-none">
-                                <span className="flex items-center gap-2">
-                                  <BadgeCheck className="w-4 h-4 text-primary" />
-                                  Переглянути 11+ ключових факторів, які можуть знизити вашу премію
-                                </span>
-                                <div className="p-1 rounded-full bg-primary/10 group-open:bg-primary/20 transition-colors">
-                                  <ChevronDown className="w-4 h-4 text-primary transition-transform duration-300 group-open:rotate-180" />
-                                </div>
-                              </summary>
-                              <div className="p-4 pt-1 bg-muted/20">
-                                <ul className="flex flex-col space-y-2 mt-2">
-                                  {premiumFactors.map((factor, i) => {
-                                    const isChecked = !!checkedFactors[i]
-                                    return (
-                                      <li key={i}>
-                                        <button
-                                          type="button"
-                                          onClick={() => toggleFactor(i)}
-                                          className="flex items-start gap-3 text-left w-full p-2 rounded-xl hover:bg-background/80 transition-colors group cursor-pointer"
-                                        >
-                                          <div className={cn(
-                                            "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all shadow-sm",
-                                            isChecked 
-                                              ? "border-primary bg-primary text-primary-foreground" 
-                                              : "border-muted-foreground/40 group-hover:border-primary/60 bg-background"
-                                          )}>
-                                            <CheckCircle2 className={cn(
-                                              "w-3.5 h-3.5 transition-opacity stroke-[3]",
-                                              isChecked ? "opacity-100" : "opacity-0"
-                                            )} />
-                                          </div>
-                                          <span className={cn(
-                                            "text-xs sm:text-sm leading-relaxed transition-all",
-                                            isChecked ? "line-through text-muted-foreground/50" : "text-muted-foreground"
-                                          )}>
-                                            <strong className={cn(
-                                              "font-semibold transition-colors",
-                                              isChecked ? "text-muted-foreground/50 font-normal" : "text-foreground"
-                                            )}>
-                                              {i + 1}. {factor.title}
-                                            </strong> — {factor.desc}
-                                          </span>
-                                        </button>
-                                      </li>
-                                    )
-                                  })}
-                                </ul>
-                              </div>
-                            </details>
-                          </div>
-                        )}
-
-                      </div>
-
+              {/* ========================================================================= */}
+              {/* GIVEAWAY #2: 11+ FACTORS THAT AFFECT YOUR PREMIUM */}
+              {/* ========================================================================= */}
+              <div id="giveaway-2" className="relative group bg-card/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 md:p-10 border border-primary/20 shadow-xl space-y-6">
+                <div className="flex items-center justify-between border-b border-border/40 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                      <Gift className="w-5 h-5" />
                     </div>
+                    <span className="text-xs font-bold text-primary tracking-wider uppercase bg-primary/10 px-3 py-1 rounded-full">
+                      Подарунок #2
+                    </span>
                   </div>
-                )
-              })}
+                  <span className="text-2xl font-black text-muted-foreground/30">
+                    02
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">
+                    11+ факторів, які можуть вплинути на ціну автострахування
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Дізнайтеся про ключові фактори, які страховики враховують при розрахунку вашого тарифу, і як ви можете оптимізувати свій профіль для максимальної економії.
+                  </p>
+
+                  <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                      <span className="text-xs sm:text-sm font-medium text-foreground leading-snug">
+                        Чек-лист зниження премії
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                      <span className="text-xs sm:text-sm font-medium text-foreground leading-snug">
+                        Дієві можливості для знижок
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" strokeWidth={2.5} />
+                      <span className="text-xs sm:text-sm font-medium text-foreground leading-snug">
+                        Ключові фактори профілю водія та полісу
+                      </span>
+                    </li>
+                  </ul>
+
+                  {/* Hide/Reveal List - Interactive Checkboxes */}
+                  <div className="pt-2">
+                    <details className="group rounded-2xl overflow-hidden bg-background/70 border border-border/60 hover:border-primary/40 transition-colors">
+                      <summary className="p-4 font-semibold text-foreground cursor-pointer list-none flex justify-between items-center outline-none select-none">
+                        <span className="flex items-center gap-2 text-sm">
+                          <BadgeCheck className="w-4 h-4 text-primary" />
+                          Переглянути 11+ ключових факторів, які можуть знизити вашу премію
+                        </span>
+                        <div className="p-1 rounded-full bg-primary/10 group-open:bg-primary/20 transition-colors">
+                          <ChevronDown className="w-4 h-4 text-primary transition-transform duration-300 group-open:rotate-180" />
+                        </div>
+                      </summary>
+                      <div className="p-4 pt-1 bg-muted/20 border-t border-border/40">
+                        <ul className="flex flex-col space-y-2 mt-2">
+                          {premiumFactors.map((factor, i) => {
+                            const isChecked = !!checkedFactors[i]
+                            return (
+                              <li key={i}>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleFactor(i)}
+                                  className="flex items-start gap-3 text-left w-full p-2 rounded-xl hover:bg-background/80 transition-colors group cursor-pointer"
+                                >
+                                  <div className={cn(
+                                    "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all shadow-sm",
+                                    isChecked 
+                                      ? "border-primary bg-primary text-primary-foreground" 
+                                      : "border-muted-foreground/40 group-hover:border-primary/60 bg-background"
+                                  )}>
+                                    <CheckCircle2 className={cn(
+                                      "w-3.5 h-3.5 transition-opacity stroke-[3]",
+                                      isChecked ? "opacity-100" : "opacity-0"
+                                    )} />
+                                  </div>
+                                  <span className={cn(
+                                    "text-xs sm:text-sm leading-relaxed transition-all",
+                                    isChecked ? "line-through text-muted-foreground/50" : "text-muted-foreground"
+                                  )}>
+                                    <strong className={cn(
+                                      "font-semibold transition-colors",
+                                      isChecked ? "text-muted-foreground/50 font-normal" : "text-foreground"
+                                    )}>
+                                      {i + 1}. {factor.title}
+                                    </strong> — {factor.desc}
+                                  </span>
+                                </button>
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              </div>
+
+              {/* ========================================================================= */}
+              {/* GIVEAWAY #3: PERSONAL QUOTE & ASSESSMENT FORM */}
+              {/* ========================================================================= */}
+              <div 
+                id="quote-form-section" 
+                className="relative group bg-card/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 md:p-10 border border-primary/30 shadow-2xl space-y-6"
+                aria-labelledby="quote-form-title"
+              >
+                <div className="flex items-center justify-between border-b border-border/40 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <span className="text-xs font-bold text-primary tracking-wider uppercase bg-primary/10 px-3 py-1 rounded-full">
+                      Подарунок #3
+                    </span>
+                  </div>
+                  <span className="text-2xl font-black text-muted-foreground/30">
+                    03
+                  </span>
+                </div>
+
+                {form ? (
+                  <div className="landing-page-form">
+                    <div className="text-center mb-6">
+                      <h3 id="quote-form-title" className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight mb-1">
+                        {formTitle}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {formSubtitle}
+                      </p>
+                    </div>
+                    <FormBlock {...formBlockProps} />
+                  </div>
+                ) : formStatus === 'success' ? (
+                  <div className="py-12 text-center space-y-4">
+                    <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
+                      <CheckCircle2 className="w-8 h-8 text-success" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground">Запит отримано</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Дякуємо! Один з наших консультантів незабаром зв'яжеться з вами щодо вашої персональної оцінки.
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setFormStatus('idle')}
+                      className="mt-4"
+                    >
+                      Надіслати ще один запит
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div className="text-center space-y-1">
+                      <h3 id="quote-form-title" className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+                        Персональна оцінка та розрахунок полісу
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {formSubtitle}
+                      </p>
+                    </div>
+
+                    {/* Tab Switcher: Home or Auto, Business, Life & Income */}
+                    <div className="flex rounded-xl bg-muted/60 p-1" role="tablist">
+                      {tabs.map((tab) => {
+                        const Icon = tab.icon
+                        const isActive = activeTab === tab.id
+                        return (
+                          <button
+                            key={tab.id}
+                            type="button"
+                            role="tab"
+                            aria-selected={isActive}
+                            aria-controls="form-container"
+                            onClick={() => setActiveTab(tab.id)}
+                            aria-pressed={isActive}
+                            aria-label={`Switch to ${tab.label} form`}
+                            className={cn(
+                              "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all",
+                              isActive
+                                ? "bg-background text-foreground shadow-sm font-semibold"
+                                : "text-muted-foreground hover:text-foreground"
+                            )}
+                          >
+                            <Icon className="w-4 h-4" />
+                            <span>{tab.label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Name */}
+                        <div className="col-span-2">
+                          <label className="block text-xs font-semibold text-foreground mb-1.5">
+                            Ім'я та Прізвище
+                          </label>
+                          <Input
+                            type="text"
+                            name="firstName"
+                            placeholder="Taras Shevchenko"
+                            className="rounded-xl h-12 bg-background/80"
+                            required
+                          />
+                        </div>
+
+                        {/* Postal Code Field */}
+                        <div className="col-span-2">
+                          <label className="block text-xs font-semibold text-foreground mb-1.5">
+                            Поштовий індекс (Перші 3 символи)
+                          </label>
+                          <Input
+                            type="text"
+                            name="postalCode"
+                            value={selectedPostalCode}
+                            onChange={(e) => setSelectedPostalCode(e.target.value.toUpperCase().slice(0, 3))}
+                            placeholder="M5A"
+                            maxLength={3}
+                            className="rounded-xl h-12 uppercase font-semibold tracking-wider bg-background/80"
+                          />
+                        </div>
+                        
+                        <div className="col-span-2 sm:col-span-1">
+                          <label className="block text-xs font-semibold text-foreground mb-1.5">
+                            Електронна пошта
+                          </label>
+                          <Input
+                            type="email"
+                            name="email"
+                            placeholder="taras@example.com"
+                            className="rounded-xl h-12 bg-background/80"
+                            required
+                          />
+                        </div>
+                        <div className="col-span-2 sm:col-span-1">
+                          <label className="block text-xs font-semibold text-foreground mb-1.5">
+                            Телефон
+                          </label>
+                          <Input
+                            type="tel"
+                            name="phone"
+                            placeholder="(555) 123-4567"
+                            className="rounded-xl h-12 bg-background/80"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      {formStatus === 'error' && (
+                        <p className="text-sm text-destructive mt-4 text-center">
+                          {errorMessage}
+                        </p>
+                      )}
+
+                      <Button 
+                        type="submit"
+                        disabled={formStatus === 'loading'}
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full py-3 h-13 text-base font-bold shadow-lg mt-4"
+                      >
+                        {formStatus === 'loading' ? 'Надсилання...' : 'Отримати персональну оцінку'}
+                        {formStatus !== 'loading' && <ArrowRight className="w-5 h-5 ml-2" />}
+                      </Button>
+                    </form>
+
+                    <p className="text-xs text-muted-foreground text-center">
+                      Ваша інформація є суворо конфіденційною.
+                    </p>
+                  </div>
+                )}
+              </div>
+
             </div>
 
             {/* Fallback Bullet list (if any) */}
             {(!cmsGiveaways || cmsGiveaways.length === 0) && lureBulletPoints && lureBulletPoints.length > 0 && (
-              <div className="bg-card/40 border border-border/80 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-card/40 border border-border/80 rounded-2xl p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow max-w-4xl mx-auto">
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                   Додаткові переваги
                 </h4>
