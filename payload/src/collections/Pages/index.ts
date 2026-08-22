@@ -429,22 +429,66 @@ export const Pages: CollectionConfig<'pages'> = {
                 {
                   name: 'businessCardTitle',
                   type: 'text',
-                  defaultValue: 'Цифрова візитка брокера',
+                  admin: {
+                    description: 'Header badge text (e.g. Digital Business Card / Цифрова візитка брокера)',
+                  },
                 },
                 {
                   name: 'businessCardSubtitle',
                   type: 'text',
-                  defaultValue: 'Олег Бабінський — Ліцензований страховий брокер в Онтаріо',
+                  admin: {
+                    description: 'Subtitle / description text below the name',
+                  },
+                },
+                {
+                  name: 'businessCardName',
+                  type: 'text',
+                  admin: {
+                    description: 'Broker full name on card (e.g. Oleh Babinskyi / Олег Бабінський)',
+                  },
+                },
+                {
+                  name: 'businessCardRole',
+                  type: 'text',
+                  admin: {
+                    description: 'Broker professional role title (e.g. Licensed Insurance Broker / Страховий брокер)',
+                  },
+                },
+                {
+                  name: 'businessCardTagline',
+                  type: 'text',
+                  admin: {
+                    description: 'Tagline text under header badge (e.g. Official Contact Profile / Офіційний контактний профіль)',
+                  },
+                },
+                {
+                  name: 'businessCardLicense',
+                  type: 'text',
+                  admin: {
+                    description: 'Licensing badge text (e.g. RIBO Licensed / RIBO Ліцензія)',
+                  },
                 },
                 {
                   name: 'businessCardPhone',
                   type: 'text',
-                  defaultValue: '+1 (416) 555-0199',
                 },
                 {
                   name: 'businessCardEmail',
                   type: 'text',
-                  defaultValue: 'oleh@example.com',
+                },
+                {
+                  name: 'businessCardShareBtnText',
+                  type: 'text',
+                  admin: {
+                    description: 'Share button text (e.g. Share Business Card / Поділитися візиткою)',
+                  },
+                },
+                {
+                  name: 'businessCardDownloadBtnText',
+                  type: 'text',
+                  admin: {
+                    description: 'PDF download button text (e.g. Download PDF Card / Завантажити PDF візитку)',
+                  },
                 },
               ],
             },

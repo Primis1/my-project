@@ -10,7 +10,7 @@ import {
   Check, 
   UserCheck, 
   ShieldCheck, 
-  FileText,
+  FileText, 
   ExternalLink,
   Sparkles
 } from 'lucide-react'
@@ -20,27 +20,82 @@ export interface BusinessCardProps {
   pdfUrl?: string
   title?: string
   subtitle?: string
+  name?: string
+  role?: string
+  tagline?: string
+  license?: string
   phone?: string
   email?: string
+  shareBtnText?: string
+  downloadBtnText?: string
+  locale?: 'uk' | 'en'
 }
 
 export const BusinessCard: React.FC<BusinessCardProps> = ({
   pdfUrl,
-  title = 'Цифрова візитка брокера',
-  subtitle = 'Олег Бабінський — Ліцензований страховий брокер в Онтаріо',
+  title,
+  subtitle,
+  name,
+  role,
+  tagline,
+  license,
   phone = '+1 (416) 555-0199',
   email = 'oleh@example.com',
+  shareBtnText,
+  downloadBtnText,
+  locale = 'uk'
 }) => {
   const [copied, setCopied] = useState(false)
   const [shareSuccess, setShareSuccess] = useState(false)
+
+  const isEn = locale === 'en'
+
+  const t = isEn ? {
+    title: 'Digital Business Card',
+    subtitle: 'Oleh Babinskyi — Licensed Insurance Broker in Ontario',
+    name: 'Oleh Babinskyi',
+    role: 'Licensed Insurance Broker',
+    tagline: 'Official Contact Profile',
+    license: 'RIBO Licensed',
+    shareBtnText: 'Share Business Card',
+    downloadBtnText: 'Download PDF Card',
+    saveContactText: 'Save Contact',
+    copiedText: 'Link Copied!',
+    shareSuccessText: 'Successfully Shared!',
+    copiedShortText: 'Copied!',
+    footerNote: '*Tap "Share" to send via Telegram, WhatsApp, iMessage, or SMS.'
+  } : {
+    title: 'Цифрова візитка брокера',
+    subtitle: 'Олег Бабінський — Ліцензований страховий брокер в Онтаріо',
+    name: 'Олег Бабінський',
+    role: 'Страховий брокер / Фахівець',
+    tagline: 'Офіційний контактний профіль',
+    license: 'RIBO Ліцензія',
+    shareBtnText: 'Поділитися візиткою',
+    downloadBtnText: 'Завантажити PDF візитку',
+    saveContactText: 'Зберегти контакти',
+    copiedText: 'Посилання скопійовано!',
+    shareSuccessText: 'Успішно поширено!',
+    copiedShortText: 'Скопійовано!',
+    footerNote: '*Натисніть «Поділитися» для відправки через Telegram, Viber, WhatsApp або SMS.'
+  }
+
+  const finalTitle = title || t.title
+  const finalSubtitle = subtitle || t.subtitle
+  const finalName = name || t.name
+  const finalRole = role || t.role
+  const finalTagline = tagline || t.tagline
+  const finalLicense = license || t.license
+  const finalShareBtnText = shareBtnText || t.shareBtnText
+  const finalDownloadBtnText = downloadBtnText || t.downloadBtnText
 
   // Target PDF link or fallback to current page URL
   const targetUrl = pdfUrl || (typeof window !== 'undefined' ? window.location.href : '')
 
   const handleShare = async () => {
     const shareData = {
-      title: title || 'Візитка Олега Бабінського',
-      text: subtitle || 'Контакти ліцензованого страхового брокера в Онтаріо',
+      title: finalTitle,
+      text: finalSubtitle,
       url: targetUrl || window.location.href,
     }
 
@@ -50,13 +105,11 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
         setShareSuccess(true)
         setTimeout(() => setShareSuccess(false), 3000)
       } catch (err) {
-        // User cancelled or share failed, fallback to copy link
         if ((err as Error).name !== 'AbortError') {
           copyToClipboard()
         }
       }
     } else {
-      // Fallback for desktop browsers without Web Share API
       copyToClipboard()
     }
   }
@@ -69,6 +122,12 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
       })
     }
   }
+
+  // Derive initials from finalName
+  const initialsParts = finalName.trim().split(' ')
+  const derivedInitials = initialsParts.length > 1 
+    ? `${initialsParts[0][0]}${initialsParts[initialsParts.length - 1][0]}`.toUpperCase()
+    : finalName.slice(0, 2).toUpperCase()
 
   return (
     <div className="w-full max-w-4xl mx-auto relative group my-12" id="business-card-section">
@@ -90,10 +149,10 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-extrabold uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{title}</span>
+                <span>{finalTitle}</span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Офіційний контактний профіль
+                {finalTagline}
               </p>
             </div>
           </div>
@@ -101,7 +160,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full bg-muted text-muted-foreground border border-border/60">
               <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-              <span>RIBO Licensed</span>
+              <span>{finalLicense}</span>
             </span>
           </div>
         </div>
@@ -113,15 +172,15 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
           <div className="md:col-span-4 flex flex-col items-center justify-center text-center space-y-3 p-4 bg-background/50 rounded-2xl border border-border/40">
             <div className="relative">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-primary to-primary/70 text-primary-foreground flex items-center justify-center text-3xl font-black shadow-xl tracking-tighter">
-                OB
+                {derivedInitials}
               </div>
               <div className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-success border-2 border-background flex items-center justify-center text-[10px] text-white font-bold" title="Verified Broker">
                 ✓
               </div>
             </div>
             <div>
-              <h4 className="text-lg font-bold text-foreground">Oleh Babinskyi</h4>
-              <p className="text-xs font-medium text-primary">Insurance Broker / Фахівець</p>
+              <h4 className="text-lg font-bold text-foreground">{finalName}</h4>
+              <p className="text-xs font-medium text-primary">{finalRole}</p>
             </div>
           </div>
 
@@ -129,10 +188,10 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
           <div className="md:col-span-8 space-y-4">
             <div>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-                Олег Бабінський
+                {finalName}
               </h3>
               <p className="text-sm sm:text-base text-muted-foreground mt-1 leading-relaxed">
-                {subtitle}
+                {finalSubtitle}
               </p>
             </div>
 
@@ -171,17 +230,17 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
               {copied ? (
                 <>
                   <Check className="w-4 h-4" />
-                  <span>Посилання скопійовано!</span>
+                  <span>{t.copiedText}</span>
                 </>
               ) : shareSuccess ? (
                 <>
                   <Check className="w-4 h-4" />
-                  <span>Успішно поширено!</span>
+                  <span>{t.shareSuccessText}</span>
                 </>
               ) : (
                 <>
                   <Share2 className="w-4 h-4" />
-                  <span>Поділитися візиткою</span>
+                  <span>{finalShareBtnText}</span>
                 </>
               )}
             </Button>
@@ -201,7 +260,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
                   className="w-full sm:w-auto rounded-full px-6 py-3 text-sm font-semibold gap-2 border-primary/40 hover:bg-primary/10"
                 >
                   <Download className="w-4 h-4 text-primary" />
-                  <span>Завантажити PDF візитку</span>
+                  <span>{finalDownloadBtnText}</span>
                   <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
                 </Button>
               </a>
@@ -213,14 +272,14 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
                 className="w-full sm:w-auto rounded-full px-6 py-3 text-sm font-semibold gap-2 border-border/80"
               >
                 <FileText className="w-4 h-4 text-primary" />
-                <span>{copied ? 'Скопійовано!' : 'Зберегти контакти'}</span>
+                <span>{copied ? t.copiedShortText : t.saveContactText}</span>
               </Button>
             )}
 
           </div>
 
           <p className="text-xs text-muted-foreground text-center sm:text-right">
-            *Натисніть «Поділитися» для відправки через Telegram, Viber, WhatsApp або SMS.
+            {t.footerNote}
           </p>
 
         </div>

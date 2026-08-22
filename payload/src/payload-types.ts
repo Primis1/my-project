@@ -469,10 +469,40 @@ export interface Page {
      * Upload the PDF business card file to display and share on the landing page.
      */
     businessCardPdf?: (number | null) | Media;
+    /**
+     * Header badge text (e.g. Digital Business Card / Цифрова візитка брокера)
+     */
     businessCardTitle?: string | null;
+    /**
+     * Subtitle / description text below the name
+     */
     businessCardSubtitle?: string | null;
+    /**
+     * Broker full name on card (e.g. Oleh Babinskyi / Олег Бабінський)
+     */
+    businessCardName?: string | null;
+    /**
+     * Broker professional role title (e.g. Licensed Insurance Broker / Страховий брокер)
+     */
+    businessCardRole?: string | null;
+    /**
+     * Tagline text under header badge (e.g. Official Contact Profile / Офіційний контактний профіль)
+     */
+    businessCardTagline?: string | null;
+    /**
+     * Licensing badge text (e.g. RIBO Licensed / RIBO Ліцензія)
+     */
+    businessCardLicense?: string | null;
     businessCardPhone?: string | null;
     businessCardEmail?: string | null;
+    /**
+     * Share button text (e.g. Share Business Card / Поділитися візиткою)
+     */
+    businessCardShareBtnText?: string | null;
+    /**
+     * PDF download button text (e.g. Download PDF Card / Завантажити PDF візитку)
+     */
+    businessCardDownloadBtnText?: string | null;
   };
   layout: (
     | CallToActionBlock
@@ -2091,8 +2121,14 @@ export interface PagesSelect<T extends boolean = true> {
         businessCardPdf?: T;
         businessCardTitle?: T;
         businessCardSubtitle?: T;
+        businessCardName?: T;
+        businessCardRole?: T;
+        businessCardTagline?: T;
+        businessCardLicense?: T;
         businessCardPhone?: T;
         businessCardEmail?: T;
+        businessCardShareBtnText?: T;
+        businessCardDownloadBtnText?: T;
       };
   layout?:
     | T

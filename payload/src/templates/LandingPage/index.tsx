@@ -44,8 +44,14 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
     businessCardPdf,
     businessCardTitle,
     businessCardSubtitle,
+    businessCardName,
+    businessCardRole,
+    businessCardTagline,
+    businessCardLicense,
     businessCardPhone,
     businessCardEmail,
+    businessCardShareBtnText,
+    businessCardDownloadBtnText,
   } = pageData
 
   const businessCardPdfUrl = typeof businessCardPdf === 'object' && businessCardPdf?.url 
@@ -543,11 +549,18 @@ export const LandingPageTemplate: React.FC<{ data?: any }> = ({ data }) => {
           {/* ========================================================================= */}
           <section aria-label="Digital Business Card">
             <BusinessCard 
+              locale="en"
               pdfUrl={businessCardPdfUrl}
               title={businessCardTitle}
               subtitle={businessCardSubtitle}
+              name={businessCardName}
+              role={businessCardRole}
+              tagline={businessCardTagline}
+              license={businessCardLicense}
               phone={businessCardPhone}
               email={businessCardEmail}
+              shareBtnText={businessCardShareBtnText}
+              downloadBtnText={businessCardDownloadBtnText}
             />
           </section>
 
