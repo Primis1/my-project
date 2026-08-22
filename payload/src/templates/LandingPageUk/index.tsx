@@ -17,7 +17,10 @@ import {
   Heart, 
   BadgeCheck,
   ChevronDown,
-  ExternalLink
+  ExternalLink,
+  Scale,
+  X,
+  Info
 } from 'lucide-react'
 import { cn } from '@/utilities/ui'
 import { PostalCodeCalculator } from '@/components/PostalCodeCalculator'
@@ -52,12 +55,13 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
   const shouldHideHeader = hideHeader !== false
   const shouldHideFooter = hideFooter !== false
 
-  // Form State
+  // Form & UI State
   const [activeTab, setActiveTab] = useState('home-auto')
   const [selectedPostalCode, setSelectedPostalCode] = useState('')
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [checkedFactors, setCheckedFactors] = useState<Record<number, boolean>>({})
+  const [isFactorsModalOpen, setIsFactorsModalOpen] = useState(false)
 
   const toggleFactor = (index: number) => {
     setCheckedFactors(prev => ({
@@ -116,21 +120,21 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
     }
   }
 
-  // 11+ Factors That Can Lower Your Premium
+  // 11+ Factors That Influence Your Premium Calculation
   const premiumFactors = [
-    { title: "Історія водіння", desc: "чиста історія за останні кілька років працює на вашу користь." },
-    { title: "Вік", desc: "премії зазвичай знижуються, коли вам за 25." },
-    { title: "Сімейний стан", desc: "одружені водії часто розглядаються страховиками як профіль з нижчим ризиком." },
-    { title: "Місце проживання", desc: "сільські райони та райони з меншим трафіком, як правило, мають нижчі тарифи, ніж густонаселені міста." },
-    { title: "Щорічний пробіг", desc: "менша кількість кілометрів за рік може знизити ваш тариф." },
-    { title: "Поїздки на роботу", desc: "відсутність щоденних поїздок на роботу або навчання може працювати на вашу користь." },
-    { title: "Тип транспортного засобу", desc: "автомобілі з меншою історією претензій (крадіжки, вартість ремонту, зіткнення) дешевше страхувати." },
-    { title: "Зимові шини", desc: "багато страховиків пропонують знижку за їх сезонне встановлення." },
-    { title: "Протиугінні пристрої", desc: "сигналізації, іммобілайзери або системи стеження можуть зменшити витрати на комплексне покриття." },
-    { title: "Професія", desc: "деякі професії класифікуються певними страховиками як такі, що мають нижчий ризик." },
-    { title: "Рівень франшизи", desc: "вибір вищої франшизи зазвичай знижує вашу премію." },
-    { title: "Комерційне використання", desc: "те, як ви використовуєте транспортний засіб, впливає на вашу класифікацію ризику та тариф." },
-    { title: "Об'єднання полісів", desc: "об'єднання страхування авто зі страхуванням житла/орендаря часто відкриває знижку за кілька полісів." },
+    { title: "Історія водіння (Driving History)", desc: "безаварійний стаж за останні 3–10 років надає найбільший позитивний внесок у розрахунок вашої премії." },
+    { title: "Вік та стаж (Age & Experience)", desc: "водії з досвідом понад 9 років та віком від 25 років отримують суттєво нижчі базові коефіцієнти ризику." },
+    { title: "Сімейний стан (Marital Status)", desc: "статистично зменшує коефіцієнт ризику в багатьох страхових компаніях Онтаріо." },
+    { title: "Місце проживання (Location & FSA)", desc: "відображає щільність руху, статистику ДТП та рівень крадіжок у вашому районі." },
+    { title: "Річний пробіг (Annual Mileage)", desc: "менша кількість кілометрів на рік пропорційно знижує ймовірність настання страхового випадку." },
+    { title: "Маршрут на роботу (Commute Usage)", desc: "використання авто тільки для особистих потреб (без щоденного commute) дає нижчий тарифний клас." },
+    { title: "Рейтинг автомобіля (CLEAR Rating)", desc: "моделі з високими показниками безпеки та низькою вартістю ремонту потребують менших витрат на покриття." },
+    { title: "Зимові шини (Winter Tires Discount)", desc: "обов'язкова за законом Онтаріо знижка (близько 2-5%) при сезонному використанні зимової гуми." },
+    { title: "Протиугінна система (Anti-Theft Devices)", desc: "наявність іммобілайзера або супутникового трекера зменшує внесок ризику крадіжки у вартість Comprehensive." },
+    { title: "Професія та освіта (Group Affiliation)", desc: "членство у професійних асоціаціях або випускних спілках відкриває додаткові групові знижки." },
+    { title: "Розмір франшизи (Deductible Amount)", desc: "вибір вищої франшизи (наприклад, $1,000 замість $500) зменшує щомісячну премію." },
+    { title: "Комерційне використання (Business Use)", desc: "коригує категорію полісу залежно від того, чи використовується авто для бізнесу або кур'єрських послуг." },
+    { title: "Мультиполісна знижка (Bundle Discount)", desc: "поєднання страхування авто з будинком чи орендою дає від 10% до 20% загальної економії." },
   ]
 
   // Construct 2 default giveaway sub-sections if not populated from CMS
@@ -308,10 +312,10 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
 
                 <div className="space-y-4">
                   <h3 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">
-                    11+ факторів, які можуть вплинути на ціну автострахування
+                    Як 11+ факторів формують підсумкову вартість автострахування
                   </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Дізнайтеся про ключові фактори, які страховики враховують при розрахунку вашого тарифу, і як ви можете оптимізувати свій профіль для максимальної економії.
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Кожен з цих параметрів має свій ваговий коефіцієнт у формулі розрахунку тарифу страхової компанії. Дізнайтеся, як саме окремі елементи вашого профілю впливають на премію та які з них ви можете оптимізувати для максимальної економії.
                   </p>
 
                   <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
@@ -341,7 +345,7 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
                       <summary className="p-4 font-semibold text-foreground cursor-pointer list-none flex justify-between items-center outline-none select-none">
                         <span className="flex items-center gap-2 text-sm">
                           <BadgeCheck className="w-4 h-4 text-primary" />
-                          Переглянути 11+ ключових факторів, які можуть знизити вашу премію
+                          Переглянути 11+ ключових факторів, які впливають на ваш тариф
                         </span>
                         <div className="p-1 rounded-full bg-primary/10 group-open:bg-primary/20 transition-colors">
                           <ChevronDown className="w-4 h-4 text-primary transition-transform duration-300 group-open:rotate-180" />
@@ -387,6 +391,18 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
                         </ul>
                       </div>
                     </details>
+
+                    <p className="text-xs text-muted-foreground pt-3">
+                      *Всі актуарні коефіцієнти розраховуються за затвердженими FSRA правилами.{' '}
+                      <button 
+                        type="button"
+                        onClick={() => setIsFactorsModalOpen(true)}
+                        className="underline font-semibold text-primary hover:text-primary/80 transition-colors inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Правова інформація та оцінка факторів (FSRA)</span>
+                        <Scale className="w-3.5 h-3.5" />
+                      </button>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -600,6 +616,98 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
 
         </div>
       </div>
+
+      {/* ========================================================================= */}
+      {/* FACTORS LEGAL & UNDERWRITING DISCLAIMER MODAL */}
+      {/* ========================================================================= */}
+      {isFactorsModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="factors-modal-title"
+          onClick={() => setIsFactorsModalOpen(false)}
+        >
+          <div 
+            className="relative w-full max-w-2xl bg-card border border-primary/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setIsFactorsModalOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              aria-label="Закрити"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Modal Header */}
+            <div className="flex items-center gap-3 border-b border-border/40 pb-4">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+                <Scale className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 id="factors-modal-title" className="text-lg sm:text-xl font-extrabold text-foreground">
+                  Правила оцінки факторів та регулювання FSRA
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Правова інформація щодо андеррайтингу в Онтаріо
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="space-y-4 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              
+              {/* Section 1 */}
+              <div className="p-4 rounded-2xl bg-background/80 border border-border/60 space-y-2">
+                <h4 className="font-bold text-foreground flex items-center gap-2 text-sm">
+                  <FileText className="w-4 h-4 text-primary shrink-0" />
+                  <span>1. Законодавче регулювання факторів (FSRA & Insurance Act)</span>
+                </h4>
+                <p>
+                  В Онтаріо всі коефіцієнти оцінки ризику (вік, стаж, історія водіння, територія, класифікація авто тощо) регулюються Управлінням з регулювання фінансових послуг Онтаріо (FSRA) відповідно до Закону про страхування (Insurance Act). Страхові компанії мають право використовувати тільки затверджені регулятором актуарні правила.
+                </p>
+              </div>
+
+              {/* Section 2 */}
+              <div className="p-4 rounded-2xl bg-background/80 border border-border/60 space-y-2">
+                <h4 className="font-bold text-foreground flex items-center gap-2 text-sm">
+                  <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                  <span>2. Варіативність вагових коефіцієнтів (Carrier Algorithm Variation)</span>
+                </h4>
+                <p>
+                  Кожна страхова компанія застосовує власну тарифну сітку. Вплив та відсоток знижки для кожного фактора (наприклад, франшиза, зимові шини, мультиполіс чи протиугінна система) відрізняються залежно від конкретного страховика та його андеррайтингових алгоритмів.
+                </p>
+              </div>
+
+              {/* Section 3 */}
+              <div className="p-4 rounded-2xl bg-background/80 border border-border/60 space-y-2">
+                <h4 className="font-bold text-foreground flex items-center gap-2 text-sm">
+                  <Info className="w-4 h-4 text-primary shrink-0" />
+                  <span>3. Ознайомчий чек-лист (Educational & Optimization Purpose)</span>
+                </h4>
+                <p>
+                  Перераховані 11+ факторів є загальними орієнтовними орієнтирами для оптимізації вашого страхового профілю. Вони не гарантують автоматичного надання фіксованої знижки у кожній компанії. Точний розрахунок проводиться брокером індивідуально.
+                </p>
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div className="pt-4 border-t border-border/40 flex justify-end">
+              <Button
+                onClick={() => setIsFactorsModalOpen(false)}
+                className="rounded-full px-6 bg-primary text-primary-foreground font-semibold"
+              >
+                Зрозуміло
+              </Button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </>
   )
 }
