@@ -55,6 +55,7 @@ COPY --from=builder /home/node/app/public ./public
 
 # 4. Copy source code (for migrations and Payload config)
 COPY --from=builder /home/node/app/src ./src
+COPY --from=builder /home/node/app/tsconfig.json ./tsconfig.json
 
 EXPOSE 3000
 CMD ["node", "server.js"]
