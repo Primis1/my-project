@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/utilities/ui'
 import { PostalCodeCalculator } from '@/components/PostalCodeCalculator'
+import { BusinessCard } from '@/components/BusinessCard'
 
 export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
   const pageData = data || {}
@@ -37,7 +38,16 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
     formSubtitle = 'Confidential assessment — no obligation',
     hideHeader,
     hideFooter,
+    businessCardPdf,
+    businessCardTitle,
+    businessCardSubtitle,
+    businessCardPhone,
+    businessCardEmail,
   } = pageData
+
+  const businessCardPdfUrl = typeof businessCardPdf === 'object' && businessCardPdf?.url 
+    ? businessCardPdf.url 
+    : (typeof businessCardPdf === 'string' ? businessCardPdf : undefined)
 
   const shouldHideHeader = hideHeader !== false
   const shouldHideFooter = hideFooter !== false
@@ -573,6 +583,19 @@ export const LandingPageUkTemplate: React.FC<{ data?: any }> = ({ data }) => {
                 </ul>
               </div>
             )}
+          </section>
+
+          {/* ========================================================================= */}
+          {/* BUSINESS CARD SECTION (UPLOADABLE PDF & MOBILE NATIVE SHARE) */}
+          {/* ========================================================================= */}
+          <section aria-label="Digital Business Card">
+            <BusinessCard 
+              pdfUrl={businessCardPdfUrl}
+              title={businessCardTitle}
+              subtitle={businessCardSubtitle}
+              phone={businessCardPhone}
+              email={businessCardEmail}
+            />
           </section>
 
         </div>

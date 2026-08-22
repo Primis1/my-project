@@ -465,6 +465,14 @@ export interface Page {
     form?: (number | null) | Form;
     hideHeader?: boolean | null;
     hideFooter?: boolean | null;
+    /**
+     * Upload the PDF business card file to display and share on the landing page.
+     */
+    businessCardPdf?: (number | null) | Media;
+    businessCardTitle?: string | null;
+    businessCardSubtitle?: string | null;
+    businessCardPhone?: string | null;
+    businessCardEmail?: string | null;
   };
   layout: (
     | CallToActionBlock
@@ -2080,6 +2088,11 @@ export interface PagesSelect<T extends boolean = true> {
         form?: T;
         hideHeader?: T;
         hideFooter?: T;
+        businessCardPdf?: T;
+        businessCardTitle?: T;
+        businessCardSubtitle?: T;
+        businessCardPhone?: T;
+        businessCardEmail?: T;
       };
   layout?:
     | T

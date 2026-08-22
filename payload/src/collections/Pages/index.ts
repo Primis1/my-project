@@ -417,6 +417,35 @@ export const Pages: CollectionConfig<'pages'> = {
                   type: 'checkbox',
                   defaultValue: true,
                 },
+                {
+                  name: 'businessCardPdf',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: false,
+                  admin: {
+                    description: 'Upload the PDF business card file to display and share on the landing page.',
+                  },
+                },
+                {
+                  name: 'businessCardTitle',
+                  type: 'text',
+                  defaultValue: 'Цифрова візитка брокера',
+                },
+                {
+                  name: 'businessCardSubtitle',
+                  type: 'text',
+                  defaultValue: 'Олег Бабінський — Ліцензований страховий брокер в Онтаріо',
+                },
+                {
+                  name: 'businessCardPhone',
+                  type: 'text',
+                  defaultValue: '+1 (416) 555-0199',
+                },
+                {
+                  name: 'businessCardEmail',
+                  type: 'text',
+                  defaultValue: 'oleh@example.com',
+                },
               ],
             },
           ],

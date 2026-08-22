@@ -84,12 +84,12 @@ export const PostalCodeCalculator: React.FC<PostalCodeCalculatorProps> = ({
         </div>
 
         {/* Header Title & Subtitle */}
-        <div className="text-center space-y-2 max-w-2xl mx-auto">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-            Оцінка середньої премії за поштовим індексом
+            Як ваш поштовий індекс впливає на вартість автострахування
           </h3>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Введіть перші 3 символи поштового індексу (наприклад, <span className="font-semibold text-foreground">M5A</span>, <span className="font-semibold text-foreground">K0B</span>, <span className="font-semibold text-foreground">L4T</span>)
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            Ваше місце проживання є одним із ключових факторів у розрахунку тарифу — воно відображає локальну статистику ДТП, інтенсивність руху та ризики крадіжок у вашому районі. Введіть перші 3 символи поштового індексу (наприклад, <span className="font-semibold text-foreground">M5A</span>, <span className="font-semibold text-foreground">K0B</span>, <span className="font-semibold text-foreground">L4T</span>), щоб дізнатися середній рівень премії для вашої території.
           </p>
         </div>
 
@@ -217,7 +217,7 @@ export const PostalCodeCalculator: React.FC<PostalCodeCalculatorProps> = ({
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
                 <p className="text-xs text-muted-foreground mt-2">
-                  *Вказані премії є середніми орієнтовними показниками для поштового індексу {cleanInput}.
+                  *Вказані премії відображають середній внесок географічного району ({cleanInput}) у підсумковий розрахунок страхового тарифу.
                 </p>
               </div>
             </div>
