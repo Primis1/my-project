@@ -59,7 +59,9 @@ services:
 
   # --- NEW: n8n Application ---
   n8n:
-    image: n8nio/n8n:2.7.4
+    build:
+      context: .
+      dockerfile: Dockerfile.n8n
     restart: always
     environment:
       - DB_TYPE=postgresdb
