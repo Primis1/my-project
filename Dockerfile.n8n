@@ -5,7 +5,7 @@ USER root
 # Install pdf-lib globally, then symlink it into a path the task runner can resolve
 RUN npm install -g pdf-lib && \
     mkdir -p /usr/local/lib/node_modules/n8n/node_modules/.pnpm/node_modules && \
-    ln -s /opt/nodejs/node-v22.22.0/lib/node_modules/pdf-lib \
+    ln -s $(npm root -g)/pdf-lib \
     /usr/local/lib/node_modules/n8n/node_modules/.pnpm/node_modules/pdf-lib
 
 # Copy task runner config
