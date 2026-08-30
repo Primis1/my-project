@@ -64,7 +64,7 @@ services:
     restart: always
     environment:
       - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib
-      - NODE_PATH=/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/home/node/.n8n/nodes/node_modules
+      - NODE_PATH=/usr/local/lib/node_modules
       - NODE_FUNCTION_ALLOW_BUILTIN=*
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres_n8n

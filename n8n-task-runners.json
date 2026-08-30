@@ -1,0 +1,13 @@
+{
+  "task-runners": [
+    {
+      "runner-type": "javascript",
+      "allowed-env": [
+        "PATH",
+        "NODE_FUNCTION_ALLOW_BUILTIN",
+        "NODE_FUNCTION_ALLOW_EXTERNAL",
+        "NODE_PATH"
+      ]
+    }
+  ]
+}

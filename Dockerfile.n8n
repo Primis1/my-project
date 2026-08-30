@@ -1,8 +1,11 @@
 FROM n8nio/n8n:2.7.4
 
 USER root
-# Install pdf-lib globally and inside n8n package directory (outside /home/node/.n8n volume mount)
-RUN npm install -g pdf-lib && \
-    cd /usr/local/lib/node_modules/n8n && npm install pdf-lib
+
+# Install pdf-lib globally
+RUN npm install -g pdf-lib
+
+# Copy task runner config to allow NODE_PATH to be passed to the runner
+COPY n8n-task-runners.json /etc/n8n-task-runners.json
 
 USER node
