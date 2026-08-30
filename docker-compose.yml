@@ -73,10 +73,10 @@ services:
       - DB_POSTGRESDB_USER=${N8N_DB_USER}
       - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD}
       - N8N_RELEASE_TYPE=stable
-      - N8N_HOST=${N8N_SUBDOMAIN}.${DOMAIN_NAME}
+      - N8N_HOST=localhost
       - N8N_PORT=5678
-      - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678
       - GENERIC_TIMEZONE=${TIMEZONE}
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
     ports:

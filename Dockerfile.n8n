@@ -2,10 +2,13 @@ FROM n8nio/n8n:2.7.4
 
 USER root
 
-# Install pdf-lib globally
-RUN npm install -g pdf-lib
+# Install pdf-lib globally, then symlink it into a path the task runner can resolve
+RUN npm install -g pdf-lib && \
+    mkdir -p /usr/local/lib/node_modules/n8n/node_modules/.pnpm/node_modules && \
+    ln -s /opt/nodejs/node-v22.22.0/lib/node_modules/pdf-lib \
+    /usr/local/lib/node_modules/n8n/node_modules/.pnpm/node_modules/pdf-lib
 
-# Copy task runner config to allow NODE_PATH to be passed to the runner
+# Copy task runner config
 COPY n8n-task-runners.json /etc/n8n-task-runners.json
 
 USER node
