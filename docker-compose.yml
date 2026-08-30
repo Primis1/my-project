@@ -75,6 +75,8 @@ services:
       - WEBHOOK_URL=https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${TIMEZONE}
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib
+      - NODE_FUNCTION_ALLOW_BUILTIN=*
     ports:
       - "127.0.0.1:5678:5678"
     depends_on:
@@ -86,15 +88,15 @@ services:
       - n8n_network
       - web_network
 
-  gotenberg:
-    image: gotenberg/gotenberg:8.x
-    restart: always
-    command:
-      - "gotenberg"
-      - "--api-port=3000"
-    networks:
-      - n8n_network
-      - web_network
+#  gotenberg:
+#    image: gotenberg/gotenberg:8.x
+#    restart: always
+#    command:
+#      - "gotenberg"
+#      - "--api-port=3000"
+#    networks:
+#      - n8n_network
+#      - web_network
 
   nginx:
     image: nginx:alpine
