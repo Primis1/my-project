@@ -59,9 +59,14 @@ services:
 
   # --- NEW: n8n Application ---
   n8n:
-    image: n8nio/n8n:2.7.4
+    build:
+      context: .
+      dockerfile: Dockerfile.n8n
     restart: always
     environment:
+      - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib
+      - NODE_PATH=/usr/local/lib/node_modules
+      - NODE_FUNCTION_ALLOW_BUILTIN=*
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres_n8n
       - DB_POSTGRESDB_PORT=5432
@@ -75,8 +80,6 @@ services:
       - WEBHOOK_URL=https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${TIMEZONE}
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-      - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib
-      - NODE_FUNCTION_ALLOW_BUILTIN=*
     ports:
       - "127.0.0.1:5678:5678"
     depends_on:
@@ -87,7 +90,6 @@ services:
     networks:
       - n8n_network
       - web_network
-
 #  gotenberg:
 #    image: gotenberg/gotenberg:8.x
 #    restart: always
