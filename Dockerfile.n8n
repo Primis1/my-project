@@ -1,4 +1,8 @@
 FROM n8nio/n8n:2.7.4
+
 USER root
-RUN npm install -g pdf-lib
+# Install pdf-lib globally and inside n8n package directory (outside /home/node/.n8n volume mount)
+RUN npm install -g pdf-lib && \
+    cd /usr/local/lib/node_modules/n8n && npm install pdf-lib
+
 USER node

@@ -52,12 +52,11 @@ services:
     networks:
       - n8n_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${N8N_DB_USER} -d ${N8N_DB_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # --- NEW: n8n Application ---
   n8n:
     build:
       context: .
@@ -65,7 +64,7 @@ services:
     restart: always
     environment:
       - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib
-      - NODE_PATH=/usr/local/lib/node_modules
+      - NODE_PATH=/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/home/node/.n8n/nodes/node_modules
       - NODE_FUNCTION_ALLOW_BUILTIN=*
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres_n8n
@@ -77,7 +76,7 @@ services:
       - N8N_HOST=${N8N_SUBDOMAIN}.${DOMAIN_NAME}
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}/
+      - WEBHOOK_URL=https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}
       - GENERIC_TIMEZONE=${TIMEZONE}
       - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
     ports:
