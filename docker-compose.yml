@@ -86,6 +86,16 @@ services:
       - n8n_network
       - web_network
 
+  gotenberg:
+    image: gotenberg/gotenberg:8.x
+    restart: always
+    command:
+      - "gotenberg"
+      - "--api-port=3000"
+    networks:
+      - n8n_network
+      - web_network
+
   nginx:
     image: nginx:alpine
     restart: always
