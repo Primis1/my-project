@@ -1,5 +1,5 @@
-FROM n8nio/n8n:2.7.4
-
+FROM n8nio/n8n:latest
+    
 USER root
 
 # Install pdf-lib globally, then symlink it into a path the task runner can resolve
